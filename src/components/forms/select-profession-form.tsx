@@ -1,12 +1,20 @@
-import { createForm, Field, Form, zodForm } from "@modular-forms/solid";
-import { JSX, splitProps } from "solid-js";
+import {
+  createForm,
+  Field,
+  Form,
+  getError,
+  zodForm,
+} from "@modular-forms/solid";
+import { JSX, Show, splitProps } from "solid-js";
 import { z } from "zod";
 import { noop } from "~/lib/util/util";
 import { BigOptionButton } from "../inputs/big-option-button";
 import { VStack } from "../stacks/v-stack";
 
 export const selectProfessionSchema = z.object({
-  profession: z.enum(["human", "robot"]),
+  profession: z.enum(["human", "robot"], {
+    required_error: "Please choose a profession",
+  }),
 });
 
 export type SelectProfessionData = z.input<typeof selectProfessionSchema>;
@@ -40,7 +48,7 @@ export function SelectProfessionForm(props: SelectProfessionFormProps) {
               {...field.props}
               checked={field.value === "human"}
               value="human"
-              label="I'm a human"
+              label={"I'm a human"}
               description="Completely, totally human"
               required
             />
@@ -58,6 +66,11 @@ export function SelectProfessionForm(props: SelectProfessionFormProps) {
             />
           )}
         </Field>
+        <Show when={getError(form, "profession")}>
+          <p class="text-xs text-red-600 dark:text-red-400">
+            {getError(form, "profession")}
+          </p>
+        </Show>
       </VStack>
       {props.children}
     </Form>

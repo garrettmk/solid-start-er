@@ -33,7 +33,7 @@ export function Step(props: StepProps) {
     "index",
     "currentIndex",
   ]);
-  const [index] = useIndexContext();
+  const index = useIndexContext();
 
   const isNext = () => index.value < stepProps.index;
   const isCurrent = () => index.value === stepProps.index;

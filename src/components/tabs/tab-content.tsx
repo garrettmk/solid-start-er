@@ -9,7 +9,7 @@ export interface TabContentProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 export function TabContent(props: TabContentProps) {
-  const [index] = useIndexContext();
+  const index = useIndexContext();
   const [, divProps] = splitProps(props, ["keepMounted", "class"]);
 
   return (

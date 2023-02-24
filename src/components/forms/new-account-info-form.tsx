@@ -1,44 +1,48 @@
-import { Form, Field, createForm, zodForm } from "@modular-forms/solid";
+import { createForm, Field, Form, zodForm } from "@modular-forms/solid";
 import { JSX, splitProps } from "solid-js";
 import { z } from "zod";
-import { TextInput } from "../inputs/text-input";
-import { Checkbox } from "../inputs/check-box";
-import { VStack } from "../stacks/v-stack";
-import { BigOptionButton } from "../inputs/big-option-button";
-import { Button } from "../buttons/button";
 import { noop } from "~/lib/util/util";
-import { Show } from "solid-js";
+import { Checkbox } from "../inputs/check-box";
+import { TextInput } from "../inputs/text-input";
 
-export const newAccountInfoSchema = z.object({
-  fullName: z
-    .string()
-    .min(3, "Please enter at least 3 characters")
-    .max(30, "Please, no more than 30 characters")
-    .regex(
-      /^[a-zA-Z' \p{L}\-]+$/,
-      "Names can include any Unicode letter, hyphen, or apostrophe"
-    ),
+export const newAccountInfoSchema = z
+  .object({
+    fullName: z
+      .string()
+      .min(3, "Please enter at least 3 characters")
+      .max(30, "Please, no more than 30 characters")
+      .regex(
+        /^[a-zA-Z' \p{L}\-]+$/,
+        "Names can include any Unicode letter, hyphen, or apostrophe"
+      ),
 
-  email: z
-    .string({ description: "Please enter your email address" })
-    .email("Please enter a valid email address"),
+    email: z
+      .string({ description: "Please enter your email address" })
+      .email("Please enter a valid email address"),
 
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    .max(30, "Password must be less than 30 characters")
-    .regex(/^.*[a-z]+.*$/, "Must include at least one lowercase letter")
-    .regex(/^.*[A-Z]+.*$/, "Must include at least one uppercase letter")
-    .regex(/^.*[0-9]+.*$/, "Must include at least one number")
-    .regex(
-      /^.*[#?!@$%^&*~_^&*(){}[\]\-]+.*$/,
-      "Must include at least one special character (#?!@$%^&*-~_^&*(){}[])"
-    ),
+    password: z
+      .string()
+      .min(6, "Password must be at least 6 characters")
+      .max(30, "Password must be less than 30 characters")
+      .regex(/^.*[a-z]+.*$/, "Must include at least one lowercase letter")
+      .regex(/^.*[A-Z]+.*$/, "Must include at least one uppercase letter")
+      .regex(/^.*[0-9]+.*$/, "Must include at least one number")
+      .regex(
+        /^.*[#?!@$%^&*~_^&*(){}[\]\-]+.*$/,
+        "Must include at least one special character (#?!@$%^&*-~_^&*(){}[])"
+      ),
 
-  confirmPassword: z.string(),
-  agreeToTerms: z.boolean(),
-  wantsMarketing: z.boolean(),
-});
+    confirmPassword: z.string(),
+    agreeToTerms: z.boolean(),
+    wantsMarketing: z.boolean(),
+  })
+  .superRefine(({ password, confirmPassword }, ctx) => {
+    if (confirmPassword !== password)
+      ctx.addIssue({
+        code: "custom",
+        message: "Must match your password",
+      });
+  });
 
 export type NewAccountInfoData = z.input<typeof newAccountInfoSchema>;
 

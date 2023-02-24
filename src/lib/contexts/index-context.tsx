@@ -2,35 +2,26 @@ import { createContext, JSX, useContext } from "solid-js";
 import { createStore } from "solid-js/store";
 import { clamp } from "../util/util";
 
-export type IndexState = {
+export type Index = {
   value: number;
   max: number;
   hasNext: boolean;
   hasPrev: boolean;
+
+  set: (value: number) => void;
+  next: () => void;
+  prev: () => void;
 };
 
-export type IndexMethods = {
-  setIndexValue: (value: number) => void;
-  setNextIndex: () => void;
-  setPrevIndex: () => void;
-};
+export const IndexContext = createContext<Index>({} as Index);
 
-export type IndexContextValue = [IndexState, IndexMethods];
-
-export const IndexContext = createContext<IndexContextValue>([
-  {},
-  {},
-] as IndexContextValue);
-
-export function createIndex(initial?: {
-  value?: number;
-  max?: number;
-}): IndexContextValue {
+export function createIndex(initial?: { value?: number; max?: number }): Index {
   const range = { min: 0, max: initial?.max };
 
-  const toState: (index: number) => IndexState = (index: number) => {
+  const toState = (index: number) => {
     const value = clamp(index, range);
     const max = initial?.max ?? Infinity;
+
     return {
       value,
       max,
@@ -39,17 +30,14 @@ export function createIndex(initial?: {
     };
   };
 
-  const [state, setState] = createStore<IndexState>(
-    toState(initial?.value ?? 0)
-  );
+  const [index, setState] = createStore({
+    ...toState(initial?.value ?? 0),
+    set: (value: number) => setState((c) => ({ ...c, ...toState(value) })),
+    next: () => setState((c) => ({ ...c, ...toState(c.value + 1) })),
+    prev: () => setState((c) => ({ ...c, ...toState(c.value - 1) })),
+  });
 
-  const methods: IndexMethods = {
-    setIndexValue: (value: number) => setState(toState(value)),
-    setNextIndex: () => setState(toState(state.value + 1)),
-    setPrevIndex: () => setState(toState(state.value - 1)),
-  };
-
-  return [state, methods];
+  return index;
 }
 
 export function useIndexContext() {
@@ -57,7 +45,7 @@ export function useIndexContext() {
 }
 
 export interface IndexProviderProps {
-  initial?: Pick<Partial<IndexState>, "value" | "max">;
+  initial?: Pick<Partial<Index>, "value" | "max">;
   children?: JSX.Element;
 }
 
