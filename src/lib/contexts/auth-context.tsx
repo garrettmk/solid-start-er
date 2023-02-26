@@ -1,67 +1,79 @@
-import { AuthError, AuthSession } from "@supabase/supabase-js";
+import { AuthError, AuthSession, User } from "@supabase/supabase-js";
+import { shake } from "radash";
 import { createContext, createEffect, JSX, useContext } from "solid-js";
 import { createStore } from "solid-js/store";
 import { isServer } from "solid-js/web";
+import { SignInData } from "../schemas/sign-in";
 import { supabase } from "../supabase/supabase";
 
-export type AuthState = {
+export type Auth = {
+  user?: User;
   session?: AuthSession;
   error?: AuthError;
+
+  signInWithPassword: (data: SignInData) => Promise<void>;
+  signOut: () => Promise<void>;
 };
 
-export const defaultAuthState: AuthState = {};
+export const AuthContext = createContext<Auth>({} as Auth);
 
-export type AuthMethods = {
-  signInWithPassword: (email: string, password: string) => void;
-  signOut: () => void;
-};
-
-export const defaultAuthMethods = {
-  signInWithPassword: (email: string, password: string) => {},
-  signOut: () => {},
-};
-
-export type AuthContextValue = [AuthState, AuthMethods];
-
-export const AuthContext = createContext<AuthContextValue>([
-  defaultAuthState,
-  defaultAuthMethods,
-]);
-
-export function createAuthState(): AuthContextValue {
-  const [state, setState] = createStore<AuthState>({});
-  const methods: AuthMethods = {
-    signInWithPassword: async (email: string, password: string) => {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) setState({ error });
-      else if (data.session) setState({ session: data.session });
-      console.log({ data, error });
+export function createAuth(): Auth {
+  const [state, setState] = createStore({
+    signInWithPassword: async (signIn: SignInData) => {
+      const { data, error } = await supabase.auth.signInWithPassword(signIn);
+      setState((c) => ({
+        ...c,
+        user: data.user ?? undefined,
+        session: data.session ?? undefined,
+        error: error ?? undefined,
+      }));
     },
-    signOut: () => supabase.auth.signOut(),
-  };
 
-  supabase.auth.getSession().then(({ data: { session } }) => {
-    if (session) setState({ session });
+    signOut: async () => {
+      const { error } = await supabase.auth.signOut();
+      setState((c) => ({
+        ...c,
+        user: undefined,
+        session: undefined,
+        error: error ?? undefined,
+      }));
+    },
   });
 
   if (!isServer)
-    supabase.auth.onAuthStateChange((event, session) => {
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log("auth state changed");
+
       if (event === "SIGNED_OUT" || event === "USER_DELETED") {
         const expires = new Date(0).toUTCString();
         document.cookie = `access-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
         document.cookie = `refresh-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
+
+        setState((c) => ({
+          ...c,
+          session: undefined,
+          user: undefined,
+          error: undefined,
+        }));
       } else if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
         const maxAge = 100 * 365 * 24 * 60 * 60; // 100 years, never expires
         document.cookie = `access-token=${session?.access_token}; path=/; max-age=${maxAge}; SameSite=Lax; secure`;
         document.cookie = `refresh-token=${session?.refresh_token}; path=/; max-age=${maxAge}; SameSite=Lax; secure`;
+
+        const { data, error } = await supabase.auth.getUser(
+          session?.access_token
+        );
+
+        setState((c) => ({
+          ...c,
+          session: session ?? undefined,
+          user: data.user ?? undefined,
+          error: error ?? undefined,
+        }));
       }
-      setState({ session: session ?? undefined });
     });
 
-  return [state, methods];
+  return state;
 }
 
 export function useAuthContext() {
@@ -73,7 +85,7 @@ export interface AuthProviderProps {
 }
 
 export function AuthProvider(props: AuthProviderProps) {
-  const value = createAuthState();
+  const value = createAuth();
 
   return (
     <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>

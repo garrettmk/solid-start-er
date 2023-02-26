@@ -15,19 +15,18 @@ import { AuthProvider } from "./lib/contexts/auth-context";
 import {
   createDarkMode,
   DarkModeContext,
+  DarkModeProvider,
 } from "./lib/contexts/dark-mode-context";
 import { createLayout, LayoutContext } from "./lib/contexts/layout-context";
 import "./root.css";
 
 export default function Root() {
-  const darkModeContext = createDarkMode();
-  const [darkMode] = darkModeContext;
-
+  const darkMode = createDarkMode();
   const layout = createLayout({ sidebarOpen: true });
 
   return (
     <AuthProvider>
-      <DarkModeContext.Provider value={darkModeContext}>
+      <DarkModeProvider darkMode={darkMode}>
         <LayoutContext.Provider value={layout}>
           <Html lang="en" class={darkMode.isDark ? "dark" : ""}>
             <Head>
@@ -50,7 +49,7 @@ export default function Root() {
             </Body>
           </Html>
         </LayoutContext.Provider>
-      </DarkModeContext.Provider>
+      </DarkModeProvider>
     </AuthProvider>
   );
 }

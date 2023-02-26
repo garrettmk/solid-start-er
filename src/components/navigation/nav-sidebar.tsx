@@ -25,7 +25,7 @@ const styles = {
 };
 
 export function NavSidebar() {
-  const [darkMode, { toggleDarkMode }] = useDarkMode();
+  const darkMode = useDarkMode();
 
   return (
     <nav class={styles.base}>
@@ -119,7 +119,7 @@ export function NavSidebar() {
         </svg>
       </a>
 
-      <button class={clsx(styles.link, "mt-auto")} onClick={toggleDarkMode}>
+      <button class={clsx(styles.link, "mt-auto")} onClick={darkMode.toggle}>
         <Show when={darkMode.isDark}>
           <svg
             xmlns="http://www.w3.org/2000/svg"

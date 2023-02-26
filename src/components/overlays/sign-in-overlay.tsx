@@ -8,11 +8,11 @@ export interface SignInOverlayProps
   extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 export function SignInOverlay(props: SignInOverlayProps) {
-  const [auth, { signInWithPassword }] = useAuthContext();
+  const auth = useAuthContext();
 
   const handleSignIn = (data: SignInData) => {
     const { email, password } = data;
-    signInWithPassword(email, password);
+    auth.signInWithPassword({ email, password });
   };
 
   return (

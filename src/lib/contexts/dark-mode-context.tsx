@@ -1,58 +1,50 @@
 import { createContext, JSX, useContext } from "solid-js";
 import { createStore } from "solid-js/store";
+import { noop } from "../util/util";
 
-export type DarkMode = [DarkModeState, DarkModeMethods];
-
-export type DarkModeState = {
+export type DarkMode = {
   isDark: boolean;
-};
 
-export type DarkModeMethods = {
   setDark: () => void;
   setLight: () => void;
-  toggleDarkMode: () => void;
+  toggle: () => void;
 };
 
-export const defaultDarkModeState: DarkModeState = {
+export const defaultDarkMode: DarkMode = {
   isDark: false,
+  setDark: noop,
+  setLight: noop,
+  toggle: noop,
 };
 
-export const defaultDarkModeMethods: DarkModeMethods = {
-  setDark: () => {},
-  setLight: () => {},
-  toggleDarkMode: () => {},
-};
-
-export const DarkModeContext = createContext<[DarkModeState, DarkModeMethods]>([
-  defaultDarkModeState,
-  defaultDarkModeMethods,
-]);
+export const DarkModeContext = createContext<DarkMode>(defaultDarkMode);
 
 export function useDarkMode() {
   return useContext(DarkModeContext);
 }
 
 export function createDarkMode(
-  initialState: DarkModeState = defaultDarkModeState
+  initialState: Pick<DarkMode, "isDark"> = defaultDarkMode
 ): DarkMode {
-  const [state, setState] = createStore<DarkModeState>({ ...initialState });
-  const methods: DarkModeMethods = {
-    setDark: () => setState({ isDark: true }),
-    setLight: () => setState({ isDark: false }),
-    toggleDarkMode: () => setState(({ isDark }) => ({ isDark: !isDark })),
-  };
+  const [darkMode, setState] = createStore({
+    ...initialState,
+    setDark: () => setState((c) => ({ ...c, isDark: true })),
+    setLight: () => setState((c) => ({ ...c, isDark: false })),
+    toggle: () => setState((c) => ({ ...c, isDark: !c.isDark })),
+  });
 
-  return [state, methods];
+  return darkMode;
 }
 
 export type DarkModeProviderProps = {
-  initialState?: DarkModeState;
+  isDark?: boolean;
+  darkMode?: DarkMode;
   children?: JSX.Element;
 };
 
 export function DarkModeProvider(props: DarkModeProviderProps) {
-  const { initialState } = props;
-  const darkMode = createDarkMode(initialState);
+  const darkMode =
+    props.darkMode ?? createDarkMode({ isDark: props.isDark ?? false });
 
   return (
     <DarkModeContext.Provider value={darkMode}>

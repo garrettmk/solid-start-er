@@ -17,6 +17,7 @@ export const publicRouter = router({
     }),
 
   greeting: protectedProcedure.query(async () => {
+    throw new Error("Noooooo!");
     return "Hello there!";
   }),
 });
