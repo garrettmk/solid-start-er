@@ -1,4 +1,6 @@
+import { User } from "@supabase/supabase-js";
 import { createStore } from "solid-js/store";
+import { supabase } from "../supabase/supabase";
 
 export function noop(...args: any[]) {}
 
@@ -44,4 +46,17 @@ export function parseCookieString(cookeString: string): Map<string, string> {
       .split(";")
       .map((entryString) => entryString.trim().split("=") as [string, string])
   );
+}
+
+export async function getRequestUser(req: Request): Promise<User | undefined> {
+  const cookies = parseCookieString(
+    req.headers.get("cookie") ?? req.headers.get("Cookie") ?? ""
+  );
+  const accessToken = cookies.get("access-token");
+  if (!accessToken) return;
+
+  const { data, error } = await supabase.auth.getUser(accessToken);
+  if (error) return;
+
+  return data.user;
 }
