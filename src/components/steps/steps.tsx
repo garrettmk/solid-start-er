@@ -44,7 +44,7 @@ export function Step(props: StepProps) {
       <li
         class={clsx(
           "flex flex-col items-center font-medium",
-          { "text-white": isCurrent(), "text-blue-600": isComplete() },
+          { "text-white": isCurrent(), "text-blue-500": isComplete() },
           stepProps.class
         )}
         {...itemProps}

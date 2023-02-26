@@ -5,19 +5,15 @@ import {
   getError,
   zodForm,
 } from "@modular-forms/solid";
+import clsx from "clsx";
 import { JSX, Show, splitProps } from "solid-js";
-import { z } from "zod";
+import {
+  SelectProfessionData,
+  selectProfessionSchema,
+} from "~/lib/schemas/choose-profession";
 import { noop } from "~/lib/util/util";
 import { BigOptionButton } from "../inputs/big-option-button";
 import { VStack } from "../stacks/v-stack";
-
-export const selectProfessionSchema = z.object({
-  profession: z.enum(["human", "robot"], {
-    required_error: "Please choose a profession",
-  }),
-});
-
-export type SelectProfessionData = z.input<typeof selectProfessionSchema>;
 
 export interface SelectProfessionFormProps
   extends Omit<JSX.HTMLAttributes<HTMLFormElement>, "onSubmit"> {
@@ -40,8 +36,10 @@ export function SelectProfessionForm(props: SelectProfessionFormProps) {
   return (
     <Form of={form} onSubmit={props.onSubmit ?? noop} {...formProps}>
       <h2 class="text-2xl font-bold mb-6">Tell us about yourself</h2>
-      <h3 class="text-lg text-slate-400 mb-6">What is your profession?</h3>
       <VStack as="fieldset" spacing="sm" align="stretch" class="mb-8">
+        <legend class="text-lg text-slate-400 mb-6">
+          What is your profession?
+        </legend>
         <Field of={form} name="profession">
           {(field) => (
             <BigOptionButton
@@ -50,6 +48,7 @@ export function SelectProfessionForm(props: SelectProfessionFormProps) {
               value="human"
               label={"I'm a human"}
               description="Completely, totally human"
+              aria-errormessage="profession-error"
               required
             />
           )}
@@ -62,15 +61,19 @@ export function SelectProfessionForm(props: SelectProfessionFormProps) {
               value="robot"
               label="I'm a robot"
               description="Better in every way"
+              aria-errormessage="profession-error"
               required
             />
           )}
         </Field>
-        <Show when={getError(form, "profession")}>
-          <p class="text-xs text-red-600 dark:text-red-400">
-            {getError(form, "profession")}
-          </p>
-        </Show>
+        <p
+          id="profession-error"
+          class={clsx("text-xs text-red-600 dark:text-red-400", {
+            "absolute opacity-0": !getError(form, "profession"),
+          })}
+        >
+          {getError(form, "profession")}
+        </p>
       </VStack>
       {props.children}
     </Form>

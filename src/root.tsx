@@ -11,8 +11,6 @@ import {
   Scripts,
   Title,
 } from "solid-start";
-import { NavSidebar } from "./components/navigation/nav-sidebar";
-import { SignInOverlay } from "./components/overlays/sign-in-overlay";
 import { AuthProvider } from "./lib/contexts/auth-context";
 import {
   createDarkMode,

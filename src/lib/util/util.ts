@@ -1,4 +1,3 @@
-import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 
 export function noop(...args: any[]) {}
@@ -37,4 +36,12 @@ export function createFormStore<T extends object>(initial?: Partial<T>) {
   };
 
   return [state, methods] as const;
+}
+
+export function parseCookieString(cookeString: string): Map<string, string> {
+  return new Map(
+    cookeString
+      .split(";")
+      .map((entryString) => entryString.trim().split("=") as [string, string])
+  );
 }
