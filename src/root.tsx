@@ -37,7 +37,7 @@ export default function Root() {
                 content="width=device-width, initial-scale=1"
               />
             </Head>
-            <Body class="bg-slate-50 dark:bg-slate-900">
+            <Body class="bg-slate-50 dark:bg-slate-900 dark:text-slate-100">
               <Suspense>
                 <ErrorBoundary>
                   <Routes>

@@ -27,7 +27,7 @@ export function Menu(props: MenuProps) {
     <ul
       ref={props.ref}
       class={clsx(
-        "list-none bg-white divide-y divide-gray-100 dark:bg-gray-700 dark:divide-gray-600",
+        "list-none bg-white divide-y divide-slate-100 dark:bg-slate-700 dark:divide-slate-600",
         props.class
       )}
       onClick={handleClick}
