@@ -20,7 +20,7 @@ export function AppPage() {
   });
 
   return (
-    <section class="ml-14">
+    <section>
       <Button onClick={() => greet()}>Greet</Button>
       <pre>{greeting.result}</pre>
       <pre class="text-red-600">{greeting.error?.message}</pre>

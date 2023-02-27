@@ -1,8 +1,12 @@
 import clsx from "clsx";
 import { JSX, splitProps } from "solid-js";
+import { onClickOutside } from "~/lib/directives/click-outside";
+onClickOutside;
 
 export interface MenuProps extends JSX.HTMLAttributes<HTMLUListElement> {
   isOpen?: boolean;
+  onClickItem?: () => void;
+  onClickOutside?: () => void;
 }
 
 export function Menu(props: MenuProps) {
@@ -11,7 +15,13 @@ export function Menu(props: MenuProps) {
     "class",
     "children",
     "isOpen",
+    "onClickItem",
   ]);
+
+  const handleClick = (event: MouseEvent) => {
+    const target = event.target as HTMLElement;
+    if (target.tagName === "A") props.onClickItem?.();
+  };
 
   return (
     <ul
@@ -20,6 +30,8 @@ export function Menu(props: MenuProps) {
         "list-none bg-white divide-y divide-gray-100 dark:bg-gray-700 dark:divide-gray-600",
         props.class
       )}
+      onClick={handleClick}
+      use:onClickOutside={props.onClickOutside}
       {...elementProps}
     >
       {props.children}

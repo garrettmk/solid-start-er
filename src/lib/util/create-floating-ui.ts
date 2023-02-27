@@ -60,25 +60,5 @@ export function createFloatingUI(options: FloatingUIOptions): FloatingUI {
       });
   });
 
-  const handleClickOutside = (e: MouseEvent) => {
-    const target = e.target as Node;
-    const anchor = anchorEl();
-    const floating = floatingEl();
-    if (!floating || !anchor) return;
-
-    if (!floating.contains(target) && !anchor.contains(target))
-      floatingUi.close();
-  };
-
-  if (!isServer) {
-    onMount(() => {
-      document.addEventListener("click", handleClickOutside);
-    });
-
-    onCleanup(() => {
-      document.removeEventListener("click", handleClickOutside);
-    });
-  }
-
   return floatingUi;
 }

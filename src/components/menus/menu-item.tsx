@@ -1,5 +1,6 @@
 import clsx from "clsx";
-import { JSX, splitProps } from "solid-js";
+import { JSX, Match, splitProps, Switch } from "solid-js";
+import { A } from "solid-start";
 
 export interface MenuItemProps extends JSX.HTMLAttributes<HTMLLIElement> {
   href?: string;
@@ -9,9 +10,11 @@ export function MenuItem(props: MenuItemProps) {
   const [, elementProps] = splitProps(props, [
     "ref",
     "class",
-    "children",
     "href",
+    "children",
   ]);
+  const isLink = Boolean(props.href);
+  const isRelative = isLink && props.href?.startsWith("/");
 
   return (
     <li
@@ -21,14 +24,24 @@ export function MenuItem(props: MenuItemProps) {
         {
           "hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white":
             props.href || props.onClick,
+          "px-4 py-2": !isLink,
         },
         props.class
       )}
       {...elementProps}
     >
-      <a class="block w-full h-full px-4 py-2" href={props.href}>
-        {props.children}
-      </a>
+      <Switch fallback={props.children}>
+        <Match when={isLink && isRelative}>
+          <A class="block w-full h-full px-4 py-2" href={props.href!}>
+            {props.children}
+          </A>
+        </Match>
+        <Match when={isLink}>
+          <a class="block w-full h-full px-4 py-2" href={props.href}>
+            {props.children}
+          </a>
+        </Match>
+      </Switch>
     </li>
   );
 }

@@ -18,6 +18,11 @@ export function ButtonUserMenu(props: ButtonUserMenuProps) {
     offset: { mainAxis: 10 },
   });
 
+  const handleClick = (e: MouseEvent) => {
+    e.stopImmediatePropagation();
+    menu.toggle();
+  };
+
   return (
     <>
       <Button
@@ -25,7 +30,7 @@ export function ButtonUserMenu(props: ButtonUserMenuProps) {
         ref={menu.anchorRef}
         color="ghost"
         class={props.class}
-        onClick={menu.toggle}
+        onClick={handleClick}
         description="Open user menu"
         aria-expanded="false"
         data-dropdown-toggle="user-dropdown"
@@ -40,13 +45,13 @@ export function ButtonUserMenu(props: ButtonUserMenuProps) {
           hidden: !menu.isOpen,
         })}
       >
-        <Menu>
+        <Menu onClickOutside={menu.close} onClickItem={menu.close}>
           <MenuItem class="py-2">
             <span class="block text-sm">Garrett Myrick</span>
             <span class="block font-medium">{auth.user?.email}</span>
           </MenuItem>
-          <MenuItem href="/app/settings">Settings</MenuItem>
           <MenuItem href="/app/profile">Profile</MenuItem>
+          <MenuItem href="/app/settings">Settings</MenuItem>
           <MenuItem>Sign out</MenuItem>
         </Menu>
       </Panel>
