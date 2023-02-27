@@ -1,0 +1,30 @@
+{
+    "$schema": "https://release-1256208672.cos.ap-guangzhou.myqcloud.com/dbclient/schema.json",
+    "database": {
+        "1677444531824": {
+            "host": "db.advnufdjixikalfrkzmu.supabase.co",
+            "port": 5432,
+            "user": "postgres",
+            "password": "I40L59EMbKsxri0b",
+            "dbType": "PostgreSQL",
+            "database": "postgres",
+            "name": "barka",
+            "includeDatabases": "postgres",
+            "useConnectionString": false,
+            "usingSSH": false,
+            "global": false,
+            "savePassword": "Forever",
+            "hideSystemSchema": true,
+            "readonly": false,
+            "sort": 11,
+            "useSSL": false,
+            "encrypt": false,
+            "authType": "default",
+            "esAuth": "none",
+            "showHidden": true,
+            "srv": false,
+            "key": "1677444531824",
+            "connectionKey": "database.connections"
+        }
+    }
+}
