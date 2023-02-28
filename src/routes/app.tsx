@@ -6,9 +6,9 @@ export function AppLayout() {
   return (
     <>
       <NavSidebar />
-      <main class="ml-14">
+      <div class="ml-14">
         <Outlet />
-      </main>
+      </div>
       <SignInOverlay />
     </>
   );

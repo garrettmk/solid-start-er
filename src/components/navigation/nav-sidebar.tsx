@@ -29,7 +29,7 @@ export function NavSidebar() {
 
   return (
     <nav class={styles.base}>
-      <div class="text-blue-700">
+      <div class="text-blue-700 h-10 flex items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -46,7 +46,7 @@ export function NavSidebar() {
         </svg>
       </div>
 
-      <hr />
+      <hr class="-my-[1px]" />
 
       <a class={styles.link} href="/">
         <svg
