@@ -10,7 +10,7 @@ export interface AvatarProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 const styles = {
-  base: "p-2 relative inline-block overflow-hidden bg-slate-300 dark:bg-slate-600 flex items-center justify-center text-slate-600 dark:text-slate-300 aspect-square",
+  base: "p-2 inline-block overflow-hidden bg-slate-300 dark:bg-slate-600 flex items-center justify-center text-slate-600 dark:text-slate-300 aspect-square",
 
   shape: {
     round: "rounded-full",

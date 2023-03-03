@@ -12,6 +12,7 @@ import { PencilIcon } from "~/components/icons/pencil-icon";
 import { XMarkIcon } from "~/components/icons/x-mark-icon";
 import { PageDivider } from "~/components/page/page-divider";
 import { PageHeader } from "~/components/page/page-header";
+import { Panel } from "~/components/panels/panel";
 import { HStack } from "~/components/stacks/h-stack";
 import { VStack } from "~/components/stacks/v-stack";
 import { api } from "~/lib/api/client";
@@ -30,7 +31,7 @@ export function routeData() {
 }
 
 export function ProfilePage() {
-  const isOpen = createToggle(true);
+  const isOpen = createToggle();
   const data = useRouteData<Resource<{ user: User; profile: any }>>();
 
   const handleClickEdit = (event: Event) => {
@@ -59,52 +60,43 @@ export function ProfilePage() {
           </Button>
         </PageHeader>
         <HStack as="section" spacing="xl" class="mb-12">
-          <VStack
-            spacing="sm"
-            align="center"
-            class="bg-white border border-slate-300 p-6 rounded-lg"
-          >
+          <Panel class="flex items-center justify-middle p-6 shrink-0">
             <Avatar size="huge" src={data()?.profile.avatar_url} />
-            <Button size="sm" color="ghost">
-              Upload new image...
-            </Button>
-          </VStack>
-          <VStack
-            as="ul"
-            spacing="md"
-            class="list-none rounded-lg bg-white border border-slate-300 p-6 flex-grow flex-shrink basis-full"
-          >
-            <li>
-              <span class="block text-sm text-slate-600 dark:text-slate-400 mb-1">
-                Full name
-              </span>
-              <span class="text-xl font-medium text-slate-800">
-                {data()?.profile.full_name}
-              </span>
-            </li>
-            <li>
-              <span class="block text-sm text-slate-600 dark:text-slate-400 mb-1">
-                Email
-              </span>
-              <span class="text-xl font-medium text-slate-800 dark:text-slate-300">
-                {data()?.profile.email}
-              </span>
-            </li>
-            <li>
-              <span class="block text-sm text-slate-600 dark:text-slate-400 mb-1">
-                Initials
-              </span>
-              <span class="text-xl font-medium text-slate-800 dark:text-slate-300">
-                GM
-              </span>
-            </li>
-          </VStack>
+          </Panel>
+          <Panel class="p-6 basis-full">
+            <VStack as="ul" spacing="md" class="list-none">
+              <li>
+                <span class="block text-sm text-slate-600 dark:text-slate-400 mb-1">
+                  Full name
+                </span>
+                <span class="text-xl font-medium text-slate-800">
+                  {data()?.profile.full_name}
+                </span>
+              </li>
+              <li>
+                <span class="block text-sm text-slate-600 dark:text-slate-400 mb-1">
+                  Email
+                </span>
+                <span class="text-xl font-medium text-slate-800 dark:text-slate-300">
+                  {data()?.profile.email}
+                </span>
+              </li>
+              <li>
+                <span class="block text-sm text-slate-600 dark:text-slate-400 mb-1">
+                  Initials
+                </span>
+                <span class="text-xl font-medium text-slate-800 dark:text-slate-300">
+                  GM
+                </span>
+              </li>
+            </VStack>
+          </Panel>
         </HStack>
         <h2 class="text-md text-slate-600 dark:text-slate-400 mb-1">Tenants</h2>
         <PageDivider class="mb-6" />
-        <p class="p-6 mb-12 min-h-[12rem] border border-slate-300 bg-white rounded-lg">
+        <Panel as="p" class="p-6 mb-12 min-h-[12rem]">
           You aren't a member of any tenants yet.
-        </p>
+        </Panel>
       </main>
       <Drawer
         isOpen={isOpen.value}

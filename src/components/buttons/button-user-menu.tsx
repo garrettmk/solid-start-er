@@ -37,22 +37,20 @@ export function ButtonUserMenu(props: ButtonUserMenuProps) {
       >
         <UserCircleIcon />
       </Button>
-      <Panel
+      <Menu
         ref={menu.floatingRef}
-        class={clsx("fixed z-50", {
-          hidden: !menu.isOpen,
-        })}
+        class={clsx(!menu.isOpen && "hidden")}
+        onClickOutside={menu.close}
+        onClickItem={menu.close}
       >
-        <Menu onClickOutside={menu.close} onClickItem={menu.close}>
-          <MenuItem class="py-2">
-            <span class="block text-sm">Garrett Myrick</span>
-            <span class="block font-medium">{auth.user?.email}</span>
-          </MenuItem>
-          <MenuItem href="/app/profile">Profile</MenuItem>
-          <MenuItem href="/app/settings">Settings</MenuItem>
-          <MenuItem onClick={auth.signOut}>Sign out</MenuItem>
-        </Menu>
-      </Panel>
+        <MenuItem class="py-2">
+          <span class="block text-sm">Garrett Myrick</span>
+          <span class="block font-medium">{auth.user?.email}</span>
+        </MenuItem>
+        <MenuItem href="/app/profile">Profile</MenuItem>
+        <MenuItem href="/app/settings">Settings</MenuItem>
+        <MenuItem onClick={auth.signOut}>Sign out</MenuItem>
+      </Menu>
     </>
   );
 }

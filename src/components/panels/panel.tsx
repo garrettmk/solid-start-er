@@ -1,23 +1,23 @@
-import { JSX, splitProps } from "solid-js";
+import { JSX, splitProps, ValidComponent } from "solid-js";
 import clsx from "clsx";
 import { Dynamic } from "solid-js/web";
 
-export interface PanelProps<
-  E extends HTMLElement = HTMLDivElement,
-  N extends E["tagName"] = E["tagName"]
-> extends JSX.HTMLAttributes<E> {
-  as?: N;
+export interface PanelProps<E extends HTMLElement = HTMLDivElement>
+  extends JSX.HTMLAttributes<E> {
+  as?: string;
 }
 
-export function Panel(props: PanelProps) {
-  const [, elementProps] = splitProps(props, ["class", "ref"]);
+export function Panel<E extends HTMLElement = HTMLDivElement>(
+  props: PanelProps<E>
+) {
+  const [, elementProps] = splitProps(props, ["as", "class", "ref"]);
 
   return (
     <Dynamic
       component={props.as ?? "div"}
       ref={props.ref}
       class={clsx(
-        "text-base bg-white rounded-lg shadow dark:bg-gray-700 overflow-hidden",
+        "text-base rounded-lg overflow-hidden bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-500",
         props.class
       )}
       {...elementProps}

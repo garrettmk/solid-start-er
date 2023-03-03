@@ -1,12 +1,12 @@
 import clsx from "clsx";
 import { JSX, splitProps } from "solid-js";
 import { onClickOutside } from "~/lib/directives/click-outside";
+import { Panel } from "../panels/panel";
 onClickOutside;
 
 export interface MenuProps extends JSX.HTMLAttributes<HTMLUListElement> {
   isOpen?: boolean;
   onClickItem?: () => void;
-  onClickOutside?: () => void;
 }
 
 export function Menu(props: MenuProps) {
@@ -24,17 +24,17 @@ export function Menu(props: MenuProps) {
   };
 
   return (
-    <ul
+    <Panel
+      as="ul"
       ref={props.ref}
       class={clsx(
-        "list-none bg-white divide-y divide-slate-100 dark:bg-slate-700 dark:divide-slate-600",
+        "fixed z-[5000] list-none bg-white divide-y divide-slate-100 dark:bg-slate-700 dark:divide-slate-600 shadow",
         props.class
       )}
       onClick={handleClick}
-      use:onClickOutside={props.onClickOutside}
       {...elementProps}
     >
       {props.children}
-    </ul>
+    </Panel>
   );
 }
