@@ -10,7 +10,7 @@ export interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
     | "ghost"
     | "green"
     | "red";
-  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  size?: "xs" | "sm" | "md" | "lg" | "xl" | "none";
   description?: string;
   icon?: boolean;
   disabled?: boolean;
@@ -51,6 +51,8 @@ const styles = {
       px-6 py-3.5
       text-base
     `,
+
+    none: "",
   },
 
   icon: {

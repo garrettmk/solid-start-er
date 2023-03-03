@@ -28,8 +28,6 @@ export function ButtonUserMenu(props: ButtonUserMenuProps) {
       <Button
         icon
         ref={menu.anchorRef}
-        color="ghost"
-        class={props.class}
         onClick={handleClick}
         description="Open user menu"
         aria-expanded="false"
