@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { splitProps } from "solid-js";
 import { useAuthContext } from "~/lib/contexts/auth-context";
 import { createFloatingUI } from "~/lib/util/create-floating-ui";
-import { UserCircleIcon } from "../icons/user-circle";
+import { UserCircleIcon } from "../icons/user-circle-icon";
 import { Menu } from "../menus/menu";
 import { MenuItem } from "../menus/menu-item";
 import { Panel } from "../panels/panel";

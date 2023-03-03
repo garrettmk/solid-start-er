@@ -1,10 +1,9 @@
 import { A } from "solid-start";
-import { useDarkMode } from "~/lib/contexts/dark-mode-context";
 import { ButtonToggleTheme } from "../buttons/button-toggle-theme";
 import { ButtonUserMenu } from "../buttons/button-user-menu";
 import { AppIcon } from "../icons/app-icon";
 import { BuildingStorefrontIcon } from "../icons/building-storefront-icon";
-import { Cog6ToothIcon } from "../icons/cog-6-tooth";
+import { Cog6ToothIcon } from "../icons/cog-6-tooth-icon";
 import { HomeIcon } from "../icons/home-icon";
 import { UsersIcon } from "../icons/users-icon";
 
@@ -29,8 +28,6 @@ const styles = {
 };
 
 export function NavSidebar() {
-  const darkMode = useDarkMode();
-
   return (
     <nav class={styles.base}>
       <div class="text-blue-700 h-10 flex items-center">

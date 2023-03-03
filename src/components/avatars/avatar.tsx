@@ -1,5 +1,5 @@
 import { JSX, Match, splitProps, Switch } from "solid-js";
-import { UserIcon } from "../icons/user";
+import { UserIcon } from "../icons/user-icon";
 import clsx from "clsx";
 
 export interface AvatarProps extends JSX.HTMLAttributes<HTMLDivElement> {

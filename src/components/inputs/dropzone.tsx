@@ -1,6 +1,6 @@
 import clsx from "clsx";
-import { createEffect, JSX, Match, Show, splitProps, Switch } from "solid-js";
-import { CloudArrowUpIcon } from "../icons/cloud-arrow-up";
+import { JSX, Match, Show, splitProps, Switch } from "solid-js";
+import { CloudArrowUpIcon } from "../icons/cloud-arrow-up-icon";
 import { VStack } from "../stacks/v-stack";
 
 export interface DropzoneProps
