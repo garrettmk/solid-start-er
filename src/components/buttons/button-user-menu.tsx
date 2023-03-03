@@ -52,7 +52,7 @@ export function ButtonUserMenu(props: ButtonUserMenuProps) {
           </MenuItem>
           <MenuItem href="/app/profile">Profile</MenuItem>
           <MenuItem href="/app/settings">Settings</MenuItem>
-          <MenuItem>Sign out</MenuItem>
+          <MenuItem onClick={auth.signOut}>Sign out</MenuItem>
         </Menu>
       </Panel>
     </>

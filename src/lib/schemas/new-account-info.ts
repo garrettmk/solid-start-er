@@ -11,6 +11,18 @@ export const newAccountInfoSchema = z
         "Names can include any Unicode letter, hyphen, or apostrophe"
       ),
 
+    casualName: z
+      .string()
+      .min(3, "Please enter at least 3 characters")
+      .max(30, "Please, no more than 30 characters")
+      .regex(
+        /^[a-zA-Z' \p{L}\-]+$/,
+        "Names can include any Unicode letter, hyphen, or apostrophe"
+      )
+      .optional(),
+
+    avatarUrl: z.string().optional(),
+
     email: z
       .string({ description: "Please enter your email address" })
       .email("Please enter a valid email address"),
@@ -28,7 +40,7 @@ export const newAccountInfoSchema = z
       ),
 
     confirmPassword: z.string(),
-    agreeToTerms: z.literal(true),
+    agreesToTerms: z.literal(true),
     wantsMarketing: z.boolean(),
   })
   .superRefine(({ confirmPassword, password }, ctx) => {

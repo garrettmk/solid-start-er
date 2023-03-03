@@ -24,7 +24,7 @@ export function AppPage() {
       <Button onClick={() => greet()}>Greet</Button>
       <pre>{greeting.result}</pre>
       <pre class="text-red-600">{greeting.error?.message}</pre>
-      <pre>Hello, {data()?.user.email}</pre>
+      <pre>Hello, {data()?.user?.email}</pre>
     </section>
   );
 }

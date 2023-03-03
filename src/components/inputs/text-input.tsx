@@ -25,7 +25,7 @@ export function TextInput(props: TextInputProps) {
     <div {...(props.container ?? {})}>
       <label
         for={inputId()}
-        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        class="block mb-2 text-sm font-medium text-slate-600 dark:text-slate-400"
       >
         {props.label}
       </label>
@@ -34,7 +34,7 @@ export function TextInput(props: TextInputProps) {
         type="text"
         ref={props.ref}
         class={clsx(
-          "w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500",
+          "w-full bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-700 dark:border-slate-600 dark:placeholder-slate-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500",
           props.class
         )}
         aria-describedby={errorId()}

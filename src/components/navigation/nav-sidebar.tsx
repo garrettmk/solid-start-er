@@ -1,11 +1,12 @@
 import clsx from "clsx";
 import { Show } from "solid-js";
+import { A } from "solid-start";
 import { useDarkMode } from "~/lib/contexts/dark-mode-context";
 import { ButtonUserMenu } from "../buttons/button-user-menu";
 
 const styles = {
   base: `
-    fixed top-0 left-0 h-screen p-3
+    fixed top-0 left-0 h-screen w-14 p-3
     border-r border-slate-200 dark:border-slate-700 
     bg-white dark:bg-slate-900 
     flex flex-col
@@ -46,9 +47,9 @@ export function NavSidebar() {
         </svg>
       </div>
 
-      <hr class="-my-[1px]" />
+      {/* <hr class="-my-[1px]" /> */}
 
-      <a class={styles.link} href="/">
+      <A class={styles.link + " mt-10"} href="/app">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -62,7 +63,7 @@ export function NavSidebar() {
             d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
           />
         </svg>
-      </a>
+      </A>
 
       <a class={styles.link} href="#">
         <svg

@@ -22,7 +22,7 @@ const styles = {
     rounded-lg
     font-medium
     focus:ring-4 focus:outline-none
-    flex justify-center items-baseline
+    flex justify-center items-center
   `,
 
   disabled: `

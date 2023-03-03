@@ -100,7 +100,7 @@ export function NewAccountInfoForm(props: NewAccountInfoFormProps) {
           )}
         </Field>
       </div>
-      <Field of={form} name="agreeToTerms">
+      <Field of={form} name="agreesToTerms">
         {(field) => (
           <Checkbox
             {...field.props}

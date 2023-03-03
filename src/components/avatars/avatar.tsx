@@ -10,7 +10,7 @@ export interface AvatarProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 const styles = {
-  base: "p-2 relative inline-block overflow-hidden bg-slate-300 dark:bg-slate-600 flex items-center justify-center text-slate-600 dark:text-slate-300",
+  base: "p-2 relative inline-block overflow-hidden bg-slate-300 dark:bg-slate-600 flex items-center justify-center text-slate-600 dark:text-slate-300 aspect-square",
 
   shape: {
     round: "rounded-full",
@@ -60,7 +60,10 @@ export function Avatar(props: AvatarProps) {
     >
       <Switch>
         <Match when={props.src}>
-          <img src={props.src} />
+          <img
+            class="min-w-[calc(100%+theme(space.4))] min-h-[calc(100%+theme(space.4))] object-cover"
+            src={props.src}
+          />
         </Match>
         <Match when={props.initials}>
           <span
