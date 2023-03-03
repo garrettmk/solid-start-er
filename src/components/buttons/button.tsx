@@ -9,7 +9,8 @@ export interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
     | "light"
     | "ghost"
     | "green"
-    | "red";
+    | "red"
+    | "none";
   size?: "xs" | "sm" | "md" | "lg" | "xl" | "none";
   description?: string;
   icon?: boolean;
@@ -66,6 +67,7 @@ const styles = {
 
   color: {
     disabled: {
+      none: "",
       default: `
         text-white
         bg-blue-400 dark:bg-blue-500
@@ -110,6 +112,8 @@ const styles = {
     `,
     },
     active: {
+      none: "",
+
       default: `
         text-white
         bg-blue-700 hover:bg-blue-800
