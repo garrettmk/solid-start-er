@@ -6,6 +6,7 @@ export interface VStackProps<E extends HTMLElement = HTMLDivElement>
   extends JSX.HTMLAttributes<E> {
   spacing?: "none" | "xs" | "sm" | "md" | "lg" | "xl";
   align?: "start" | "center" | "end" | "stretch";
+  justify?: "start" | "end" | "center" | "between" | "around" | "evenly";
   as?: keyof JSX.HTMLElementTags;
 }
 
@@ -14,11 +15,11 @@ const styles = {
 
   spacing: {
     none: "",
-    xs: "[&>:not(:last-child)]:mb-2",
-    sm: "[&>:not(:last-child)]:mb-4",
-    md: "[&>:not(:last-child)]:mb-6",
-    lg: "[&>:not(:last-child)]:mb-6",
-    xl: "[&>:not(:last-child)]:mb-8",
+    xs: "space-y-2",
+    sm: "space-y-4",
+    md: "space-y-6",
+    lg: "space-y-6",
+    xl: "space-y-8",
   },
 
   align: {
@@ -26,6 +27,15 @@ const styles = {
     center: "items-center",
     end: "items-end",
     stretch: "items-stretch",
+  },
+
+  justify: {
+    start: "justify-start",
+    end: "justify-end",
+    center: "justify-center",
+    between: "justify-between",
+    around: "justify-around",
+    evenly: "justify-evenly",
   },
 };
 
@@ -37,6 +47,7 @@ export function VStack<E extends HTMLElement = HTMLDivElement>(
     "class",
     "spacing",
     "align",
+    "justify",
   ]);
 
   return (
@@ -46,6 +57,7 @@ export function VStack<E extends HTMLElement = HTMLDivElement>(
         styles.base,
         styles.spacing[stackProps.spacing ?? "none"],
         styles.align[stackProps.align ?? "stretch"],
+        styles.justify[stackProps.justify ?? "start"],
         stackProps.class
       )}
       {...(elementProps as any)}
