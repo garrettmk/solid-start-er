@@ -26,7 +26,7 @@ export function Icon(props: IconProps) {
       viewBox="0 0 24 24"
       stroke-width="1.5"
       stroke="currentColor"
-      class={clsx(styles.size[props.size ?? "sm"])}
+      class={clsx(styles.size[props.size ?? "sm"], props.class)}
       {...svgProps}
     />
   );
