@@ -1,5 +1,5 @@
-import { JSX, splitProps, ValidComponent } from "solid-js";
 import clsx from "clsx";
+import { JSX, splitProps } from "solid-js";
 import { Dynamic } from "solid-js/web";
 
 export interface PanelProps<E extends HTMLElement = HTMLDivElement>

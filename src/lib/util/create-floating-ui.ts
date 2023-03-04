@@ -5,7 +5,13 @@ import {
   Placement,
 } from "@floating-ui/core";
 import { platform } from "@floating-ui/dom";
-import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
+import {
+  Accessor,
+  createEffect,
+  createSignal,
+  onCleanup,
+  onMount,
+} from "solid-js";
 import { createStore } from "solid-js/store";
 import { isServer } from "solid-js/web";
 
@@ -17,7 +23,9 @@ export type FloatingUIOptions = {
 export type FloatingUI = {
   isOpen: boolean;
   anchorRef: (el: HTMLElement) => void;
+  anchorEl: Accessor<HTMLElement | undefined>;
   floatingRef: (el: HTMLElement) => void;
+  floatingEl: Accessor<HTMLElement | undefined>;
   open: () => void;
   close: () => void;
   toggle: () => void;
@@ -30,7 +38,9 @@ export function createFloatingUI(options: FloatingUIOptions): FloatingUI {
   const [floatingUi, setState] = createStore<FloatingUI>({
     isOpen: false,
     anchorRef,
+    anchorEl,
     floatingRef,
+    floatingEl,
 
     open: () => {
       setState("isOpen", true);

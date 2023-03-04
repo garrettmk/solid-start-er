@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { splitProps } from "solid-js";
 import { useAuthContext } from "~/lib/contexts/auth-context";
 import { createFloatingUI } from "~/lib/util/create-floating-ui";
+import { useOnClickOutside } from "~/lib/util/use-click-outside";
 import { UserCircleIcon } from "../icons/user-circle-icon";
 import { Menu } from "../menus/menu";
 import { MenuItem } from "../menus/menu-item";
@@ -23,6 +24,8 @@ export function ButtonUserMenu(props: ButtonUserMenuProps) {
     menu.toggle();
   };
 
+  useOnClickOutside(menu.floatingEl, menu.close);
+
   return (
     <>
       <Button
@@ -40,7 +43,6 @@ export function ButtonUserMenu(props: ButtonUserMenuProps) {
       <Menu
         ref={menu.floatingRef}
         class={clsx(!menu.isOpen && "hidden")}
-        onClickOutside={menu.close}
         onClickItem={menu.close}
       >
         <MenuItem class="py-2">
