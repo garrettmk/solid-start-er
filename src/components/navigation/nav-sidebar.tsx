@@ -30,7 +30,7 @@ const styles = {
 export function NavSidebar() {
   return (
     <nav class={styles.base}>
-      <div class="text-blue-700 h-10 flex items-center">
+      <div class="text-blue-700 h-10 flex items-center justify-center">
         <AppIcon />
       </div>
 
