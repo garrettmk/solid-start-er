@@ -7,20 +7,25 @@ import { NavMenuHeader } from "~/components/navigation/nav-menu-header";
 import { NavMenuItem } from "~/components/navigation/nav-menu-item";
 import { PageHeader } from "~/components/page/page-header";
 
-export function TenantsLayout() {
+export function UsersLayout() {
   return (
     <>
       <ModuleSidebar>
         <PageHeader class="-mx-5 -my-3 mb-6">
-          <h1 class="text-lg text-slate-800 dark:text-slate-200">Tenants</h1>
+          <h1 class="text-lg text-slate-800 dark:text-slate-200">Users</h1>
         </PageHeader>
         <NavMenu>
-          <Button size="xs" class="w-full mb-6">
+          <Button size="xs" class="w-full">
             <BuildingStorefrontIcon size="xs" class="mr-2" />
-            New Tenant
+            New User
           </Button>
-          <NavMenuHeader>Manage</NavMenuHeader>
-          <NavMenuItem active>Tenants</NavMenuItem>
+
+          <NavMenuHeader class="mt-6">Manage</NavMenuHeader>
+          <NavMenuItem active>All Users</NavMenuItem>
+
+          <NavMenuHeader class="mt-6">Application Users</NavMenuHeader>
+          <NavMenuItem>Roles</NavMenuItem>
+          <NavMenuItem>Assignments</NavMenuItem>
         </NavMenu>
       </ModuleSidebar>
       <div class="ml-64">
@@ -30,4 +35,4 @@ export function TenantsLayout() {
   );
 }
 
-export default TenantsLayout;
+export default UsersLayout;
