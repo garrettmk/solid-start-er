@@ -5,9 +5,10 @@
     to view everyone's profile, but only edit their own profile. We also set up
     a trigger to automatically create a profile row when a user is registered.
 */
+DROP TABLE IF EXISTS public.user_profiles;
 
 CREATE TABLE public.user_profiles (
-    id UUID REFERENCES auth.users NOT NULL PRIMARY KEY,
+    id UUID REFERENCES auth.users(id) PRIMARY KEY,
     full_name TEXT NOT NULL,
     preferred_name TEXT NOT NULL,
     avatar_url TEXT,
@@ -16,7 +17,7 @@ CREATE TABLE public.user_profiles (
     last_sign_in_at TIMESTAMP WITH TIME ZONE,
     CONSTRAINT fullname_length CHECK (char_length(full_name) >= 3),
     CONSTRAINT preferred_name_length CHECK (char_length(preferred_name) >= 3),
-    CONSTRAINT initials_length CHECK (char_length(avatar_initials) > 0 AND char_length(avatar_initials) < 3)
+    CONSTRAINT initials_length CHECK (avatar_initials ~ '^[a-zA-Z]{2}$')
 );
 
 COMMENT ON TABLE public.user_profiles IS 'Public user information';
@@ -30,13 +31,13 @@ COMMENT ON TABLE public.user_profiles IS 'Public user information';
 */
 ALTER TABLE public.user_profiles enable ROW LEVEL SECURITY;
 
-CREATE OR REPLACE POLICY "User profiles are viewable by everyone." ON public.user_profiles FOR
+CREATE POLICY "User profiles are viewable by everyone." ON public.user_profiles FOR
     SELECT USING (TRUE);
 
-CREATE OR REPLACE POLICY "Users can insert their own profile." ON public.user_profiles FOR
+CREATE POLICY "Users can insert their own profile." ON public.user_profiles FOR
     INSERT WITH CHECK (auth.uid() = id);
 
-CREATE OR REPLACE POLICY "Users can update own profile." ON public.user_profiles FOR
+CREATE POLICY "Users can update own profile." ON public.user_profiles FOR
     UPDATE USING (auth.uid() = id);
 
 
@@ -60,7 +61,7 @@ AS $$
             NEW.raw_user_meta_data->>'fullName',
             coalesce(NEW.raw_user_meta_data->>'preferredName', split_part(NEW.raw_user_meta_data->>'fullName', ' ', 1)),
             NEW.raw_user_meta_data->>'avatarUrl',
-            coalesce(NEW.avatar_initials, public.get_initials(NEW.raw_user_meta_data->>'fullName')),
+            coalesce(NEW.raw_user_meta_data->>'avatarInitials', public.get_initials(NEW.raw_user_meta_data->>'fullName')),
             NEW.created_at
         );
         RETURN NEW;
@@ -78,10 +79,11 @@ AS $$
         UPDATE 
             public.user_profiles p 
         SET
-            email = NEW.email,
             full_name = coalesce(NEW.raw_user_meta_data->>'fullName', full_name),
             preferred_name = coalesce(NEW.raw_user_meta_data->>'preferredName', preferred_name),
-            avatar_url = coalesce(NEW.raw_user_meta_data->>'avatarUrl', avatar_url)
+            avatar_url = coalesce(NEW.raw_user_meta_data->>'avatarUrl', avatar_url),
+            avatar_initials = coalesce(NEW.raw_user_meta_data->>'avatarInitials', avatar_initials),
+            last_sign_in_at = NEW.last_sign_in_at
         WHERE
             p.id = NEW.id;
         RETURN NEW;
@@ -105,5 +107,5 @@ as $$
 $$ language PLPGSQL SECURITY DEFINER;
 
 create or replace trigger on_auth_user_deleted
-    after delete on auth.users
+    before delete on auth.users
     for each row execute procedure public.handle_user_deleted();
