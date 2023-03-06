@@ -45,6 +45,8 @@ export function createAuth(): Auth {
 
   if (!isServer)
     supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log("auth state changed", { event, session });
+
       if (event === "SIGNED_OUT" || event === "USER_DELETED") {
         const options: CookieSerializeOptions = {
           expires: new Date(0),

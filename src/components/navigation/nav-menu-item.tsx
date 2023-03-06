@@ -1,5 +1,7 @@
 import { JSX, splitProps } from "solid-js";
 import clsx from "clsx";
+import { A, useLocation } from "solid-start";
+import { Dynamic } from "solid-js/web";
 
 const styles = {
   base: `
@@ -23,31 +25,44 @@ const styles = {
 
 export interface NavMenuItemProps extends JSX.HTMLAttributes<HTMLLIElement> {
   href?: string;
+  exact?: boolean;
   active?: boolean;
 }
 
 export function NavMenuItem(props: NavMenuItemProps) {
+  const location = useLocation();
   const [itemProps, otherProps] = splitProps(props, [
     "class",
     "href",
+    "exact",
     "children",
     "active",
   ]);
+
+  const isActivePath = props.href
+    ? props.exact
+      ? location.pathname === props.href
+      : location.pathname.startsWith(props.href)
+    : false;
 
   return (
     <li
       class={clsx(
         styles.item,
         {
-          [styles.active]: itemProps.active,
+          [styles.active]: itemProps.active || isActivePath,
         },
         itemProps.class
       )}
       {...otherProps}
     >
-      <a class="block" href={itemProps.href}>
+      <Dynamic
+        component={props.href?.startsWith("/") ? A : "a"}
+        class="block"
+        href={itemProps.href}
+      >
         {itemProps.children}
-      </a>
+      </Dynamic>
     </li>
   );
 }

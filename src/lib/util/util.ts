@@ -1,5 +1,5 @@
 import { Session, User } from "@supabase/supabase-js";
-import { mapValues, shake } from "radash";
+import { mapValues, shake, camel, snake, mapKeys } from "radash";
 import { createStore } from "solid-js/store";
 import { supabaseServiceRole } from "../supabase/supabase";
 
@@ -98,4 +98,12 @@ export function stringifySupabaseSession(session: Session): string {
     session.provider_refresh_token,
     session.user.factors,
   ]);
+}
+
+export function camelizeObject<T = object>(obj: object): T {
+  return mapKeys(obj, (key) => camel(key)) as T;
+}
+
+export function snakeifyObject<T = object>(obj: object): T {
+  return mapKeys(obj, (key) => snake(key)) as T;
 }

@@ -21,11 +21,13 @@ export function UsersLayout() {
           </Button>
 
           <NavMenuHeader class="mt-6">Manage</NavMenuHeader>
-          <NavMenuItem active>All Users</NavMenuItem>
+          <NavMenuItem href="/app/users" exact>
+            All Users
+          </NavMenuItem>
 
           <NavMenuHeader class="mt-6">Application Users</NavMenuHeader>
-          <NavMenuItem>Roles</NavMenuItem>
-          <NavMenuItem>Assignments</NavMenuItem>
+          <NavMenuItem href="/app/users/roles">Roles</NavMenuItem>
+          <NavMenuItem href="/app/users/assignments">Assignments</NavMenuItem>
         </NavMenu>
       </ModuleSidebar>
       <div class="ml-64">

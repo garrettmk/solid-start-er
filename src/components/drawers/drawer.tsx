@@ -11,7 +11,7 @@ export interface DrawerProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 const styles = {
-  base: "fixed z-40 p-4 transition-transform bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 dark:text-slate-100",
+  base: "fixed z-40 transition-transform bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 dark:text-slate-100",
 
   placement: {
     left: "top-0 left-0 h-screen overflow-y-auto w-80 border-r ",
@@ -32,6 +32,7 @@ const styles = {
 
 export function Drawer(props: DrawerProps) {
   const [, elementProps] = splitProps(props, [
+    "class",
     "isOpen",
     "children",
     "backdrop",

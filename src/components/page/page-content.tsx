@@ -8,6 +8,9 @@ export function PageContent(props: PageContentProps) {
 
   return (
     // @ts-ignore
-    <main class={clsx("p-12", props.class)} {...divProps} />
+    <main
+      class={clsx("p-12 text-slate-800 dark:text-slate-200", props.class)}
+      {...divProps}
+    />
   );
 }

@@ -5,18 +5,23 @@ import {
   getCoreRowModel,
 } from "@tanstack/solid-table";
 import clsx from "clsx";
-import { For, JSX, Show, splitProps } from "solid-js";
+import { Accessor, For, JSX, Show, splitProps } from "solid-js";
 
-export interface TableProps extends JSX.HTMLAttributes<HTMLTableElement> {
-  data: any[];
-  columns: ColumnDef<any>[];
+export interface TableProps<T = any, V = T>
+  extends JSX.HTMLAttributes<HTMLTableElement> {
+  data?: T[] | Accessor<T[]>;
+  columns?: ColumnDef<T, V>[];
 }
 
 export function Table(props: TableProps) {
   const [, tableProps] = splitProps(props, ["class", "columns", "data"]);
 
   const table = createSolidTable({
-    data: props.data ?? [],
+    get data() {
+      if (typeof props.data === "function") return props.data() ?? [];
+
+      return props.data ?? [];
+    },
     columns: props.columns ?? [],
     getCoreRowModel: getCoreRowModel(),
   });
@@ -49,7 +54,7 @@ export function Table(props: TableProps) {
           )}
         </For>
       </thead>
-      <tbody>
+      <tbody class="[&_td]:text-slate-700 [&_td]:dark:text-slate-200">
         <For each={table.getRowModel().rows}>
           {(row) => (
             <tr class="bg-white border-b last:border-0 dark:bg-slate-800 dark:border-slate-700">
