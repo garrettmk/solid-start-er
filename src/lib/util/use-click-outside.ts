@@ -2,15 +2,23 @@ import { Accessor, onCleanup, onMount } from "solid-js";
 import { isServer } from "solid-js/web";
 
 export function useOnClickOutside(
-  ref: Accessor<HTMLElement | undefined>,
-  handler: (event: MouseEvent) => void
+  ...args: [
+    ...refs: Accessor<HTMLElement | undefined>[],
+    handler: (event: MouseEvent) => void
+  ]
 ) {
   if (!isServer) {
-    const onClick = (event: Event) => {
-      const isNotRefElement = !(event.target === ref());
-      const isOutsideRefElement = !ref()?.contains(event.target as Node);
+    const [handler, ...refs] = args.reverse() as [
+      handler: (event: MouseEvent) => void,
+      ...refs: Accessor<HTMLElement | undefined>[]
+    ];
 
-      if (isNotRefElement && isOutsideRefElement) handler(event as MouseEvent);
+    const onClick = (event: Event) => {
+      const isInsideRefElement = refs.some((ref) =>
+        ref()?.contains(event.target as Node)
+      );
+
+      if (!isInsideRefElement) handler(event as MouseEvent);
     };
 
     onMount(() => document.addEventListener("click", onClick));
