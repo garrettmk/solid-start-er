@@ -1,6 +1,6 @@
 import { Icon, IconProps } from "./icon";
 
-export function BuildingStorefrontIcon(props: IconProps) {
+export function BeakerIcon(props: IconProps) {
   return (
     <Icon {...props}>
       <path
