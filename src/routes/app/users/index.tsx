@@ -6,7 +6,7 @@ import { createServerData$ } from "solid-start/server";
 import { ProfileAvatar } from "~/components/avatars/profile-avatar";
 import { Button } from "~/components/buttons/button";
 import { ButtonMenu } from "~/components/buttons/button-menu";
-import { EllipsisHorizontalIcon } from "~/components/icons/ellipsis-horizontal-icon copy";
+import { EllipsisHorizontalIcon } from "~/components/icons/ellipsis-horizontal-icon";
 import { SearchInput } from "~/components/inputs/search-input";
 import { MenuItem } from "~/components/menus/menu-item";
 import { PageContent } from "~/components/page/page-content";
