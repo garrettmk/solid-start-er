@@ -13,17 +13,17 @@ export default createHandler(
     async (event) => {
       const url = new URL(event.request.url);
       const cookies = parseCookieString(
-        event.request.headers.get("cookie") ?? ""
+        event.request.headers.get("Cookie") ?? ""
       );
 
       // Redirect unauthenticated users to the sign in page
-      if (url.pathname.startsWith("/app") && !cookies.has("session"))
-        return redirect("/sign-in");
+      // if (url.pathname.startsWith("/app") && !cookies.has("session"))
+      //   return redirect("/sign-in");
 
       // Create authenticated context
-      const supabase = await createSupabaseFrom(event.request, new Headers());
-      const { data, error } = await supabase.auth.getSession();
-      const user = data.session?.user;
+      const supabase = await createSupabaseFrom(event.request);
+      const { data, error } = await supabase.auth.getUser();
+      const user = data.user ?? undefined;
 
       // Redirect to sign-in if there is an error
       if (error) console.log(error);

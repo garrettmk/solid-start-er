@@ -49,12 +49,14 @@ export function createAuth(): Auth {
 
       if (event === "SIGNED_OUT" || event === "USER_DELETED") {
         const options: CookieSerializeOptions = {
-          expires: new Date(0),
+          maxAge: 0,
           sameSite: "lax",
           secure: true,
+          path: "/",
         };
 
-        document.cookie = serializeCookie("session", "", options);
+        document.cookie = serializeCookie("access_token", "", options);
+        document.cookie = serializeCookie("refresh_token", "", options);
 
         setState((c) => ({
           ...c,
@@ -64,16 +66,22 @@ export function createAuth(): Auth {
         }));
       } else if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
         const { access_token, refresh_token } = session!;
+
         const options: CookieSerializeOptions = {
           maxAge: 100 * 365 * 24 * 60 * 60, // 100 years, never expires
           sameSite: "lax",
           secure: true,
-          encode: identity,
+          path: "/",
         };
 
         document.cookie = serializeCookie(
-          "session",
-          stringifySupabaseSession(session!),
+          "access_token",
+          access_token,
+          options
+        );
+        document.cookie = serializeCookie(
+          "refresh_token",
+          refresh_token,
           options
         );
 

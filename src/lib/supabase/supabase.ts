@@ -1,7 +1,3 @@
-import {
-  createServerSupabaseClient,
-  serializeCookie,
-} from "@supabase/auth-helpers-shared";
 import { createClient } from "@supabase/supabase-js";
 import { parseCookieString } from "../util/util";
 
@@ -19,25 +15,37 @@ export const createSupabase = (key: "anon" | "service_role" = "anon") =>
       : VITE_SUPABASE_ANON_KEY
   );
 
-export const createSupabaseFrom = async (req: Request, headers: Headers) => {
-  const cookieString = req.headers.get("cookie") ?? "";
+export const createSupabaseFrom = async (req: Request) => {
+  const cookieString = req.headers.get("Cookie") ?? "";
   const cookies = parseCookieString(cookieString);
 
-  return createServerSupabaseClient({
-    supabaseUrl: import.meta.env.VITE_SUPABASE_URL,
-    supabaseKey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-    cookieOptions: { name: "session" },
-    getCookie: (name) => cookies.get(name),
-    setCookie: (name, value, options) => {
-      const session = serializeCookie(name, value, {
-        ...options,
-        httpOnly: false,
-      });
+  const client = createClient(
+    import.meta.env.VITE_SUPABASE_URL,
+    import.meta.env.VITE_SUPABASE_ANON_KEY,
+    {
+      auth: {
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+        persistSession: false,
+      },
+    }
+  );
 
-      headers.append(name, session);
-    },
-    getRequestHeader: (key) => req.headers.get(key) ?? undefined,
-  });
+  if (cookies.has("access_token") && cookies.has("refresh_token")) {
+    const access_token = cookies.get("access_token")!;
+    const refresh_token = cookies.get("refresh_token")!;
+
+    const response = await client.auth.setSession({
+      access_token,
+      refresh_token,
+    });
+
+    if (response.error) console.log(response.error);
+  } else {
+    console.log("No session");
+  }
+
+  return client;
 };
 
 export const supabaseServiceRole = createSupabase("service_role");
