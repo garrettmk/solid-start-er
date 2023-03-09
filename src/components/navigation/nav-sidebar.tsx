@@ -2,6 +2,7 @@ import { A } from "solid-start";
 import { ButtonToggleTheme } from "../buttons/button-toggle-theme";
 import { ButtonUserMenu } from "../buttons/button-user-menu";
 import { AppIcon } from "../icons/app-icon";
+import { BeakerIcon } from "../icons/beaker-icon";
 import { BuildingStorefrontIcon } from "../icons/building-storefront-icon";
 import { Cog6ToothIcon } from "../icons/cog-6-tooth-icon";
 import { HomeIcon } from "../icons/home-icon";
@@ -49,6 +50,10 @@ export function NavSidebar() {
       </A>
 
       <hr />
+
+      <A class={styles.link} href="/app/components">
+        <BeakerIcon />
+      </A>
 
       <A class={styles.link} href="/app/settings">
         <Cog6ToothIcon />
