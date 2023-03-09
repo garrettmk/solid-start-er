@@ -30,7 +30,7 @@ export default function Root() {
         <LayoutContext.Provider value={layout}>
           <Html lang="en" class={darkMode.isDark ? "dark" : ""}>
             <Head>
-              <Title>SolidStart - Bare</Title>
+              <Title>solid-start-er - Bare</Title>
               <Meta charset="utf-8" />
               <Meta
                 name="viewport"
