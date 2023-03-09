@@ -7,7 +7,7 @@ export function Code(props: JSX.HTMLAttributes<HTMLSpanElement>) {
   return (
     <span
       class={clsx(
-        "font-mono p-1 bg-slate-200 dark:bg-slate-700 rounded-sm",
+        "font-mono p-1 bg-slate-200 dark:bg-slate-700 rounded-md",
         props.class
       )}
       {...spanProps}

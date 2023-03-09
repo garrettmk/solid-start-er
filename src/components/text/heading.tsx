@@ -20,7 +20,7 @@ export function Heading(props: HeadingProps) {
   return (
     <Dynamic
       component={component}
-      class={clsx("text-slate-600 dark:text-slate-300", props.class)}
+      class={clsx("text-slate-600 dark:text-slate-400", props.class)}
       {...hProps}
     />
   );
