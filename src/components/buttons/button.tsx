@@ -32,7 +32,7 @@ const styles = {
 
   size: {
     xs: `
-    px-3 py-2
+    px-2.5 py-1
     text-xs
     `,
     sm: `
@@ -41,7 +41,7 @@ const styles = {
     `,
     md: `
       px-5 py-2.5
-      text-xs
+      text-sm
     `,
     lg: `
       px-5 py-3
@@ -74,7 +74,7 @@ const styles = {
     `,
 
       alternative: `
-        border border-gray-200 dark:border-gray-600
+        border border-slate-200 dark:border-gray-600
         bg-white
         dark:bg-gray-800
         text-gray-900
@@ -122,35 +122,35 @@ const styles = {
       `,
 
       alternative: `
-        border border-gray-200 dark:border-gray-600
-        bg-white hover:bg-gray-100
-        dark:bg-gray-800 dark:hover:bg-gray-700
-        text-gray-900 hover:text-blue-700
-        dark:text-gray-400 dark:hover:text-white
-        focus:z-10 focus:ring-gray-200 dark:focus:ring-gray-700
+        border border-slate-200 dark:border-slate-600
+        bg-white hover:bg-slate-100
+        dark:bg-slate-800 dark:hover:bg-slate-700
+        text-slate-900 hover:text-blue-700
+        dark:text-slate-400 dark:hover:text-white
+        focus:z-10 focus:ring-slate-200 dark:focus:ring-slate-700
       `,
 
       dark: `
         text-white  
-        bg-gray-800 hover:bg-gray-900
-        dark:bg-gray-800 dark:hover:bg-gray-700
-        focus:ring-gray-300
-        dark:focus:ring-gray-700
-        dark:border-gray-700
+        bg-slate-800 hover:bg-slate-900
+        dark:bg-slate-800 dark:hover:bg-slate-700
+        focus:ring-slate-300
+        dark:focus:ring-slate-700
+        dark:border-slate-700
       `,
 
       light: `
-        border border-gray-300 dark:border-gray-600 dark:hover:border-gray-600 
-        text-gray-900 dark:text-white
-        bg-white hover:bg-gray-100 
-        dark:bg-gray-800 dark:hover:bg-gray-700
-        focus:ring-gray-200 dark:focus:ring-gray-700
+        border border-slate-300 dark:border-slate-600 dark:hover:border-slate-600 
+        text-slate-900 dark:text-white
+        bg-white hover:bg-slate-100 
+        dark:bg-slate-800 dark:hover:bg-slate-700
+        focus:ring-slate-200 dark:focus:ring-slate-700
       `,
 
       ghost: `
-        text-gray-500 dark:text-gray-400 
-        hover:bg-gray-100 dark:hover:bg-gray-700 
-        focus:ring-gray-200 dark:focus:ring-gray-700
+        text-slate-500 dark:text-slate-400 
+        hover:bg-slate-100 dark:hover:bg-slate-700 
+        focus:ring-slate-200 dark:focus:ring-slate-700
       `,
 
       green: `
