@@ -17,7 +17,7 @@ export function Panel<E extends HTMLElement = HTMLDivElement>(
       component={props.as ?? "div"}
       ref={props.ref}
       class={clsx(
-        "text-base rounded-lg overflow-hidden bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-500",
+        "text-base rounded-lg overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700",
         props.class
       )}
       {...elementProps}
