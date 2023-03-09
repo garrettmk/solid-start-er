@@ -26,8 +26,12 @@ export function UsersLayout() {
           </NavMenuItem>
 
           <NavMenuHeader class="mt-6">Application Users</NavMenuHeader>
-          <NavMenuItem href="/app/users/roles">Roles</NavMenuItem>
-          <NavMenuItem href="/app/users/assignments">Assignments</NavMenuItem>
+          <NavMenuItem href="/app/users/roles" exact>
+            Roles
+          </NavMenuItem>
+          <NavMenuItem href="/app/users/roles/assignments">
+            Assignments
+          </NavMenuItem>
         </NavMenu>
       </ModuleSidebar>
       <div class="ml-64">

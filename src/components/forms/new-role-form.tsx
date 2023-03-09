@@ -1,14 +1,14 @@
 import { createForm, Field, Form, zodForm } from "@modular-forms/solid";
 import clsx from "clsx";
 import { JSX, splitProps } from "solid-js";
-import { NewRoleData, newRoleSchema } from "~/lib/schemas/new-role";
+import { RoleData, roleSchema } from "~/lib/schemas/role-schema";
 import { noop } from "~/lib/util/util";
 import { TextInput } from "../inputs/text-input";
 
 export interface NewRoleFormProps
   extends Omit<JSX.HTMLAttributes<HTMLFormElement>, "onSubmit"> {
-  initialValues?: Partial<NewRoleData>;
-  onSubmit?: (data: NewRoleData) => void;
+  initialValues?: Partial<RoleData>;
+  onSubmit?: (data: RoleData) => void;
 }
 
 export function NewRoleForm(props: NewRoleFormProps) {
@@ -19,9 +19,9 @@ export function NewRoleForm(props: NewRoleFormProps) {
     "children",
   ]);
 
-  const form = createForm<NewRoleData>({
+  const form = createForm<RoleData>({
     initialValues: props.initialValues,
-    validate: zodForm(newRoleSchema),
+    validate: zodForm(roleSchema),
   });
 
   return (

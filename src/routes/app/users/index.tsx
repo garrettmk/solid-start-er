@@ -4,13 +4,19 @@ import { Accessor } from "solid-js";
 import { useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
 import { ProfileAvatar } from "~/components/avatars/profile-avatar";
+import { Button } from "~/components/buttons/button";
+import { ButtonMenu } from "~/components/buttons/button-menu";
+import { EllipsisHorizontalIcon } from "~/components/icons/ellipsis-horizontal-icon copy";
 import { SearchInput } from "~/components/inputs/search-input";
+import { MenuItem } from "~/components/menus/menu-item";
 import { PageContent } from "~/components/page/page-content";
 import { PageHeader } from "~/components/page/page-header";
 import { HStack } from "~/components/stacks/h-stack";
 import { VStack } from "~/components/stacks/v-stack";
 import { DateAndTimeCell } from "~/components/tables/date-and-time-cell";
 import { Table } from "~/components/tables/table";
+import { TableContainer } from "~/components/tables/table-container";
+import { Heading } from "~/components/text/heading";
 import { UserProfileData } from "~/lib/schemas/user-profile-schema";
 import { getAuthenticatedServerContext } from "~/lib/util/get-page-context";
 import { camelizeObject } from "~/lib/util/util";
@@ -34,8 +40,10 @@ const userColumns: ColumnDef<UserProfileData>[] = [
       <HStack spacing="sm">
         <ProfileAvatar profile={info.row.original} />
         <VStack>
-          <span class="font-medium">{info.row.original.fullName}</span>
-          <span class="text-xs">"{info.row.original.preferredName}"</span>
+          <span class="text-base font-medium text-slate-700 dark:text-slate-300">
+            {info.row.original.fullName}
+          </span>
+          <span class="text-sm">"{info.row.original.preferredName}"</span>
         </VStack>
       </HStack>
     ),
@@ -50,6 +58,31 @@ const userColumns: ColumnDef<UserProfileData>[] = [
     header: "Last signed in",
     cell: (info) => <DateAndTimeCell value={info.getValue<string>()} />,
   },
+  {
+    id: "actions",
+    header: () => (
+      <ButtonMenu
+        placement="left-end"
+        size="xs"
+        color="ghost"
+        content={<EllipsisHorizontalIcon />}
+      >
+        <MenuItem href="#">Edit...</MenuItem>
+        <MenuItem href="#">Assign Roles...</MenuItem>
+      </ButtonMenu>
+    ),
+    cell: () => (
+      <ButtonMenu
+        placement="left-end"
+        size="xs"
+        color="ghost"
+        content={<EllipsisHorizontalIcon />}
+      >
+        <MenuItem href="#">Edit...</MenuItem>
+        <MenuItem href="#">Assign Roles...</MenuItem>
+      </ButtonMenu>
+    ),
+  },
 ];
 
 export function UsersPage() {
@@ -62,9 +95,26 @@ export function UsersPage() {
         <SearchInput placeholder="Search users..." class="w-64" />
       </PageHeader>
       <PageContent>
-        <div class="overflow-hidden rounded-t-lg border border-slate-200 dark:border-slate-700">
-          <Table columns={userColumns} data={data()} class="-mb-[2px]" />
-        </div>
+        <TableContainer>
+          <div class="bg-white dark:bg-slate-800 p-6">
+            <HStack justify="between" align="start">
+              <Heading level="1" class="text-xl font-medium mb-6">
+                All Users
+              </Heading>
+              <Button>Send Invite</Button>
+            </HStack>
+            <p class="max-w-md">
+              View all users of your application. Invite new users by clicking
+              on the button to the right, or enable, disable, or assign roles to
+              existing users with the Actions menu.
+            </p>
+          </div>
+          <Table
+            columns={userColumns}
+            data={data()}
+            class="-mb-[2px] [&_th:last-child]:w-[0.1%]"
+          />
+        </TableContainer>
       </PageContent>
     </>
   );

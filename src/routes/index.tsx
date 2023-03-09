@@ -1,9 +1,5 @@
 import "flowbite";
-import { createSignal } from "solid-js";
-import { createRouteData, useRouteData } from "solid-start";
 import { Button } from "~/components/buttons/button";
-import { HStack } from "~/components/stacks/h-stack";
-import { supabase } from "~/lib/supabase/supabase";
 
 export default function Home() {
   return (

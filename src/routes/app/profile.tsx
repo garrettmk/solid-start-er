@@ -1,5 +1,5 @@
 import { User } from "@supabase/supabase-js";
-import { Resource, Show } from "solid-js";
+import { createEffect, Resource, Show } from "solid-js";
 import { createRouteAction, useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
 import { Avatar } from "~/components/avatars/avatar";

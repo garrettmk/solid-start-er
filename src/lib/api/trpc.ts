@@ -1,5 +1,6 @@
 import { AuthUser, SupabaseClient } from "@supabase/supabase-js";
 import { initTRPC, TRPCError } from "@trpc/server";
+import { ZodError } from "zod";
 import { delay } from "../util/util";
 
 export type ApiContext = {
@@ -7,10 +8,24 @@ export type ApiContext = {
   user?: AuthUser;
 };
 
-const t = initTRPC.context<ApiContext>().create();
+const t = initTRPC.context<ApiContext>().create({
+  errorFormatter: ({ shape, error }) => {
+    console.log(error);
+
+    return {
+      ...shape,
+      data: {
+        ...shape.data,
+        zodError:
+          error.code === "BAD_REQUEST" && error.cause instanceof ZodError
+            ? error.cause.flatten()
+            : null,
+      },
+    };
+  },
+});
 
 const isAuthed = t.middleware(({ next, ctx }) => {
-  console.log("isAuthed");
   if (!ctx.user) throw new TRPCError({ code: "UNAUTHORIZED" });
 
   return next({ ctx });

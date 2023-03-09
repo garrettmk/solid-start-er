@@ -15,8 +15,10 @@ export function DateAndTimeCell(props: DateAndTimeCellProps) {
       class={clsx("inline-flex flex-col items-center", props.class)}
       {...divProps}
     >
-      <span class="block font-medium">{formatDate(props.value)}</span>
-      <span class="block text-xs">{formatTime(props.value)}</span>
+      <span class="block font-medium text-slate-700 dark:text-slate-300">
+        {formatDate(props.value)}
+      </span>
+      <span class="block text-sm">{formatTime(props.value)}</span>
     </div>
   );
 }
