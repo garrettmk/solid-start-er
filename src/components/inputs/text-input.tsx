@@ -1,4 +1,4 @@
-import { JSX, splitProps } from "solid-js";
+import { JSX, Show, splitProps } from "solid-js";
 import clsx from "clsx";
 
 export interface TextInputProps
@@ -6,7 +6,37 @@ export interface TextInputProps
   container?: JSX.HTMLAttributes<HTMLDivElement>;
   label?: string;
   error?: string;
+  size?: "sm" | "md" | "lg";
 }
+
+const styles = {
+  label: {
+    base: "block font-medium text-slate-600 dark:text-slate-400",
+    size: {
+      sm: "text-xs",
+      md: "text-sm",
+      lg: "text-base",
+    },
+  },
+
+  input: {
+    base: "w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-slate-700 dark:border-slate-600 dark:placeholder-slate-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500",
+    size: {
+      sm: "text-sm p-1.5 pb-1",
+      md: "text-md p-2.5 pb-2",
+      lg: "text-lg p-3 pb-2.5",
+    },
+  },
+
+  error: {
+    base: "mt-2 text-red-600 dark:text-red-400",
+    size: {
+      sm: "text-xs",
+      md: "text-sm",
+      lg: "text-base",
+    },
+  },
+};
 
 export function TextInput(props: TextInputProps) {
   const [, inputProps] = splitProps(props, [
@@ -25,7 +55,7 @@ export function TextInput(props: TextInputProps) {
     <div {...(props.container ?? {})}>
       <label
         for={inputId()}
-        class="block mb-2 text-sm font-medium text-slate-600 dark:text-slate-400"
+        class={clsx(styles.label.base, styles.label.size[props.size ?? "md"])}
       >
         {props.label}
       </label>
@@ -34,15 +64,21 @@ export function TextInput(props: TextInputProps) {
         type="text"
         ref={props.ref}
         class={clsx(
-          "w-full bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-slate-700 dark:border-slate-600 dark:placeholder-slate-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500",
+          styles.input.base,
+          styles.input.size[props.size ?? "md"],
           props.class
         )}
         aria-describedby={errorId()}
         {...inputProps}
       />
-      <p id={errorId()} class="mt-2 text-xs text-red-600 dark:text-red-400">
-        {props.error}
-      </p>
+      <Show when={props.error}>
+        <p
+          id={errorId()}
+          class={clsx(styles.error.base, styles.error.size[props.size ?? "md"])}
+        >
+          {props.error}
+        </p>
+      </Show>
     </div>
   );
 }
