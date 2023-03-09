@@ -20,8 +20,8 @@ const styles = {
     xs: "space-x-2",
     sm: "space-x-4",
     md: "space-x-6",
-    lg: "space-x-6",
-    xl: "space-x-8",
+    lg: "space-x-8",
+    xl: "space-x-12",
     overlap: "-space-x-4",
   },
 
