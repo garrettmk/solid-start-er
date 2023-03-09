@@ -39,18 +39,19 @@ export function NavMenuItem(props: NavMenuItemProps) {
     "active",
   ]);
 
-  const isActivePath = props.href
-    ? props.exact
-      ? location.pathname === props.href
-      : location.pathname.startsWith(props.href)
-    : false;
+  const isActivePath = () =>
+    props.href
+      ? props.exact
+        ? location.pathname === props.href
+        : location.pathname.startsWith(props.href)
+      : false;
 
   return (
     <li
       class={clsx(
         styles.item,
         {
-          [styles.active]: itemProps.active || isActivePath,
+          [styles.active]: itemProps.active || isActivePath(),
         },
         itemProps.class
       )}
