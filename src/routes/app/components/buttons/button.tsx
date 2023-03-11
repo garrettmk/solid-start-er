@@ -7,6 +7,7 @@ import { PageHeader } from "~/components/page/page-header";
 import { Panel } from "~/components/panels/panel";
 import { Heading } from "~/components/text/heading";
 import { For } from "solid-js";
+import { UserIcon } from "~/components/icons/user-icon";
 
 export default function ButtonPage() {
   const sizes: ButtonProps["size"][] = ["xs", "sm", "md", "lg", "xl"];
@@ -54,13 +55,43 @@ export default function ButtonPage() {
                     level="4"
                     class="text-base font-medium justify-self-end"
                   >
-                    {color ?? "(default)"}
+                    {color ?? "default"}
                   </Heading>
                   <For each={sizes}>
                     {(size) => (
                       <>
                         <Button size={size} color={color}>
                           Button
+                        </Button>
+                      </>
+                    )}
+                  </For>
+                  <Heading
+                    level="4"
+                    class="text-base font-medium justify-self-end"
+                  >
+                    {(color ?? "default") + " (disabled)"}
+                  </Heading>
+                  <For each={sizes}>
+                    {(size) => (
+                      <>
+                        <Button size={size} color={color} disabled>
+                          Button
+                        </Button>
+                      </>
+                    )}
+                  </For>
+                  <Heading
+                    level="4"
+                    class="text-base font-medium justify-self-end"
+                  >
+                    {(color ?? "default") + " (icon)"}
+                  </Heading>
+                  <For each={sizes}>
+                    {(size) => (
+                      <>
+                        <Button size={size} color={color} icon>
+                          <UserIcon size={size} />
                         </Button>
                       </>
                     )}
