@@ -5,6 +5,7 @@ export interface CheckboxProps
   extends JSX.InputHTMLAttributes<HTMLInputElement> {
   container?: JSX.HTMLAttributes<HTMLDivElement>;
   children?: JSX.Element;
+  indeterminate?: boolean;
 }
 
 export function Checkbox(props: CheckboxProps) {
