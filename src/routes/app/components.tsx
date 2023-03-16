@@ -36,6 +36,9 @@ export function ComponentsLayout() {
           <NavMenuItem href="/app/components/buttons/button-menu">
             ButtonMenu
           </NavMenuItem>
+
+          <NavMenuHeader>Tabs</NavMenuHeader>
+          <NavMenuItem href="/app/components/tabs/tabs">Tabs</NavMenuItem>
         </NavMenu>
       </ModuleSidebar>
       <div class="ml-64">
