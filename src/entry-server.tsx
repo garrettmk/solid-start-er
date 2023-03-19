@@ -1,10 +1,9 @@
-import { redirect } from "solid-start";
+import { apiRouter } from "./lib/trpc/router";
 import {
   createHandler,
   renderAsync,
   StartServer,
 } from "solid-start/entry-server";
-import { appRouter } from "./lib/api/router";
 import { createSupabaseFrom } from "./lib/supabase/supabase";
 import { parseCookieString } from "./lib/util/util";
 
@@ -33,7 +32,7 @@ export default createHandler(
 
       // We don't need to create the caller if this is an API request
       if (!url.pathname.startsWith("/api"))
-        event.locals.api = appRouter.createCaller({ supabase, user });
+        event.locals.api = apiRouter.createCaller({ supabase, user });
 
       return forward(event);
     },

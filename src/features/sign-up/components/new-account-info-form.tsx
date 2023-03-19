@@ -9,10 +9,10 @@ import { JSX, splitProps } from "solid-js";
 import {
   NewAccountInfoData,
   newAccountInfoSchema,
-} from "~/lib/schemas/new-account-info";
-import { noop } from "~/lib/util/util";
-import { Checkbox } from "../inputs/check-box";
-import { TextInput } from "../inputs/text-input";
+} from "@/features/sign-up/schema/new-account-info";
+import { noop } from "@/lib/util/util";
+import { Checkbox } from "../../../components/inputs/check-box";
+import { TextInput } from "../../../components/inputs/text-input";
 
 // For the moment, module-forms doesn't catch the superRefine error in the
 // zod schema.

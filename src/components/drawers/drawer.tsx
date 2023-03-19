@@ -1,6 +1,6 @@
 import { JSX, Show, splitProps } from "solid-js";
 import clsx from "clsx";
-import { onClickOutside } from "~/lib/directives/click-outside";
+import { onClickOutside } from "@/lib/directives/click-outside";
 onClickOutside;
 
 export interface DrawerProps extends JSX.HTMLAttributes<HTMLDivElement> {

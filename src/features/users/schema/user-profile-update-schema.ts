@@ -8,7 +8,7 @@ export const IMAGE_TYPES = [
   "image/webp",
 ] as const;
 
-export const updateProfileSchemaBase = z.object({
+export const userProfileUpdateSchemaBase = z.object({
   fullName: z
     .string()
     .min(3, "Please enter at least 3 characters")
@@ -29,22 +29,24 @@ export const updateProfileSchemaBase = z.object({
     )
     .optional(),
 
-  avatarImage: z.object({
-    name: z.string(),
-    size: z.number().max(MAX_FILE_SIZE, "The maximum file size is 1MB"),
-    type: z.enum(IMAGE_TYPES, {
-      description: "Allowed file types are JPEG/JPG, PNG or WEBP",
-    }),
-  }),
+  avatarImage: z
+    .object({
+      name: z.string(),
+      size: z.number().max(MAX_FILE_SIZE, "The maximum file size is 1MB"),
+      type: z.enum(IMAGE_TYPES, {
+        description: "Allowed file types are JPEG/JPG, PNG or WEBP",
+      }),
+    })
+    .optional(),
 
   avatarImageData: z.string().optional(),
 
   wantsMarketing: z.boolean().optional(),
 });
 
-export const updateProfileSchema = updateProfileSchemaBase.refine(
+export const userProfileUpdateSchema = userProfileUpdateSchemaBase.refine(
   ({ avatarImage, avatarImageData }) =>
     avatarImage || avatarImageData ? avatarImage && avatarImageData : true
 );
 
-export type UpdateProfileData = z.input<typeof updateProfileSchema>;
+export type UserProfileUpdate = z.input<typeof userProfileUpdateSchema>;

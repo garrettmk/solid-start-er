@@ -1,5 +1,5 @@
 import "flowbite";
-import { Button } from "~/components/buttons/button";
+import { Button } from "@/components/buttons/button";
 
 export default function Home() {
   return (

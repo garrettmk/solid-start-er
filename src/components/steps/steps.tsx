@@ -1,8 +1,8 @@
 import { JSX, Match, splitProps, Switch } from "solid-js";
 import { HStack } from "../stacks/h-stack";
 import clsx from "clsx";
-import { CheckCircleSolidIcon } from "~/components/icons/check-circle-solid-icon";
-import { useIndexContext } from "~/lib/contexts/index-context";
+import { CheckCircleSolidIcon } from "@/components/icons/check-circle-solid-icon";
+import { useIndexContext } from "@/lib/contexts/index-context";
 
 export interface StepsProps extends JSX.HTMLAttributes<HTMLUListElement> {}
 
@@ -44,7 +44,10 @@ export function Step(props: StepProps) {
       <li
         class={clsx(
           "flex flex-col items-center font-medium",
-          { "text-white": isCurrent(), "text-blue-500": isComplete() },
+          {
+            "text-slate-800 dark:text-white": isCurrent(),
+            "text-blue-500": isComplete(),
+          },
           stepProps.class
         )}
         {...itemProps}

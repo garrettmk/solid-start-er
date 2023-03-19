@@ -1,5 +1,5 @@
 import { JSX, Show, splitProps } from "solid-js";
-import { useIndexContext } from "~/lib/contexts/index-context";
+import { useIndexContext } from "@/lib/contexts/index-context";
 import clsx from "clsx";
 
 export interface TabContentProps extends JSX.HTMLAttributes<HTMLDivElement> {

@@ -1,6 +1,6 @@
 import { JSX, splitProps } from "solid-js";
 import { Dynamic } from "solid-js/web";
-import { useTabsContext } from "~/lib/contexts/tabs-context";
+import { useTabsContext } from "@/lib/contexts/tabs-context";
 import { mergeProps } from "@zag-js/solid";
 
 export interface TabsProps<E extends HTMLElement = HTMLDivElement>

@@ -1,29 +1,21 @@
-import { ColumnDef, ExpandedState } from "@tanstack/solid-table";
-import {
-  Accessor,
-  createEffect,
-  createSignal,
-  Match,
-  Resource,
-  Show,
-  Switch,
-} from "solid-js";
+import { Button } from "@/components/buttons/button";
+import { Drawer } from "@/components/drawers/drawer";
+import { NewRoleForm } from "@/features/roles/components/new-role-form";
+import { PageContent } from "@/components/page/page-content";
+import { PageHeader } from "@/components/page/page-header";
+import { HStack } from "@/components/stacks/h-stack";
+import { Table } from "@/components/tables/table";
+import { TableContainer } from "@/components/tables/table-container";
+import { Code } from "@/components/text/code";
+import { Heading } from "@/components/text/heading";
+import { Role } from "@/features/roles/schema/role-schema";
+import { api } from "@/lib/trpc/client";
+import { createToggle } from "@/lib/util/create-toggle";
+import { getAuthenticatedServerContext } from "@/lib/util/get-page-context";
+import { ColumnDef } from "@tanstack/solid-table";
+import { Accessor, Match, Resource, Switch } from "solid-js";
 import { A, createRouteAction, useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
-import { Button } from "~/components/buttons/button";
-import { Drawer } from "~/components/drawers/drawer";
-import { NewRoleForm } from "~/components/forms/new-role-form";
-import { PageContent } from "~/components/page/page-content";
-import { PageHeader } from "~/components/page/page-header";
-import { HStack } from "~/components/stacks/h-stack";
-import { Table } from "~/components/tables/table";
-import { TableContainer } from "~/components/tables/table-container";
-import { Code } from "~/components/text/code";
-import { Heading } from "~/components/text/heading";
-import { api } from "~/lib/api/client";
-import { RoleData } from "~/lib/schemas/role-schema";
-import { createToggle } from "~/lib/util/create-toggle";
-import { getAuthenticatedServerContext } from "~/lib/util/get-page-context";
 
 const columns: ColumnDef<any>[] = [
   {
@@ -55,10 +47,8 @@ export function routeData() {
 }
 
 export function UserRolesPage() {
-  const roles = useRouteData() as Accessor<
-    Resource<{ data: RoleData[]; error: any }>
-  >;
-
+  const data = useRouteData<typeof routeData>();
+  const roles = () => data()?.data;
   const isCreateOpen = createToggle(false);
 
   const handleClickCreate = (event: Event) => {
@@ -66,8 +56,8 @@ export function UserRolesPage() {
     isCreateOpen.on();
   };
 
-  const [create, createRole] = createRouteAction<RoleData>((data: any) =>
-    api.application.createRole.mutate(data)
+  const [create, createRole] = createRouteAction((data: Role) =>
+    api.roles.createRole.mutate(data)
   );
 
   return (
@@ -97,16 +87,11 @@ export function UserRolesPage() {
               permission can assign or remove these roles from other users.
             </p>
           </div>
-          <Table columns={columns} data={roles()?.data} />
+          <Table columns={columns} data={roles() ?? []} />
           <Switch>
-            <Match when={roles()?.data?.length === 0}>
+            <Match when={roles()?.length === 0}>
               <div class="bg-white dark:bg-slate-800 text-center text-sm p-4">
                 Click "New Role" to create a role.
-              </div>
-            </Match>
-            <Match when={roles()?.loading}>
-              <div class="bg-white dark:bg-slate-800 text-center text-sm p-4">
-                Loading
               </div>
             </Match>
           </Switch>

@@ -1,7 +1,7 @@
 import { mergeProps } from "@zag-js/solid";
 import { JSX, splitProps } from "solid-js";
 import { Dynamic } from "solid-js/web";
-import { useTabsContext } from "~/lib/contexts/tabs-context";
+import { useTabsContext } from "@/lib/contexts/tabs-context";
 
 export interface TabListProps<E extends HTMLElement = HTMLDivElement>
   extends JSX.HTMLAttributes<E> {

@@ -1,5 +1,5 @@
 import { splitProps } from "solid-js";
-import { useIndexContext } from "~/lib/contexts/index-context";
+import { useIndexContext } from "@/lib/contexts/index-context";
 import { Button, ButtonProps } from "./button";
 
 export function ButtonNext(props: ButtonProps) {

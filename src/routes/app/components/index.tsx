@@ -1,7 +1,7 @@
-import { PageContent } from "~/components/page/page-content";
-import { PageHeader } from "~/components/page/page-header";
-import { Panel } from "~/components/panels/panel";
-import { Heading } from "~/components/text/heading";
+import { PageContent } from "@/components/page/page-content";
+import { PageHeader } from "@/components/page/page-header";
+import { Panel } from "@/components/panels/panel";
+import { Heading } from "@/components/text/heading";
 
 export default function ComponentsPage() {
   return (

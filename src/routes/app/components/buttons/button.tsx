@@ -1,13 +1,13 @@
-import { ButtonProps } from "~/components/buttons/button";
-import { BreadcrumbItem } from "~/components/breadcrumbs/breadcrumb-item";
-import { Breadcrumbs } from "~/components/breadcrumbs/breadcrumbs";
-import { Button } from "~/components/buttons/button";
-import { PageContent } from "~/components/page/page-content";
-import { PageHeader } from "~/components/page/page-header";
-import { Panel } from "~/components/panels/panel";
-import { Heading } from "~/components/text/heading";
+import { ButtonProps } from "@/components/buttons/button";
+import { BreadcrumbItem } from "@/components/breadcrumbs/breadcrumb-item";
+import { Breadcrumbs } from "@/components/breadcrumbs/breadcrumbs";
+import { Button } from "@/components/buttons/button";
+import { PageContent } from "@/components/page/page-content";
+import { PageHeader } from "@/components/page/page-header";
+import { Panel } from "@/components/panels/panel";
+import { Heading } from "@/components/text/heading";
 import { For } from "solid-js";
-import { UserIcon } from "~/components/icons/user-icon";
+import { UserIcon } from "@/components/icons/user-icon";
 
 export default function ButtonPage() {
   const sizes: ButtonProps["size"][] = ["xs", "sm", "md", "lg", "xl"];

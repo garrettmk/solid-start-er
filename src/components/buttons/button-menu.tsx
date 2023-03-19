@@ -1,8 +1,8 @@
 import { OffsetOptions, Placement } from "@floating-ui/dom";
 import clsx from "clsx";
 import { JSX, splitProps } from "solid-js";
-import { createFloatingUI } from "~/lib/util/create-floating-ui";
-import { useOnClickOutside } from "~/lib/util/use-click-outside";
+import { createFloatingUI } from "@/lib/util/create-floating-ui";
+import { useOnClickOutside } from "@/lib/util/use-click-outside";
 import { EllipsisVerticalIcon } from "../icons/ellipsis-vertical-icon";
 import { Menu } from "../menus/menu";
 import { ButtonProps, Button } from "./button";

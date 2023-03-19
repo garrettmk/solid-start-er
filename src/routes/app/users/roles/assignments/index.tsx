@@ -1,20 +1,16 @@
+import { BreadcrumbItem } from "@/components/breadcrumbs/breadcrumb-item";
+import { Breadcrumbs } from "@/components/breadcrumbs/breadcrumbs";
+import { Button } from "@/components/buttons/button";
+import { TrashIcon } from "@/components/icons/trash-icon";
+import { PageContent } from "@/components/page/page-content";
+import { PageHeader } from "@/components/page/page-header";
+import { HStack } from "@/components/stacks/h-stack";
+import { Table } from "@/components/tables/table";
+import { TableContainer } from "@/components/tables/table-container";
+import { getAuthenticatedServerContext } from "@/lib/util/get-page-context";
 import { ColumnDef } from "@tanstack/solid-table";
-import { createEffect } from "solid-js";
 import { A, useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
-import { BreadcrumbItem } from "~/components/breadcrumbs/breadcrumb-item";
-import { Breadcrumbs } from "~/components/breadcrumbs/breadcrumbs";
-import { Button } from "~/components/buttons/button";
-import { Drawer } from "~/components/drawers/drawer";
-import { TrashIcon } from "~/components/icons/trash-icon";
-import { PageContent } from "~/components/page/page-content";
-import { PageHeader } from "~/components/page/page-header";
-import { HStack } from "~/components/stacks/h-stack";
-import { Table } from "~/components/tables/table";
-import { TableContainer } from "~/components/tables/table-container";
-import { Heading } from "~/components/text/heading";
-import { createToggle } from "~/lib/util/create-toggle";
-import { getAuthenticatedServerContext } from "~/lib/util/get-page-context";
 
 const columns: ColumnDef<any>[] = [
   {
@@ -39,7 +35,7 @@ const columns: ColumnDef<any>[] = [
 export function routeData() {
   return createServerData$(async (_, event) => {
     const { api } = getAuthenticatedServerContext(event);
-    return await api.application.getRoleAssignments();
+    return await api.roles.getRoleAssignments();
   });
 }
 
@@ -62,7 +58,7 @@ export function RoleAssignmentsPage() {
               <h3 class="text-lg font-medium text-slate-600 dark:text-slate-400 mb-6">
                 Role Assignments
               </h3>
-              <A href="/app/users/roles/assign">
+              <A href="/app/users/roles/assignments/new">
                 <Button>New Assignment</Button>
               </A>
             </HStack>

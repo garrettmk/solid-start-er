@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { userProfileSchema } from "../user-profile-schema";
+import { userProfileSchema } from "@/features/users/schema/user-profile-schema";
 import { roleAssignmentRowSchema } from "./role-assignment-row-schema";
 
 export const roleAssignmentSchema = roleAssignmentRowSchema.extend({

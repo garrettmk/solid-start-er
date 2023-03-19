@@ -1,17 +1,13 @@
+import { RolePermissionRow } from "@/features/roles/schema/role-permissions-row-schema";
+import { RoleRow } from "@/features/roles/schema/role-row-schema";
+import { Role, roleSchema } from "@/features/roles/schema/role-schema";
+import { roleUpdateInputSchema } from "@/features/roles/schema/role-update-input-schema";
 import { group, mapValues, shake } from "radash";
 import { z } from "zod";
-import { rolePermissionsSchema } from "~/lib/schemas/role-permissions-schema";
-import { roleUpdateInputSchema } from "~/lib/schemas/roles/role-update-input-schema";
-import { roleSchema } from "~/lib/schemas/roles/role-schema";
-import { RolePermissionRow } from "~/lib/schemas/roles/role-permissions-row-schema";
-import { RoleRow } from "~/lib/schemas/roles/role-row-schema";
-import { Role } from "~/lib/schemas/roles/role-schema";
-import { protectedProcedure, router } from "../trpc";
-import { equal } from "assert";
-import { roleAssignmentSchema } from "~/lib/schemas/roles/role-assignment-schema";
+import { protectedProcedure, router } from "../../../lib/trpc/trpc";
 
-export const applicationRouter = router({
-  findManyRoles: protectedProcedure.query(async ({ ctx }) => {
+export const rolesRouter = router({
+  findRoles: protectedProcedure.query(async ({ ctx }) => {
     const { supabase } = ctx;
 
     return supabase.from("application_roles").select("*");
@@ -177,6 +173,29 @@ export const applicationRouter = router({
       if (result.error) throw result.error;
 
       return result.data;
+    }),
+
+  assignRoles: protectedProcedure
+    .input(
+      z.object({
+        userIds: z.array(z.string()),
+        roleIds: z.array(z.number()),
+      })
+    )
+    .output(z.boolean())
+    .mutation(async ({ input, ctx }) => {
+      const { supabase } = ctx;
+      const { userIds, roleIds } = input;
+      const rows = userIds.flatMap((user_id) =>
+        roleIds.map((role_id) => ({ user_id, role_id }))
+      );
+
+      const result = await supabase.from("application_users").upsert(rows, {
+        ignoreDuplicates: true,
+      });
+
+      if (result.error) throw result.error;
+      return true;
     }),
 
   getRoleAssignments: protectedProcedure.mutation(async ({ input, ctx }) => {

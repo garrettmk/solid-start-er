@@ -1,6 +1,6 @@
 import { createMemo, JSX, splitProps } from "solid-js";
 import { Dynamic } from "solid-js/web";
-import { useTabsContext } from "~/lib/contexts/tabs-context";
+import { useTabsContext } from "@/lib/contexts/tabs-context";
 import { mergeProps } from "@zag-js/solid";
 
 export interface TabTriggerProps<E extends HTMLElement = HTMLDivElement>

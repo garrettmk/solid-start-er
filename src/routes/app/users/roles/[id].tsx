@@ -3,27 +3,27 @@ import { useParams, useRouteData } from "@solidjs/router";
 import { For, onMount } from "solid-js";
 import { createRouteAction, RouteDataArgs } from "solid-start";
 import { createServerData$ } from "solid-start/server";
-import { BreadcrumbItem } from "~/components/breadcrumbs/breadcrumb-item";
-import { Breadcrumbs } from "~/components/breadcrumbs/breadcrumbs";
-import { Button } from "~/components/buttons/button";
-import { Divider } from "~/components/dividers/divider";
-import { SubjectPermissionsGroup } from "~/components/inputs/subject-permissions-group";
-import { SubjectPermissionsInput } from "~/components/inputs/subject-permissions-input";
-import { TextInput } from "~/components/inputs/text-input";
-import { PageContent } from "~/components/page/page-content";
-import { PageHeader } from "~/components/page/page-header";
-import { Panel } from "~/components/panels/panel";
-import { HStack } from "~/components/stacks/h-stack";
-import { VStack } from "~/components/stacks/v-stack";
-import { Heading } from "~/components/text/heading";
-import { api } from "~/lib/api/client";
-import { getAuthenticatedServerContext } from "~/lib/util/get-page-context";
+import { BreadcrumbItem } from "@/components/breadcrumbs/breadcrumb-item";
+import { Breadcrumbs } from "@/components/breadcrumbs/breadcrumbs";
+import { Button } from "@/components/buttons/button";
+import { Divider } from "@/components/dividers/divider";
+import { SubjectPermissionsGroup } from "@/components/inputs/subject-permissions-group";
+import { SubjectPermissionsInput } from "@/components/inputs/subject-permissions-input";
+import { TextInput } from "@/components/inputs/text-input";
+import { PageContent } from "@/components/page/page-content";
+import { PageHeader } from "@/components/page/page-header";
+import { Panel } from "@/components/panels/panel";
+import { HStack } from "@/components/stacks/h-stack";
+import { VStack } from "@/components/stacks/v-stack";
+import { Heading } from "@/components/text/heading";
+import { api } from "@/lib/trpc/client";
+import { getAuthenticatedServerContext } from "@/lib/util/get-page-context";
 
 export function routeData({ params }: RouteDataArgs) {
   return createServerData$(
     async (id, event) => {
       const { api } = getAuthenticatedServerContext(event);
-      return await api.application.getRole(id);
+      return await api.roles.getRole(id);
     },
     { key: () => parseInt(params.id) }
   );
@@ -35,7 +35,7 @@ export function RolePage() {
 
   const [update, updateSubject] = createRouteAction(
     async ({ application_roles, tenants, users }: Record<string, string[]>) => {
-      await api.application.updateRole.mutate({
+      await api.roles.updateRole.mutate({
         id: parseInt(id),
         subjects: { application_roles, tenants, users },
       });

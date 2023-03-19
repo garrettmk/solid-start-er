@@ -1,46 +1,43 @@
-import { User } from "@supabase/supabase-js";
-import { createEffect, Resource, Show } from "solid-js";
+import { Avatar } from "@/components/avatars/avatar";
+import { BreadcrumbItem } from "@/components/breadcrumbs/breadcrumb-item";
+import { Breadcrumbs } from "@/components/breadcrumbs/breadcrumbs";
+import { Button } from "@/components/buttons/button";
+import { Drawer } from "@/components/drawers/drawer";
+import { PencilIcon } from "@/components/icons/pencil-icon";
+import { XMarkIcon } from "@/components/icons/x-mark-icon";
+import { PageDivider } from "@/components/page/page-divider";
+import { PageHeader } from "@/components/page/page-header";
+import { Panel } from "@/components/panels/panel";
+import { HStack } from "@/components/stacks/h-stack";
+import { VStack } from "@/components/stacks/v-stack";
+import { UpdateProfileForm } from "@/features/users/components/update-profile-form";
+import { UserProfileUpdate } from "@/features/users/schema/user-profile-update-schema";
+import { api } from "@/lib/trpc/client";
+import { createToggle } from "@/lib/util/create-toggle";
+import { getAuthenticatedServerContext } from "@/lib/util/get-page-context";
+import { Show } from "solid-js";
 import { createRouteAction, useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
-import { Avatar } from "~/components/avatars/avatar";
-import { BreadcrumbItem } from "~/components/breadcrumbs/breadcrumb-item";
-import { Breadcrumbs } from "~/components/breadcrumbs/breadcrumbs";
-import { Button } from "~/components/buttons/button";
-import { Drawer } from "~/components/drawers/drawer";
-import { UpdateProfileForm } from "~/components/forms/update-profile-form";
-import { PencilIcon } from "~/components/icons/pencil-icon";
-import { XMarkIcon } from "~/components/icons/x-mark-icon";
-import { PageDivider } from "~/components/page/page-divider";
-import { PageHeader } from "~/components/page/page-header";
-import { Panel } from "~/components/panels/panel";
-import { HStack } from "~/components/stacks/h-stack";
-import { VStack } from "~/components/stacks/v-stack";
-import { api } from "~/lib/api/client";
-import { AppRouterCaller } from "~/lib/api/router";
-import { UpdateProfileData } from "~/lib/schemas/update-profile";
-import { createToggle } from "~/lib/util/create-toggle";
 
 export function routeData() {
   return createServerData$(async (_, event) => {
-    const user = event.locals.user as User;
-    const api = event.locals.api as AppRouterCaller;
-    const { data: profile, error } = await api.user.getProfile();
-
-    return { user, profile, error };
+    const { api } = getAuthenticatedServerContext(event);
+    return await api.users.getCurrentProfile();
   });
 }
 
 export function ProfilePage() {
   const isOpen = createToggle();
-  const data = useRouteData<Resource<{ user: User; profile: any }>>();
+  const data = useRouteData<typeof routeData>();
+  const profile = () => data()?.data;
 
   const handleClickEdit = (event: Event) => {
     event.stopImmediatePropagation();
     isOpen.on();
   };
 
-  const [update, updateProfile] = createRouteAction<UpdateProfileData>(
-    (data: any) => api.user.updateProfile.mutate(data)
+  const [update, updateProfile] = createRouteAction((data: UserProfileUpdate) =>
+    api.users.updateCurrentProfile.mutate(data)
   );
 
   return (
@@ -49,7 +46,7 @@ export function ProfilePage() {
         <PageHeader class="-mx-12 mb-12" title="User Profile">
           <Breadcrumbs>
             <BreadcrumbItem href="/app/profile">
-              {data()?.profile.email}
+              {profile()?.email}
             </BreadcrumbItem>
             <BreadcrumbItem>/</BreadcrumbItem>
             <BreadcrumbItem>Profile</BreadcrumbItem>
@@ -61,7 +58,7 @@ export function ProfilePage() {
         </PageHeader>
         <HStack as="section" spacing="xl" class="mb-12">
           <Panel class="flex items-center justify-middle p-6 shrink-0">
-            <Avatar size="huge" src={data()?.profile.avatar_url} />
+            <Avatar size="huge" src={profile()?.avatar_url} />
           </Panel>
           <Panel class="p-6 basis-full">
             <VStack as="ul" spacing="md" class="list-none">
@@ -70,7 +67,7 @@ export function ProfilePage() {
                   Full name
                 </span>
                 <span class="text-xl font-medium text-slate-800">
-                  {data()?.profile.full_name}
+                  {profile()?.full_name}
                 </span>
               </li>
               <li>
@@ -78,7 +75,7 @@ export function ProfilePage() {
                   Email
                 </span>
                 <span class="text-xl font-medium text-slate-800 dark:text-slate-300">
-                  {data()?.profile.email}
+                  {profile()?.email}
                 </span>
               </li>
               <li>

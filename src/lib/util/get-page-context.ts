@@ -1,11 +1,11 @@
 import { SupabaseClient, User } from "@supabase/supabase-js";
 import { ServerFunctionEvent } from "solid-start";
-import { AppRouterCaller } from "../api/router";
+import { ApiCaller } from "@/lib/trpc/router";
 
 export interface ServerFunctionContext {
   user?: User;
   supabase?: SupabaseClient;
-  api?: AppRouterCaller;
+  api?: ApiCaller;
 }
 
 export function getServerContext(
@@ -14,7 +14,7 @@ export function getServerContext(
   return {
     user: event.locals.user as User,
     supabase: event.locals.supabase as SupabaseClient,
-    api: event.locals.api as AppRouterCaller,
+    api: event.locals.api as ApiCaller,
   };
 }
 

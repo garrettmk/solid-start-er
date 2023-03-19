@@ -15,11 +15,11 @@ const styles = {
 
   spacing: {
     none: "",
-    xs: "space-y-2",
-    sm: "space-y-4",
+    xs: "space-y-1",
+    sm: "space-y-3",
     md: "space-y-6",
-    lg: "space-y-6",
-    xl: "space-y-8",
+    lg: "space-y-9",
+    xl: "space-y-12",
   },
 
   align: {

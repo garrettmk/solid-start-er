@@ -1,4 +1,4 @@
-import { apiRequestHandler } from "~/lib/api/request-handler";
+import { apiRequestHandler } from "@/lib/trpc/request-handler";
 
 export const GET = apiRequestHandler;
 export const POST = apiRequestHandler;

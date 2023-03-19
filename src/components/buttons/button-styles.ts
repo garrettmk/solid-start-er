@@ -1,6 +1,7 @@
 import { ButtonProps } from "./button";
 
-export const base = "rounded-lg font-medium focus:ring-4 focus:outline-none";
+export const base =
+  "rounded-lg font-medium focus:ring-4 focus:outline-none flex justify-center items-center basis-grow-0 basis-shrink-0";
 export const disabled = "cursor-not-allowed";
 
 export const padding: Record<NonNullable<ButtonProps["size"]>, string> = {

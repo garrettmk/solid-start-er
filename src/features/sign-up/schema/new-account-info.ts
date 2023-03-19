@@ -35,8 +35,8 @@ export const newAccountInfoSchema = z
       .regex(/^.*[A-Z]+.*$/, "Must include at least one uppercase letter")
       .regex(/^.*[0-9]+.*$/, "Must include at least one number")
       .regex(
-        /^.*[#?!@$%^&*~_^&*(){}[\]\-]+.*$/,
-        "Must include at least one special character (#?!@$%^&*-~_^&*(){}[])"
+        /^.*[#?!@$%^&*@_^&*(){}[\]\-]+.*$/,
+        "Must include at least one special character (#?!@$%^&*-@_^&*(){}[])"
       ),
 
     confirmPassword: z.string(),

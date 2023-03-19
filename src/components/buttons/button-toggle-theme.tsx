@@ -1,5 +1,5 @@
 import { Show, splitProps } from "solid-js";
-import { useDarkMode } from "~/lib/contexts/dark-mode-context";
+import { useDarkMode } from "@/lib/contexts/dark-mode-context";
 import { MoonIcon } from "../icons/moon-icon";
 import { SunIcon } from "../icons/sun-icon";
 import { Button, ButtonProps } from "./button";

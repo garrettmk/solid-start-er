@@ -1,11 +1,11 @@
 import { Outlet } from "solid-start";
-import { Button } from "~/components/buttons/button";
-import { BuildingStorefrontIcon } from "~/components/icons/building-storefront-icon";
-import { ModuleSidebar } from "~/components/module/module-sidebar";
-import { NavMenu } from "~/components/navigation/nav-menu";
-import { NavMenuHeader } from "~/components/navigation/nav-menu-header";
-import { NavMenuItem } from "~/components/navigation/nav-menu-item";
-import { PageHeader } from "~/components/page/page-header";
+import { Button } from "@/components/buttons/button";
+import { BuildingStorefrontIcon } from "@/components/icons/building-storefront-icon";
+import { ModuleSidebar } from "@/components/module/module-sidebar";
+import { NavMenu } from "@/components/navigation/nav-menu";
+import { NavMenuHeader } from "@/components/navigation/nav-menu-header";
+import { NavMenuItem } from "@/components/navigation/nav-menu-item";
+import { PageHeader } from "@/components/page/page-header";
 
 export function TenantsLayout() {
   return (

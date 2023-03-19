@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { JSX, Show } from "solid-js";
-import { useAuthContext } from "~/lib/contexts/auth-context";
-import { SignInData } from "~/lib/schemas/sign-in";
+import { useAuthContext } from "@/lib/contexts/auth-context";
+import { SignInData } from "@/lib/schemas/sign-in";
 import { SignInForm } from "../forms/sign-in-form";
 
 export interface SignInOverlayProps

@@ -1,17 +1,41 @@
+import { UserProfile } from "@/features/users/schema/user-profile-schema";
+import { userProfileUpdateSchema } from "../schema/user-profile-update-schema";
+import { recursivelyCamelize } from "@/lib/util/util";
+import { protectedProcedure, router } from "@/lib/trpc/trpc";
+import { shake } from "radash";
 import b64toBlob from "b64-to-blob";
-import { omit, shake } from "radash";
-import { updateProfileSchema } from "~/lib/schemas/update-profile";
-import { protectedProcedure, router } from "../trpc";
 import jimp from "jimp";
 
-export const userRouter = router({
-  getProfile: protectedProcedure.query(async ({ ctx }) => {
+export const usersRouter = router({
+  findUsersWithRoles: protectedProcedure.query(async ({ ctx }) => {
+    const { supabase, user } = ctx;
+
+    return supabase
+      .from("user_profiles")
+      .select(
+        `
+          id,
+          full_name,
+          roles:application_roles!application_users(
+            id,
+            name,
+            description
+          )
+        `
+      )
+      .then((result) => ({
+        ...result,
+        data: recursivelyCamelize<UserProfile[] | null>(result.data),
+      }));
+  }),
+
+  getCurrentProfile: protectedProcedure.query(async ({ ctx }) => {
     const { supabase, user } = ctx;
     return supabase.from("profiles").select("*").eq("id", user!.id).single();
   }),
 
-  updateProfile: protectedProcedure
-    .input(updateProfileSchema)
+  updateCurrentProfile: protectedProcedure
+    .input(userProfileUpdateSchema)
     .mutation(async ({ input, ctx }) => {
       const { supabase, user } = ctx;
       const {

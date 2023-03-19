@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { JSX, splitProps } from "solid-js";
-import { formatDate, formatTime } from "~/lib/util/format";
+import { formatDate, formatTime } from "@/lib/util/format";
 
 export interface DateAndTimeCellProps
   extends JSX.HTMLAttributes<HTMLDivElement> {

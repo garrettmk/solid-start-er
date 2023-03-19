@@ -1,11 +1,11 @@
 import { z } from "zod";
 import {
-  updateProfileSchemaBase,
+  userProfileUpdateSchemaBase,
   MAX_FILE_SIZE,
   IMAGE_TYPES,
-} from "~/lib/schemas/update-profile";
+} from "@/features/users/schema/user-profile-update-schema";
 
-export const updateProfileFormSchema = updateProfileSchemaBase
+export const userUpdateFormSchema = userProfileUpdateSchemaBase
   .pick({
     fullName: true,
     casualName: true,
@@ -18,4 +18,4 @@ export const updateProfileFormSchema = updateProfileSchemaBase
       .refine((file) => IMAGE_TYPES.includes(file.type)),
   });
 
-export type UpdateProfileFormData = z.input<typeof updateProfileFormSchema>;
+export type UserUpdateForm = z.input<typeof userUpdateFormSchema>;

@@ -1,12 +1,11 @@
-import { AuthError, AuthSession, User } from "@supabase/supabase-js";
 import { serializeCookie } from "@supabase/auth-helpers-shared";
+import { AuthError, AuthSession, User } from "@supabase/supabase-js";
 import { createContext, JSX, useContext } from "solid-js";
 import { createStore } from "solid-js/store";
 import { isServer } from "solid-js/web";
+import { CookieSerializeOptions } from "solid-start";
 import { SignInData } from "../schemas/sign-in";
 import { createSupabase } from "../supabase/supabase";
-import { identity, stringifySupabaseSession } from "../util/util";
-import { CookieSerializeOptions } from "solid-start";
 
 export type Auth = {
   user?: User;

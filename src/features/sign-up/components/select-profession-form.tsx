@@ -10,10 +10,10 @@ import { JSX, Show, splitProps } from "solid-js";
 import {
   SelectProfessionData,
   selectProfessionSchema,
-} from "~/lib/schemas/choose-profession";
-import { noop } from "~/lib/util/util";
-import { BigOptionButton } from "../inputs/big-option-button";
-import { VStack } from "../stacks/v-stack";
+} from "@/features/sign-up/schema/choose-profession";
+import { noop } from "@/lib/util/util";
+import { BigOptionButton } from "../../../components/inputs/big-option-button";
+import { VStack } from "../../../components/stacks/v-stack";
 
 export interface SelectProfessionFormProps
   extends Omit<JSX.HTMLAttributes<HTMLFormElement>, "onSubmit"> {

@@ -1,7 +1,7 @@
 import { createForm, Field, Form, zodForm } from "@modular-forms/solid";
 import { JSX, splitProps } from "solid-js";
-import { SignInData, signInSchema } from "~/lib/schemas/sign-in";
-import { noop } from "~/lib/util/util";
+import { SignInData, signInSchema } from "@/lib/schemas/sign-in";
+import { noop } from "@/lib/util/util";
 import { Button } from "../buttons/button";
 import { Checkbox } from "../inputs/check-box";
 import { TextInput } from "../inputs/text-input";

@@ -10,4 +10,4 @@ export const userProfileSchema = z.object({
   lastSignInAt: z.string().optional(),
 });
 
-export type UserProfileData = z.input<typeof userProfileSchema>;
+export type UserProfile = z.input<typeof userProfileSchema>;

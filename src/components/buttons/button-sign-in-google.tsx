@@ -1,5 +1,5 @@
 import { JSX, useContext } from "solid-js";
-import { AuthContext } from "~/lib/contexts/auth-context";
+import { AuthContext } from "@/lib/contexts/auth-context";
 
 export interface ButtonSignInGoogleProps
   extends JSX.HTMLAttributes<HTMLButtonElement> {}

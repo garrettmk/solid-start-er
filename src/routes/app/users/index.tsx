@@ -3,23 +3,23 @@ import { ColumnDef } from "@tanstack/solid-table";
 import { Accessor } from "solid-js";
 import { useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
-import { ProfileAvatar } from "~/components/avatars/profile-avatar";
-import { Button } from "~/components/buttons/button";
-import { ButtonMenu } from "~/components/buttons/button-menu";
-import { EllipsisHorizontalIcon } from "~/components/icons/ellipsis-horizontal-icon";
-import { SearchInput } from "~/components/inputs/search-input";
-import { MenuItem } from "~/components/menus/menu-item";
-import { PageContent } from "~/components/page/page-content";
-import { PageHeader } from "~/components/page/page-header";
-import { HStack } from "~/components/stacks/h-stack";
-import { VStack } from "~/components/stacks/v-stack";
-import { DateAndTimeCell } from "~/components/tables/date-and-time-cell";
-import { Table } from "~/components/tables/table";
-import { TableContainer } from "~/components/tables/table-container";
-import { Heading } from "~/components/text/heading";
-import { UserProfileData } from "~/lib/schemas/user-profile-schema";
-import { getAuthenticatedServerContext } from "~/lib/util/get-page-context";
-import { camelizeObject } from "~/lib/util/util";
+import { ProfileAvatar } from "@/components/avatars/profile-avatar";
+import { Button } from "@/components/buttons/button";
+import { ButtonMenu } from "@/components/buttons/button-menu";
+import { EllipsisHorizontalIcon } from "@/components/icons/ellipsis-horizontal-icon";
+import { SearchInput } from "@/components/inputs/search-input";
+import { MenuItem } from "@/components/menus/menu-item";
+import { PageContent } from "@/components/page/page-content";
+import { PageHeader } from "@/components/page/page-header";
+import { HStack } from "@/components/stacks/h-stack";
+import { VStack } from "@/components/stacks/v-stack";
+import { DateAndTimeCell } from "@/components/tables/date-and-time-cell";
+import { Table } from "@/components/tables/table";
+import { TableContainer } from "@/components/tables/table-container";
+import { Heading } from "@/components/text/heading";
+import { UserProfile } from "@/features/users/schema/user-profile-schema";
+import { getAuthenticatedServerContext } from "@/lib/util/get-page-context";
+import { camelizeObject } from "@/lib/util/util";
 
 export function routeData() {
   return createServerData$(async (_, event) => {
@@ -28,11 +28,11 @@ export function routeData() {
     const { data, error } = await supabase.from("user_profiles").select("*");
     if (error) console.log(error);
 
-    return data?.map(camelizeObject<UserProfileData>);
+    return data?.map(camelizeObject<UserProfile>);
   });
 }
 
-const userColumns: ColumnDef<UserProfileData>[] = [
+const userColumns: ColumnDef<UserProfile>[] = [
   {
     accessorKey: "fullName",
     header: "Name",

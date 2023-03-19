@@ -45,12 +45,13 @@ export function useIndexContext() {
 }
 
 export interface IndexProviderProps {
+  index?: Index;
   initial?: Pick<Partial<Index>, "value" | "max">;
   children?: JSX.Element;
 }
 
 export function IndexProvider(props: IndexProviderProps) {
-  const value = createIndex(props.initial);
+  const value = props.index ?? createIndex(props.initial);
 
   return (
     <IndexContext.Provider value={value}>

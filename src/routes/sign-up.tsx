@@ -1,42 +1,39 @@
 import { chain } from "radash";
 import { createEffect, createSignal, Show } from "solid-js";
 import { createRouteAction } from "solid-start";
-import { Alert } from "~/components/alerts/alert";
-import { Button } from "~/components/buttons/button";
-import { ButtonPrev } from "~/components/buttons/button-prev";
-import { NewAccountInfoForm } from "~/components/forms/new-account-info-form";
-import { SelectProfessionForm } from "~/components/forms/select-profession-form";
-import { CheckIcon } from "~/components/icons/check-icon";
-import { ChevronLeftIcon } from "~/components/icons/chevron-left-icon";
-import { CloudIcon } from "~/components/icons/cloud-icon";
-import { Spinner } from "~/components/spinners/spinner";
-import { HStack } from "~/components/stacks/h-stack";
-import { Step, Steps } from "~/components/steps/steps";
-import { TabContent } from "~/components/tabs/tab-content";
-import { api } from "~/lib/api/client";
-import { createIndex, IndexContext } from "~/lib/contexts/index-context";
-import { SelectProfessionData } from "~/lib/schemas/choose-profession";
-import { NewAccountInfoData } from "~/lib/schemas/new-account-info";
-import { SignUpData } from "~/lib/schemas/sign-up";
+import { Alert } from "@/components/alerts/alert";
+import { Button } from "@/components/buttons/button";
+import { ButtonPrev } from "@/components/buttons/button-prev";
+import { NewAccountInfoForm } from "@/features/sign-up/components/new-account-info-form";
+import { SelectProfessionForm } from "@/features/sign-up/components/select-profession-form";
+import { CheckIcon } from "@/components/icons/check-icon";
+import { ChevronLeftIcon } from "@/components/icons/chevron-left-icon";
+import { CloudIcon } from "@/components/icons/cloud-icon";
+import { Spinner } from "@/components/spinners/spinner";
+import { HStack } from "@/components/stacks/h-stack";
+import { Step, Steps } from "@/components/steps/steps";
+import { TabContent } from "@/components/tabs/tab-content";
+import { api } from "@/lib/trpc/client";
+import { createIndex, IndexContext } from "@/lib/contexts/index-context";
+import { SelectProfessionData } from "@/features/sign-up/schema/choose-profession";
+import { NewAccountInfoData } from "@/features/sign-up/schema/new-account-info";
+import { SignUpData } from "@/features/sign-up/schema/sign-up";
 
 /**
  *
  * @returns The sign up page
  */
 export function SignUpPage() {
-  // Track the current page
   const index = createIndex();
-  // Page 1 data
   const [professionData, setProfessionData] =
     createSignal<SelectProfessionData>();
-  // Page 2 data
   const [newAccountData, setNewAccountData] =
     createSignal<NewAccountInfoData>();
 
   // Send sign up info to the API
   const [request, signUp] = createRouteAction(
     async (signUpData: SignUpData) => {
-      const { data, error } = await api.public.signUp.mutate(signUpData);
+      const { data, error } = await api.signUp.signUp.mutate(signUpData);
       if (data.user) return data.user;
       else throw error;
     }

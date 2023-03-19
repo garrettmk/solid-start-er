@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { JSX, splitProps } from "solid-js";
-import { onClickOutside } from "~/lib/directives/click-outside";
+import { onClickOutside } from "@/lib/directives/click-outside";
 import { Panel } from "../panels/panel";
 onClickOutside;
 

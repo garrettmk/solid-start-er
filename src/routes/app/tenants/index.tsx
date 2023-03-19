@@ -1,10 +1,10 @@
-import { CalendarIcon } from "~/components/icons/calendar-icon";
-import { CheckIcon } from "~/components/icons/check-icon";
-import { SearchInput } from "~/components/inputs/search-input";
-import { PageContent } from "~/components/page/page-content";
-import { PageHeader } from "~/components/page/page-header";
-import { HStack } from "~/components/stacks/h-stack";
-import { VStack } from "~/components/stacks/v-stack";
+import { CalendarIcon } from "@/components/icons/calendar-icon";
+import { CheckIcon } from "@/components/icons/check-icon";
+import { SearchInput } from "@/components/inputs/search-input";
+import { PageContent } from "@/components/page/page-content";
+import { PageHeader } from "@/components/page/page-header";
+import { HStack } from "@/components/stacks/h-stack";
+import { VStack } from "@/components/stacks/v-stack";
 
 export function TenantsPage() {
   const now = new Date();
