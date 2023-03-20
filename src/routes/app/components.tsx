@@ -39,6 +39,11 @@ export function ComponentsLayout() {
 
           <NavMenuHeader>Tabs</NavMenuHeader>
           <NavMenuItem href="/app/components/tabs/tabs">Tabs</NavMenuItem>
+
+          <NavMenuHeader>Progress</NavMenuHeader>
+          <NavMenuItem href="/app/components/progress/progress">
+            Progress
+          </NavMenuItem>
         </NavMenu>
       </ModuleSidebar>
       <div class="ml-64">
