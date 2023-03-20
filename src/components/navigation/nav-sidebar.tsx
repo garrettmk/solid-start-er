@@ -10,7 +10,7 @@ import { UsersIcon } from "../icons/users-icon";
 
 const styles = {
   base: `
-    fixed top-0 left-0 h-screen w-14 p-3 z-[2000]
+    fixed top-0 left-0 h-screen w-14 p-3
     border-r border-slate-200 dark:border-slate-700 
     bg-white dark:bg-slate-900 
     flex flex-col
