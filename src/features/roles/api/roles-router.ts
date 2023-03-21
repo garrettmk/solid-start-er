@@ -2,9 +2,14 @@ import { RolePermissionRow } from "@/features/roles/schema/role-permissions-row-
 import { RoleRow } from "@/features/roles/schema/role-row-schema";
 import { Role, roleSchema } from "@/features/roles/schema/role-schema";
 import { roleUpdateInputSchema } from "@/features/roles/schema/role-update-input-schema";
+import { camelizeObject } from "@/lib/util/util";
 import { group, mapValues, shake } from "radash";
 import { z } from "zod";
 import { protectedProcedure, router } from "../../../lib/trpc/trpc";
+import {
+  RoleAssignment,
+  roleAssignmentSchema,
+} from "../schema/role-assignment-schema";
 
 export const rolesRouter = router({
   findRoles: protectedProcedure.query(async ({ ctx }) => {
@@ -198,13 +203,15 @@ export const rolesRouter = router({
       return true;
     }),
 
-  getRoleAssignments: protectedProcedure.mutation(async ({ input, ctx }) => {
-    const { supabase } = ctx;
-    const result = await supabase
-      .from("application_role_assignments")
-      .select("*");
+  getRoleAssignments: protectedProcedure
+    .output(z.array(roleAssignmentSchema))
+    .mutation(async ({ input, ctx }) => {
+      const { supabase } = ctx;
+      const result = await supabase
+        .from("application_role_assignments")
+        .select("*");
 
-    if (result.error) throw result.error;
-    return result.data;
-  }),
+      if (result.error) throw result.error;
+      return result.data.map(camelizeObject) as RoleAssignment[];
+    }),
 });

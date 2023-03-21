@@ -1,10 +1,11 @@
 import { z } from "zod";
-import { userProfileSchema } from "@/features/users/schema/user-profile-schema";
-import { roleAssignmentRowSchema } from "./role-assignment-row-schema";
 
-export const roleAssignmentSchema = roleAssignmentRowSchema.extend({
-  user: userProfileSchema,
-  role: z.string(),
+export const roleAssignmentSchema = z.object({
+  userId: z.string(),
+  fullName: z.string(),
+  roleId: z.number(),
+  name: z.string(),
+  description: z.string(),
 });
 
 export type RoleAssignment = z.input<typeof roleAssignmentSchema>;

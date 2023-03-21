@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { createEffect, createSignal, onCleanup, onMount, Show } from "solid-js";
+import { createEffect, createSignal } from "solid-js";
 import { useIsRouting } from "solid-start";
 import { Progress } from "../progress/progress";
 
@@ -25,9 +25,10 @@ export function NavProgress() {
 
   return (
     <Progress
-      class={clsx("fixed top-0 left-0 right-0")}
+      class={clsx("fixed top-0 left-0 right-0", !isRouting() && "opacity-0")}
       value={value()}
       size="xs"
+      background="none"
     />
   );
 }

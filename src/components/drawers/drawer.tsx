@@ -1,13 +1,10 @@
 import { JSX, Show, splitProps } from "solid-js";
 import clsx from "clsx";
-import { onClickOutside } from "@/lib/directives/click-outside";
-onClickOutside;
 
 export interface DrawerProps extends JSX.HTMLAttributes<HTMLDivElement> {
   isOpen?: boolean;
   placement?: "left" | "right" | "top" | "bottom";
   backdrop?: boolean;
-  onClickOutside?: () => void;
 }
 
 const styles = {
@@ -32,11 +29,11 @@ const styles = {
 
 export function Drawer(props: DrawerProps) {
   const [, elementProps] = splitProps(props, [
+    "ref",
     "class",
     "isOpen",
     "children",
     "backdrop",
-    "onClickOutside",
   ]);
 
   return (
@@ -46,6 +43,7 @@ export function Drawer(props: DrawerProps) {
       </Show>
       <div
         id="drawer-left-example"
+        ref={props.ref}
         class={clsx(
           styles.base,
           styles.placement[props.placement ?? "left"],
@@ -53,7 +51,6 @@ export function Drawer(props: DrawerProps) {
           props.class
         )}
         tabindex="-1"
-        use:onClickOutside={props.onClickOutside}
         {...elementProps}
       >
         {props.children}

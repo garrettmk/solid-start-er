@@ -3,7 +3,12 @@ import clsx from "clsx";
 import { JSX, splitProps } from "solid-js";
 
 const styles = {
-  base: "w-full bg-gray-200 rounded-full dark:bg-gray-700",
+  base: "w-full rounded-full",
+
+  background: {
+    none: "",
+    default: "bg-slate-200 dark:bg-slate-700",
+  },
 
   size: {
     xs: "h-1",
@@ -17,16 +22,27 @@ const styles = {
 export interface ProgressProps extends JSX.HTMLAttributes<HTMLDivElement> {
   size?: "xs" | "sm" | "md" | "lg" | "xl";
   value?: number;
+  background?: "none" | "default";
 }
 
 export function Progress(props: ProgressProps) {
-  const [, divProps] = splitProps(props, ["size", "class", "value"]);
+  const [, divProps] = splitProps(props, [
+    "size",
+    "class",
+    "value",
+    "background",
+  ]);
   const style = () =>
     `width: ${clamp(props.value ?? 0, { min: 0, max: 100 })}%`;
 
   return (
     <div
-      class={clsx(styles.base, styles.size[props.size ?? "md"], props.class)}
+      class={clsx(
+        styles.base,
+        styles.size[props.size ?? "md"],
+        styles.background[props.background ?? "default"],
+        props.class
+      )}
       {...divProps}
     >
       <div

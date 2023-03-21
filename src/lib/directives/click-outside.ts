@@ -1,15 +1,9 @@
-import { Accessor, onCleanup } from "solid-js";
-import { isServer } from "solid-js/web";
+import { Accessor } from "solid-js";
+import { useOnClickOutside } from "../util/use-click-outside";
 
 export function onClickOutside(
-  el: Element,
+  el: HTMLElement,
   accessor: Accessor<(event: MouseEvent) => void>
 ) {
-  if (!isServer) {
-    const onClick = (e: MouseEvent) =>
-      !el.contains(e.target as Node) && accessor()(e);
-    document.addEventListener("click", onClick);
-
-    onCleanup(() => document.removeEventListener("click", onClick));
-  }
+  useOnClickOutside(() => el, accessor());
 }
