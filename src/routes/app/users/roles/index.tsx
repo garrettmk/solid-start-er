@@ -1,6 +1,6 @@
 import { Button } from "@/components/buttons/button";
 import { Drawer } from "@/components/drawers/drawer";
-import { NewRoleForm } from "@/features/roles/components/new-role-form";
+import { BlurOverlay } from "@/components/overlays/blur-overlay";
 import { PageContent } from "@/components/page/page-content";
 import { PageHeader } from "@/components/page/page-header";
 import { HStack } from "@/components/stacks/h-stack";
@@ -8,12 +8,13 @@ import { Table } from "@/components/tables/table";
 import { TableContainer } from "@/components/tables/table-container";
 import { Code } from "@/components/text/code";
 import { Heading } from "@/components/text/heading";
+import { NewRoleForm } from "@/features/roles/components/new-role-form";
 import { Role } from "@/features/roles/schema/role-schema";
 import { api } from "@/lib/trpc/client";
 import { createToggle } from "@/lib/util/create-toggle";
 import { getAuthenticatedServerContext } from "@/lib/util/get-page-context";
 import { ColumnDef } from "@tanstack/solid-table";
-import { Accessor, Match, Resource, Switch } from "solid-js";
+import { Match, Switch } from "solid-js";
 import { A, createRouteAction, useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
 
@@ -41,14 +42,14 @@ const columns: ColumnDef<any>[] = [
 
 export function routeData() {
   return createServerData$(async (_, event) => {
-    const { supabase } = getAuthenticatedServerContext(event);
-    return supabase?.from("application_roles").select("*");
+    const { api } = getAuthenticatedServerContext(event);
+    return api.roles.getRolesAndPermissions();
   });
 }
 
 export function UserRolesPage() {
   const data = useRouteData<typeof routeData>();
-  const roles = () => data()?.data;
+  const roles = () => data()?.data ?? [];
   const isCreateOpen = createToggle(false);
 
   const handleClickCreate = (event: Event) => {
@@ -97,12 +98,8 @@ export function UserRolesPage() {
           </Switch>
         </TableContainer>
       </PageContent>
-      <Drawer
-        isOpen={isCreateOpen.value}
-        onClickOutside={isCreateOpen.off}
-        placement="right"
-        backdrop
-      >
+      <BlurOverlay isOpen={isCreateOpen.value} onClick={isCreateOpen.off} />
+      <Drawer isOpen={isCreateOpen.value} placement="right" backdrop>
         <PageHeader>
           <Heading class="font-medium">New Role</Heading>
         </PageHeader>

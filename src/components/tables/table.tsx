@@ -7,6 +7,7 @@ import {
   TableOptions,
 } from "@tanstack/solid-table";
 import clsx from "clsx";
+import { Accessor } from "solid-js";
 import { Component, For, JSX, Show, splitProps } from "solid-js";
 
 const styles = {
@@ -39,7 +40,7 @@ const styles = {
 
 export interface TableProps<T = any, V = T>
   extends JSX.HTMLAttributes<HTMLTableElement> {
-  data?: T[];
+  data?: T[] | Accessor<T[] | undefined>;
   columns?: ColumnDef<T, V>[];
   options?: Omit<TableOptions<T>, "data" | "columns" | "getCoreRowModel">;
   expandedComponent?: Component<{ row: Row<T> }>;
@@ -57,7 +58,9 @@ export function Table(props: TableProps) {
 
   const table = createSolidTable({
     get data() {
-      return props.data ?? [];
+      return typeof props.data === "function"
+        ? props.data() ?? []
+        : props.data ?? [];
     },
     columns: props.columns ?? [],
     getCoreRowModel: getCoreRowModel(),

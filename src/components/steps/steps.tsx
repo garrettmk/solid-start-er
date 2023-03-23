@@ -24,6 +24,9 @@ export function Steps(props: StepsProps) {
 export interface StepProps extends JSX.HTMLAttributes<HTMLLIElement> {
   index: number;
   currentIndex?: number;
+
+  current?: boolean;
+  complete?: boolean;
 }
 
 export function Step(props: StepProps) {
@@ -32,12 +35,13 @@ export function Step(props: StepProps) {
     "class",
     "index",
     "currentIndex",
+    "current",
+    "complete",
   ]);
   const index = useIndexContext();
 
-  const isNext = () => index.value < stepProps.index;
-  const isCurrent = () => index.value === stepProps.index;
-  const isComplete = () => index.value > stepProps.index;
+  const isCurrent = () => props.current || index.value === stepProps.index;
+  const isComplete = () => props.complete || index.value > stepProps.index;
 
   return (
     <>

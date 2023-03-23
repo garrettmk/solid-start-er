@@ -1,3 +1,4 @@
+import { supabaseServiceRole } from "@/lib/supabase/supabase";
 import { publicProcedure, router } from "@/lib/trpc/trpc";
 import { signUpSchema } from "../schema/sign-up";
 

@@ -2,8 +2,10 @@ import { RolePermissionRow } from "@/features/roles/schema/role-permissions-row-
 import { RoleRow } from "@/features/roles/schema/role-row-schema";
 import { Role, roleSchema } from "@/features/roles/schema/role-schema";
 import { roleUpdateInputSchema } from "@/features/roles/schema/role-update-input-schema";
-import { camelizeObject } from "@/lib/util/util";
-import { group, mapValues, shake } from "radash";
+import { makeResponseSchema } from "@/lib/schemas/postgrest-response.schema";
+import { camelizeObject, snakeifyObject } from "@/lib/util/util";
+import { PostgrestSingleResponse } from "@supabase/supabase-js";
+import { group, mapValues, pick, shake } from "radash";
 import { z } from "zod";
 import { protectedProcedure, router } from "../../../lib/trpc/trpc";
 import {
@@ -12,14 +14,39 @@ import {
 } from "../schema/role-assignment-schema";
 
 export const rolesRouter = router({
-  findRoles: protectedProcedure.query(async ({ ctx }) => {
-    const { supabase } = ctx;
+  getRolesAndPermissions: protectedProcedure
+    .output(makeResponseSchema(z.array(roleSchema)))
+    .query(async ({ ctx }) => {
+      const { supabase } = ctx;
 
-    return supabase.from("application_roles").select("*");
-  }),
+      const result = (await supabase
+        .from("roles_and_permissions")
+        .select("*")) as PostgrestSingleResponse<Role[]>;
+
+      return result;
+    }),
+
+  findRoles: protectedProcedure
+    .output(makeResponseSchema(z.array(z.any())))
+    .query(async ({ ctx }) => {
+      const { supabase } = ctx;
+
+      const result = await supabase.from("application_roles").select(`
+          id,
+          name,
+          description,
+          subjects:application_role_permissions(
+            subject,
+            action
+          )
+        `);
+
+      console.log(result.data?.[0]);
+      return result;
+    }),
 
   createRole: protectedProcedure
-    .input(roleSchema.omit({ id: true, subjects: true }))
+    .input(roleSchema.omit({ id: true, permissions: true }))
     .mutation(async ({ input, ctx }) => {
       const { supabase, user } = ctx;
       console.log("createRole");
@@ -31,7 +58,6 @@ export const rolesRouter = router({
     .output(roleSchema)
     .query(async ({ input, ctx }) => {
       const { supabase } = ctx;
-
       const roleRow = await supabase
         .from("application_roles")
         .select("*")
@@ -51,7 +77,7 @@ export const rolesRouter = router({
 
       const role: Role = {
         ...roleRow.data,
-        subjects: mapValues(
+        permissions: mapValues(
           group(permissionsRows.data!, (row) => row.subject),
           (permissionRows) => permissionRows!.map((row) => row.action)
         ),
@@ -65,7 +91,7 @@ export const rolesRouter = router({
     // .output(roleSchema)
     .mutation(async ({ input, ctx }) => {
       const { supabase } = ctx;
-      const { id, name, description, subjects } = input;
+      const { id, name, description, permissions } = input;
 
       if (name || description) {
         const update = shake({ name, description });
@@ -77,9 +103,9 @@ export const rolesRouter = router({
         if (roleUpdate.error) throw roleUpdate.error;
       }
 
-      if (subjects) {
+      if (permissions) {
         const rows = Object.values(
-          mapValues(subjects, (actions, subject) =>
+          mapValues(permissions, (actions, subject) =>
             actions.map((action) => ({
               role_id: id,
               subject,
@@ -213,5 +239,22 @@ export const rolesRouter = router({
 
       if (result.error) throw result.error;
       return result.data.map(camelizeObject) as RoleAssignment[];
+    }),
+
+  deleteRoleAssignments: protectedProcedure
+    .input(z.array(roleAssignmentSchema))
+    .mutation(async ({ input, ctx }) => {
+      const { supabase } = ctx;
+      const conditions = input
+        .map((i) => pick(i, ["userId", "roleId"]))
+        .map(snakeifyObject);
+
+      const result = await supabase
+        .from("application_users")
+        .delete()
+        .in("user_id, role_id", conditions);
+
+      if (result.error) throw result.error;
+      return result.data;
     }),
 });

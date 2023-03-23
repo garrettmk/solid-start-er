@@ -1,5 +1,15 @@
-import { createClient } from "@supabase/supabase-js";
+import {
+  createClient,
+  SupabaseClient,
+  User,
+  Session,
+} from "@supabase/supabase-js";
 import { parseCookieString } from "../util/util";
+
+export type AuthTokens = {
+  access_token: string;
+  refresh_token: string;
+};
 
 const {
   VITE_SUPABASE_URL,
@@ -7,21 +17,12 @@ const {
   VITE_SUPABASE_SERVICE_ROLE_KEY,
 } = import.meta.env;
 
-export const createSupabase = (key: "anon" | "service_role" = "anon") =>
-  createClient(
+export function createSupabaseClient(key: "anon" | "service_role" = "anon") {
+  return createClient(
     VITE_SUPABASE_URL,
     key === "service_role"
       ? VITE_SUPABASE_SERVICE_ROLE_KEY
-      : VITE_SUPABASE_ANON_KEY
-  );
-
-export const createSupabaseFrom = async (req: Request) => {
-  const cookieString = req.headers.get("Cookie") ?? "";
-  const cookies = parseCookieString(cookieString);
-
-  const client = createClient(
-    import.meta.env.VITE_SUPABASE_URL,
-    import.meta.env.VITE_SUPABASE_ANON_KEY,
+      : VITE_SUPABASE_ANON_KEY,
     {
       auth: {
         autoRefreshToken: false,
@@ -30,22 +31,27 @@ export const createSupabaseFrom = async (req: Request) => {
       },
     }
   );
+}
 
-  if (cookies.has("access_token") && cookies.has("refresh_token")) {
-    const access_token = cookies.get("access_token")!;
-    const refresh_token = cookies.get("refresh_token")!;
+export function getAuthTokens(req: Request): AuthTokens | undefined {
+  const cookieString = req.headers.get("Cookie") ?? "";
+  const cookies = parseCookieString(cookieString);
 
-    const response = await client.auth.setSession({
-      access_token,
-      refresh_token,
-    });
+  const access_token = cookies.get("access_token");
+  const refresh_token = cookies.get("refresh_token");
 
-    if (response.error) console.log(response.error);
-  } else {
-    console.log("No session");
-  }
+  if (access_token && refresh_token) return { access_token, refresh_token };
+}
 
-  return client;
-};
+export async function useAuthTokens(
+  client: SupabaseClient,
+  tokens: AuthTokens
+): Promise<User | undefined> {
+  const { data, error } = await client.auth.setSession(tokens);
 
-export const supabaseServiceRole = createSupabase("service_role");
+  if (error) console.log(error);
+
+  return data.user ?? undefined;
+}
+
+export const supabaseServiceRole = createSupabaseClient("service_role");

@@ -1,29 +1,29 @@
-import { ColumnDef, Updater } from "@tanstack/solid-table";
-import { createEffect, createMemo, createSignal, For } from "solid-js";
-import { createRouteAction, useRouteData } from "solid-start";
-import { createServerData$ } from "solid-start/server";
 import { BreadcrumbItem } from "@/components/breadcrumbs/breadcrumb-item";
 import { Breadcrumbs } from "@/components/breadcrumbs/breadcrumbs";
 import { Button } from "@/components/buttons/button";
 import { CheckIcon } from "@/components/icons/check-icon";
 import { ChevronLeftIcon } from "@/components/icons/chevron-left-icon";
 import { ChevronRightIcon } from "@/components/icons/chevron-right-icon";
-import { Checkbox } from "@/components/inputs/check-box";
 import { PageContent } from "@/components/page/page-content";
 import { PageHeader } from "@/components/page/page-header";
 import { Panel } from "@/components/panels/panel";
 import { HStack } from "@/components/stacks/h-stack";
 import { VStack } from "@/components/stacks/v-stack";
 import { Step, Steps } from "@/components/steps/steps";
-import { Table, TableProps } from "@/components/tables/table";
 import { TableContainer } from "@/components/tables/table-container";
-import { TabContent } from "@/components/tabs/tab-content";
 import { Heading } from "@/components/text/heading";
-import { createIndex, IndexProvider } from "@/lib/contexts/index-context";
+import { SelectRolesTable } from "@/features/roles/components/select-roles-table";
+import { SelectUsersTable } from "@/features/roles/components/select-users-table";
+import { newRoleAssignmentsMachine } from "@/features/roles/machines/new-assignments.machine";
 import { Role } from "@/features/roles/schema/role-schema";
-import { UserProfile } from "@/features/users/schema/user-profile-schema";
+import { UserAndRoles } from "@/features/roles/schema/user-and-roles-schema";
+import { IndexProvider } from "@/lib/contexts/index-context";
 import { getAuthenticatedServerContext } from "@/lib/util/get-page-context";
-import { api } from "@/lib/trpc/client";
+import { useStateIndex } from "@/lib/util/use-state-index";
+import { useMachine } from "@xstate/solid";
+import { For, Show } from "solid-js";
+import { useRouteData } from "solid-start";
+import { createServerData$ } from "solid-start/server";
 
 export function routeData() {
   return createServerData$(async (_, event) => {
@@ -37,142 +37,24 @@ export function routeData() {
   });
 }
 
-const userColumns: ColumnDef<UserProfile>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllRowsSelected()}
-        indeterminate={table.getIsSomePageRowsSelected()}
-        onChange={table.getToggleAllRowsSelectedHandler()}
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        disabled={!row.getCanSelect()}
-        indeterminate={row.getIsSomeSelected()}
-        onChange={row.getToggleSelectedHandler()}
-      />
-    ),
-  },
-  {
-    accessorKey: "fullName",
-    header: "User",
-    cell: ({ getValue }) => <span>{getValue<string>()}</span>,
-  },
-  {
-    accessorKey: "roles",
-    header: "Current roles",
-    cell: ({ getValue }) => (
-      <span>
-        {getValue<Role[]>()
-          ?.map((role) => role.name)
-          .join(", ")}
-      </span>
-    ),
-  },
-];
-
-const roleColumns: ColumnDef<Role>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllRowsSelected()}
-        indeterminate={table.getIsSomePageRowsSelected()}
-        onChange={table.getToggleAllRowsSelectedHandler()}
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        disabled={!row.getCanSelect()}
-        indeterminate={row.getIsSomeSelected()}
-        onChange={row.getToggleSelectedHandler()}
-      />
-    ),
-  },
-  {
-    accessorKey: "name",
-    header: "Name",
-    cell: ({ getValue }) => <span>{getValue<string>()}</span>,
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
-    cell: ({ getValue }) => <span>{getValue<string>()}</span>,
-  },
-];
-
 export default function AssignPage() {
   const data = useRouteData<typeof routeData>();
-  const users = () => data()?.users;
-  const roles = () => data()?.roles;
-  const index = createIndex();
+  const users = () => data()?.users.data ?? [];
+  const roles = () => data()?.roles.data ?? [];
 
-  //
-  // User selection
-  //
-  const [selectedUserRows, setSelectedUserRows] = createSignal({});
-  const selectedUsers = createMemo(() => {
-    const selected = selectedUserRows();
-    const userData = users()?.data;
-    if (!userData) return [];
+  const [state, send] = useMachine(newRoleAssignmentsMachine);
 
-    return Object.entries(selected)
-      .filter(([, isSelected]) => isSelected)
-      .map(([idx]) => userData[parseInt(idx)]);
-  });
+  const handleSelectUsers = (users: UserAndRoles[]) =>
+    send({ type: "SELECT", payload: users });
+  const handleSelectRoles = (roles: Role[]) =>
+    send({ type: "SELECT", payload: roles });
 
-  const usersTableOptions: TableProps["options"] = {
-    state: {
-      get rowSelection() {
-        return selectedUserRows();
-      },
-    },
-    enableRowSelection: true,
-    onRowSelectionChange: setSelectedUserRows,
-  };
-
-  //
-  // Role selection
-  //
-  const [selectedRoleRows, setSelectedRoleRows] = createSignal({});
-  const selectedRoles = createMemo(() => {
-    const selected = selectedRoleRows();
-    const roleData = roles()?.data;
-    if (!roleData) return [];
-
-    return Object.entries(selected)
-      .filter(([, isSelected]) => isSelected)
-      .map(([idx]) => roleData[parseInt(idx)]);
-  });
-
-  const roleTableOptions: TableProps["options"] = {
-    state: {
-      get rowSelection() {
-        return selectedRoleRows();
-      },
-    },
-    enableRowSelection: true,
-    onRowSelectionChange: setSelectedRoleRows,
-  };
-
-  //
-  // Assignment
-  //
-  const [assignment, assignRoles] = createRouteAction(async () => {
-    return api.roles.assignRoles.mutate({
-      userIds: selectedUsers().map((user) => user.id),
-      roleIds: selectedRoles().map((role) => role.id),
-    });
-  });
-
-  createEffect(() => {
-    if (assignment.error) index.set(4);
-    else if (assignment.result) index.set(3);
-  });
+  const index = useStateIndex(state, [
+    "selectingUsers",
+    "selectingRoles",
+    "assigningRoles",
+    "success",
+  ]);
 
   return (
     <>
@@ -193,14 +75,14 @@ export default function AssignPage() {
             <Steps class="justify-center">
               <Step index={0}>Select Users</Step>
               <Step index={1}>Select Roles</Step>
-              <Step index={2}>Confirmation</Step>
+              <Step index={2}>Assign Roles</Step>
             </Steps>
           </Panel>
 
           {/**
            * Select Users
            */}
-          <TabContent index={0}>
+          <Show when={state.matches("selectingUsers")}>
             <TableContainer>
               <div class="p-6 bg-white dark:bg-slate-800">
                 <HStack align="start" justify="between">
@@ -212,27 +94,25 @@ export default function AssignPage() {
                   </VStack>
                   <Button
                     class="block"
-                    onClick={index.next}
-                    disabled={!selectedUsers().length}
+                    onClick={() => send("NEXT")}
+                    disabled={!state.can("NEXT")}
                   >
                     Next
                     <ChevronRightIcon class="ml-2" />
                   </Button>
                 </HStack>
               </div>
-              <Table
-                columns={userColumns}
-                data={users()?.data ?? []}
-                options={usersTableOptions}
-                class="[&_th:first-child]:w-[0.1%]"
+              <SelectUsersTable
+                users={users}
+                onChangeSelection={handleSelectUsers}
               />
             </TableContainer>
-          </TabContent>
+          </Show>
 
           {/**
            * Select Roles
            */}
-          <TabContent index={1}>
+          <Show when={state.matches("selectingRoles")}>
             <TableContainer>
               <div class="p-6 bg-white dark:bg-slate-800">
                 <HStack align="start" justify="between">
@@ -243,14 +123,14 @@ export default function AssignPage() {
                     <p>Choose the roles you want to assign to these users.</p>
                   </VStack>
                   <HStack spacing="sm">
-                    <Button class="block" onClick={index.prev}>
+                    <Button class="block" onClick={() => send("BACK")}>
                       Back
                       <ChevronLeftIcon class="mr-2" />
                     </Button>
                     <Button
                       class="block"
-                      onClick={index.next}
-                      disabled={!selectedRoles().length}
+                      disabled={!state.can("NEXT")}
+                      onClick={() => send("NEXT")}
                     >
                       Next
                       <ChevronRightIcon class="ml-2" />
@@ -258,26 +138,24 @@ export default function AssignPage() {
                   </HStack>
                 </HStack>
               </div>
-              <Table
-                columns={roleColumns}
-                data={roles()?.data ?? []}
-                options={roleTableOptions}
-                class="[&_th:first-child]:w-[0.1%]"
+              <SelectRolesTable
+                roles={roles}
+                onChangeSelection={handleSelectRoles}
               />
             </TableContainer>
-          </TabContent>
+          </Show>
 
           {/**
            * Confirmation
            */}
-          <TabContent index={2}>
+          <Show when={state.matches("assigningRoles")}>
             <Panel class="p-6">
               <HStack align="start" justify="between">
                 <Heading level="2" class="text-3xl font-medium mb-6">
-                  Confirmation
+                  Assign Roles
                 </Heading>
                 <HStack spacing="sm">
-                  <Button class="block" onClick={index.prev}>
+                  <Button class="block" onClick={() => send("BACK")}>
                     <ChevronLeftIcon class="mr-2" />
                     Back
                   </Button>
@@ -285,8 +163,8 @@ export default function AssignPage() {
                   <Button
                     class="block"
                     color="green"
-                    onClick={() => assignRoles()}
-                    disabled={assignment.pending}
+                    onClick={() => send("CONFIRM")}
+                    disabled={state.matches("assigningRoles.sending")}
                   >
                     <CheckIcon class="mr-2" />
                     Assign Roles
@@ -306,7 +184,7 @@ export default function AssignPage() {
                     Users
                   </Heading>
                   <ul>
-                    <For each={selectedUsers()}>
+                    <For each={state.context.users}>
                       {(user) => <li>{user.fullName}</li>}
                     </For>
                   </ul>
@@ -320,31 +198,31 @@ export default function AssignPage() {
                     Roles
                   </Heading>
                   <ul class="mt-0">
-                    <For each={selectedRoles()}>
+                    <For each={state.context.roles}>
                       {(role) => <li>{role.name}</li>}
                     </For>
                   </ul>
                 </VStack>
               </HStack>
             </Panel>
-          </TabContent>
+          </Show>
 
           {/**
            * Success
            */}
-          <TabContent index={3}>
+          <Show when={state.matches("success")}>
             <Panel class="p-6">
               <Heading level="2" class="text-3xl font-medium mb-6">
                 Success!
               </Heading>
               <p>The roles were assignedd succesfully.</p>
             </Panel>
-          </TabContent>
+          </Show>
 
           {/**
            * Error
            */}
-          <TabContent index={4}>
+          {/* <TabContent index={4}>
             <Panel class="p-6">
               <HStack align="start" justify="between">
                 <Heading level="2" class="text-3xl font-medium mb-6">
@@ -357,7 +235,7 @@ export default function AssignPage() {
               </HStack>
               <pre>{JSON.stringify(assignment.error, null, "  ")}</pre>
             </Panel>
-          </TabContent>
+          </TabContent> */}
         </PageContent>
       </IndexProvider>
     </>

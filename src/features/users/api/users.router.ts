@@ -1,10 +1,10 @@
-import { UserProfile } from "@/features/users/schema/user-profile-schema";
-import { userProfileUpdateSchema } from "../schema/user-profile-update-schema";
-import { recursivelyCamelize } from "@/lib/util/util";
+import { UserAndRoles } from "@/features/roles/schema/user-and-roles-schema";
 import { protectedProcedure, router } from "@/lib/trpc/trpc";
-import { shake } from "radash";
+import { recursivelyCamelize } from "@/lib/util/util";
 import b64toBlob from "b64-to-blob";
 import jimp from "jimp";
+import { shake } from "radash";
+import { userProfileUpdateSchema } from "../schema/user-profile-update-schema";
 
 export const usersRouter = router({
   findUsersWithRoles: protectedProcedure.query(async ({ ctx }) => {
@@ -25,7 +25,7 @@ export const usersRouter = router({
       )
       .then((result) => ({
         ...result,
-        data: recursivelyCamelize<UserProfile[] | null>(result.data),
+        data: recursivelyCamelize<UserAndRoles[] | null>(result.data),
       }));
   }),
 

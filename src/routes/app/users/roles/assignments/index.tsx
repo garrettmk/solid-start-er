@@ -12,11 +12,13 @@ import { Table, TableProps } from "@/components/tables/table";
 import { TableContainer } from "@/components/tables/table-container";
 import { Code } from "@/components/text/code";
 import { Heading } from "@/components/text/heading";
+import { roleAssignmentsMachines } from "@/features/roles/machines/role-assignments.machine";
 import { RoleAssignment } from "@/features/roles/schema/role-assignment-schema";
-import { createToggle } from "@/lib/util/create-toggle";
 import { getAuthenticatedServerContext } from "@/lib/util/get-page-context";
-import { ColumnDef, Row, TableOptions } from "@tanstack/solid-table";
-import { createMemo, createSignal, Show } from "solid-js";
+import { useRowSelection } from "@/lib/util/make-selection-handler";
+import { ColumnDef } from "@tanstack/solid-table";
+import { useMachine } from "@xstate/solid";
+import { Show } from "solid-js";
 import { A, useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
 
@@ -29,31 +31,19 @@ export function routeData() {
 
 export function RoleAssignmentsPage() {
   const data = useRouteData<typeof routeData>();
-  const isSidebarOpen = createToggle();
-  const [selectedRows, setSelectedRows] = createSignal({});
-  const selectedAssignments = createMemo(() => {
-    const selected = selectedRows();
-    const assignments = data();
-    if (!assignments) return [];
-
-    return Object.entries(selected)
-      .filter(([, isSelected]) => isSelected)
-      .map(([idx]) => assignments[parseInt(idx)]);
+  const [state, send] = useMachine(roleAssignmentsMachines);
+  const [selectionState, setSelectionState] = useRowSelection(data, (s) => {
+    send({ type: "SELECT", payload: s });
   });
-
-  const handleDelete = (assignment: Row<RoleAssignment>) => {
-    setSelectedRows([assignment]);
-    isSidebarOpen.on();
-  };
 
   const tableOptions: TableProps["options"] = {
     state: {
       get rowSelection() {
-        return selectedRows();
+        return selectionState();
       },
     },
     enableRowSelection: true,
-    onRowSelectionChange: setSelectedRows,
+    onRowSelectionChange: setSelectionState,
   };
 
   const columns: ColumnDef<RoleAssignment>[] = [
@@ -88,14 +78,18 @@ export function RoleAssignmentsPage() {
         <Button
           color="ghost"
           size="xs"
-          onClick={isSidebarOpen.on}
-          disabled={!selectedAssignments().length}
+          onClick={() => send("DELETE")}
+          disabled={!state.context.selection.length}
         >
           <TrashIcon size="xs" />
         </Button>
       ),
       cell: (p) => (
-        <Button color="ghost" size="xs" onClick={() => handleDelete(p.row)}>
+        <Button
+          color="ghost"
+          size="xs"
+          onClick={() => send({ type: "DELETE", payload: [p.row.original] })}
+        >
           <TrashIcon size="xs" />
         </Button>
       ),
@@ -136,28 +130,35 @@ export function RoleAssignmentsPage() {
           />
         </TableContainer>
       </PageContent>
-      <BlurOverlay isOpen={isSidebarOpen.value} onClick={isSidebarOpen.off} />
-      <Drawer placement="right" isOpen={isSidebarOpen.value} class="p-6">
+      <BlurOverlay
+        isOpen={state.matches("deleting")}
+        onClick={() => send("CANCEL")}
+      />
+      <Drawer placement="right" isOpen={state.matches("deleting")} class="p-6">
         <Heading level="2" class="text-2xl font-medium">
           Remove Role?
         </Heading>
-        <Show when={selectedAssignments().length === 1}>
+        <Show when={state.context.selection.length === 1}>
           <p class="mt-6">
             Are you sure you want to remove the role{" "}
-            <Code>{selectedAssignments()[0].name}</Code> from the user{" "}
-            {selectedAssignments()[0].fullName}?
+            <Code>{state.context.selection[0].name}</Code> from the user{" "}
+            {state.context.selection[0].fullName}?
           </p>
         </Show>
-        <Show when={selectedAssignments().length !== 1}>
+        <Show when={state.context.selection.length !== 1}>
           <p class="mt-6">
-            Are you sure you want to remove these {selectedAssignments().length}{" "}
-            role assignments?
+            Are you sure you want to remove these{" "}
+            {state.context.selection.length} role assignments?
           </p>
         </Show>
         <HStack justify="end" spacing="xs" class="mt-6">
-          <Button onClick={isSidebarOpen.off}>Cancel</Button>
-          <Button color="red">Remove Role</Button>
+          <Button onClick={() => send("CANCEL")}>Cancel</Button>
+          <Button color="red" onClick={() => send("CONFIRM")}>
+            Remove
+          </Button>
         </HStack>
+
+        <p class="text-red-600 mt-6">{state.context.error}</p>
       </Drawer>
     </>
   );

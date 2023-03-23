@@ -150,3 +150,45 @@ create view public.application_role_assignments as
     on p.id = au.user_id 
   left join public.application_roles ar 
     on au.role_id = ar.id;
+
+create view public.roles_and_permissions as
+  select 
+    r.*, 
+    json_agg(subquery.actions) as permissions
+  from
+    public.application_roles r
+  left join 
+    (
+      select 
+        p.role_id, 
+        json_build_object('subject', p.subject, 'actions', json_agg(p.action)) as actions
+      from
+        public.application_role_permissions p
+      group by
+        p.role_id,
+        p.subject
+    ) as subquery
+  on
+    r.id = subquery.role_id
+  group by
+    r.id;
+
+
+drop function public.delete_application_role_assignments;
+create or replace function public.delete_application_role_assignments(input text[][]) returns integer
+as $$ begin
+  return with deleted as (
+    delete from public.application_users where (user_id, role_id) in (
+      with pairs as (select input as arr)
+      select
+        cast(arr[i][1] as uuid) as user_id,
+        cast(arr[i][2] as integer) as role_id
+      from
+        pairs,
+        generate_subscripts((select arr from pairs), 1) i
+      returning
+        *
+      )
+    ) select count(*) from deleted;
+end; $$ language plpgsql;
+
