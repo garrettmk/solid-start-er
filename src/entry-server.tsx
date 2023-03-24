@@ -16,15 +16,12 @@ export default createHandler(
       const url = new URL(event.request.url);
       const tokens = getAuthTokens(event.request);
 
-      // Redirect unauthenticated users to the sign in page
-      // if (url.pathname.startsWith("/app") && !cookies.has("session"))
-      //   return redirect("/sign-in");
-
       // Create a supabase client for the request
       const supabase = await createSupabaseClient();
-      const user = tokens && (await useAuthTokens(supabase, tokens));
-
       event.locals.supabase = supabase;
+
+      // If tokens were sent, sign in the client and add the user to locals
+      const user = tokens && (await useAuthTokens(supabase, tokens));
       event.locals.user = user;
 
       // We don't need to create the caller if this is an API request

@@ -5,7 +5,7 @@ import { createStore } from "solid-js/store";
 import { isServer } from "solid-js/web";
 import { CookieSerializeOptions } from "solid-start";
 import { SignInData } from "../schemas/sign-in";
-import { createSupabase } from "../supabase/supabase";
+import { createSupabaseClient } from "../supabase/supabase";
 
 export type Auth = {
   user?: User;
@@ -19,7 +19,7 @@ export type Auth = {
 export const AuthContext = createContext<Auth>({} as Auth);
 
 export function createAuth(): Auth {
-  const supabase = createSupabase();
+  const supabase = createSupabaseClient();
   const [state, setState] = createStore({
     signInWithPassword: async (signIn: SignInData) => {
       const { data, error } = await supabase.auth.signInWithPassword(signIn);
