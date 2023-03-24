@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const newAccountInfoSchema = z
+export const newAccountInputSchema = z
   .object({
     fullName: z
       .string()
@@ -51,4 +51,4 @@ export const newAccountInfoSchema = z
       });
   });
 
-export type NewAccountInfoData = z.input<typeof newAccountInfoSchema>;
+export type NewAccountInput = z.input<typeof newAccountInputSchema>;

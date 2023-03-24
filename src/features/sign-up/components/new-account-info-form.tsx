@@ -7,17 +7,17 @@ import {
 } from "@modular-forms/solid";
 import { JSX, splitProps } from "solid-js";
 import {
-  NewAccountInfoData,
-  newAccountInfoSchema,
-} from "@/features/sign-up/schema/new-account-info";
+  NewAccountInput,
+  newAccountInputSchema,
+} from "@/features/sign-up/schema/new-account-input.schema";
 import { noop } from "@/lib/util/util";
 import { Checkbox } from "../../../components/inputs/check-box";
 import { TextInput } from "../../../components/inputs/text-input";
 
 // For the moment, module-forms doesn't catch the superRefine error in the
 // zod schema.
-const zodFormValidator = zodForm(newAccountInfoSchema);
-const formValidator: ValidateForm<NewAccountInfoData> = (values) => {
+const zodFormValidator = zodForm(newAccountInputSchema);
+const formValidator: ValidateForm<NewAccountInput> = (values) => {
   const { password, confirmPassword } = values;
   const errors = zodFormValidator(values);
 
@@ -29,8 +29,8 @@ const formValidator: ValidateForm<NewAccountInfoData> = (values) => {
 
 export interface NewAccountInfoFormProps
   extends Omit<JSX.HTMLAttributes<HTMLFormElement>, "onSubmit"> {
-  initialValues?: Partial<NewAccountInfoData>;
-  onSubmit?: (data: NewAccountInfoData) => void;
+  initialValues?: Partial<NewAccountInput>;
+  onSubmit?: (data: NewAccountInput) => void;
 }
 
 export function NewAccountInfoForm(props: NewAccountInfoFormProps) {
@@ -41,7 +41,7 @@ export function NewAccountInfoForm(props: NewAccountInfoFormProps) {
     "children",
   ]);
 
-  const form = createForm<NewAccountInfoData>({
+  const form = createForm<NewAccountInput>({
     initialValues,
     validate: formValidator,
   });

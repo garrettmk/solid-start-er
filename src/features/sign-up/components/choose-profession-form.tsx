@@ -8,29 +8,29 @@ import {
 import clsx from "clsx";
 import { JSX, Show, splitProps } from "solid-js";
 import {
-  SelectProfessionData,
-  selectProfessionSchema,
-} from "@/features/sign-up/schema/choose-profession";
+  ChooseProfessionInput,
+  chooseProfessionInputSchema,
+} from "@/features/sign-up/schema/choose-profession-input.schema";
 import { noop } from "@/lib/util/util";
 import { BigOptionButton } from "../../../components/inputs/big-option-button";
 import { VStack } from "../../../components/stacks/v-stack";
 
 export interface SelectProfessionFormProps
   extends Omit<JSX.HTMLAttributes<HTMLFormElement>, "onSubmit"> {
-  initialValues?: Partial<SelectProfessionData>;
-  onSubmit?: (data: SelectProfessionData) => void;
+  initialValues?: Partial<ChooseProfessionInput>;
+  onSubmit?: (data: ChooseProfessionInput) => void;
 }
 
-export function SelectProfessionForm(props: SelectProfessionFormProps) {
+export function ChooseProfessionForm(props: SelectProfessionFormProps) {
   const [, formProps] = splitProps(props, [
     "initialValues",
     "onSubmit",
     "children",
   ]);
   const { initialValues } = props;
-  const form = createForm<SelectProfessionData>({
+  const form = createForm<ChooseProfessionInput>({
     initialValues,
-    validate: zodForm(selectProfessionSchema),
+    validate: zodForm(chooseProfessionInputSchema),
   });
 
   return (

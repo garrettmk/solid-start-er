@@ -1,55 +1,35 @@
-import { chain } from "radash";
-import { createEffect, createSignal, Show } from "solid-js";
-import { createRouteAction } from "solid-start";
 import { Alert } from "@/components/alerts/alert";
 import { Button } from "@/components/buttons/button";
-import { ButtonPrev } from "@/components/buttons/button-prev";
-import { NewAccountInfoForm } from "@/features/sign-up/components/new-account-info-form";
-import { SelectProfessionForm } from "@/features/sign-up/components/select-profession-form";
 import { CheckIcon } from "@/components/icons/check-icon";
 import { ChevronLeftIcon } from "@/components/icons/chevron-left-icon";
 import { CloudIcon } from "@/components/icons/cloud-icon";
 import { Spinner } from "@/components/spinners/spinner";
 import { HStack } from "@/components/stacks/h-stack";
 import { Step, Steps } from "@/components/steps/steps";
-import { TabContent } from "@/components/tabs/tab-content";
-import { api } from "@/lib/trpc/client";
-import { createIndex, IndexContext } from "@/lib/contexts/index-context";
-import { SelectProfessionData } from "@/features/sign-up/schema/choose-profession";
-import { NewAccountInfoData } from "@/features/sign-up/schema/new-account-info";
-import { SignUpData } from "@/features/sign-up/schema/sign-up";
+import { ChooseProfessionForm } from "@/features/sign-up/components/choose-profession-form";
+import { NewAccountInfoForm } from "@/features/sign-up/components/new-account-info-form";
+import { signUpMachine } from "@/features/sign-up/machines/sign-up.machine";
+import { IndexContext } from "@/lib/contexts/index-context";
+import { useStateIndex } from "@/lib/util/use-state-index";
+import { useMachine } from "@xstate/solid";
+import { createEffect, Show } from "solid-js";
 
 /**
  *
  * @returns The sign up page
  */
 export function SignUpPage() {
-  const index = createIndex();
-  const [professionData, setProfessionData] =
-    createSignal<SelectProfessionData>();
-  const [newAccountData, setNewAccountData] =
-    createSignal<NewAccountInfoData>();
+  const [state, send] = useMachine(signUpMachine);
+  const index = useStateIndex(state, [
+    "gettingProfession",
+    "gettingAccountInfo",
+    "signingUp",
+    "error",
+    "success",
+  ]);
 
-  // Send sign up info to the API
-  const [request, signUp] = createRouteAction(
-    async (signUpData: SignUpData) => {
-      const { data, error } = await api.signUp.signUp.mutate(signUpData);
-      if (data.user) return data.user;
-      else throw error;
-    }
-  );
-
-  // Combine data from each page and call the route action
-  const handleSignup = () =>
-    signUp({
-      ...professionData()!,
-      ...newAccountData()!,
-    });
-
-  // Jump to the error or success pages after the request
   createEffect(() => {
-    if (request.error) index.set(2);
-    else if (request.result) index.set(3);
+    console.log(state.value, state);
   });
 
   return (
@@ -62,7 +42,7 @@ export function SignUpPage() {
         <a href="/" class="block text-sm mb-4">
           <ChevronLeftIcon class="inline w-4 h-4 stroke-2" /> Go Back
         </a>
-        <HStack class="mb-6" align="end">
+        <HStack class="mb-6" align="center">
           <CloudIcon class="w-12 h-12 mr-2" />
           <h1 class="text-3xl font-medium mr-6">Our Service</h1>
         </HStack>
@@ -92,7 +72,7 @@ export function SignUpPage() {
        */}
       <section class="dark bg-slate-900 text-white p-24 flex-grow">
         <IndexContext.Provider value={index}>
-          <Steps class="mb-12">
+          <Steps class="mb-12 justify-center">
             <Step index={0}>Personal Info</Step>
             <Step index={1}>Account Info</Step>
             <Step index={2}>Confirmation</Step>
@@ -101,36 +81,46 @@ export function SignUpPage() {
           {/**
            * Choose your profession
            */}
-          <TabContent index={0}>
-            <SelectProfessionForm
-              initialValues={professionData()}
-              onSubmit={chain(setProfessionData, index.next)}
+          <Show when={state.matches("gettingProfession")}>
+            <ChooseProfessionForm
+              initialValues={{ ...state.context.profession }}
+              onSubmit={(payload) => {
+                send({ type: "SAVE", payload });
+                send({ type: "NEXT" });
+              }}
             >
               <Button type="submit" size="xl" class="mb-4 w-full">
                 Next: Account Info
               </Button>
-            </SelectProfessionForm>
-          </TabContent>
+            </ChooseProfessionForm>
+          </Show>
 
           {/**
            * Basic user info
            */}
-          <TabContent index={1}>
+          <Show
+            when={
+              state.matches("gettingAccountInfo") || state.matches("signingUp")
+            }
+          >
             <NewAccountInfoForm
-              initialValues={newAccountData()}
-              onSubmit={chain(setNewAccountData, handleSignup)}
+              initialValues={{ ...state.context.account }}
+              onSubmit={(payload) => {
+                send({ type: "SAVE", payload });
+                send({ type: "NEXT" });
+              }}
             >
               <div class="columns-2 gap-6">
-                <ButtonPrev
-                  onClick={index.prev}
+                <Button
+                  onClick={() => send("BACK")}
                   size="xl"
                   class="w-full"
                   color="alternative"
                 >
                   Prev: Personal Info
-                </ButtonPrev>
+                </Button>
 
-                <Show when={!request.pending}>
+                <Show when={!state.matches("signingUp")}>
                   <Button
                     type="submit"
                     size="xl"
@@ -139,7 +129,7 @@ export function SignUpPage() {
                     Next: Create Account
                   </Button>
                 </Show>
-                <Show when={request.pending}>
+                <Show when={state.matches("signingUp")}>
                   <Button
                     disabled
                     size="xl"
@@ -155,32 +145,38 @@ export function SignUpPage() {
                 </Show>
               </div>
             </NewAccountInfoForm>
-          </TabContent>
+          </Show>
 
           {/**
            * Errors
            */}
-          <TabContent index={2}>
+          <Show when={state.matches("error")}>
             <h2 class="text-2xl font-bold mb-6">Uh-oh...</h2>
             <p class="mb-3">There was a problem creating your account:</p>
             <Alert class="mb-6" color="red">
-              {request.error?.message}
+              {state.context.error?.message ??
+                JSON.stringify(state.context.error, null, "  ")}
             </Alert>
-            <ButtonPrev size="xl" class="w-full" color="alternative">
+            <Button
+              size="xl"
+              class="w-full"
+              color="alternative"
+              onClick={() => send("BACK")}
+            >
               Prev: Account Info
-            </ButtonPrev>
-          </TabContent>
+            </Button>
+          </Show>
 
           {/**
            * Success
            */}
-          <TabContent index={3}>
+          <Show when={state.matches("success")}>
             <h2 class="text-2xl font-bold mb-6">Congratulations!</h2>
             <p>
               Your account has been created. A confirmation email has been sent.
               Please click on the link in the email to log in.
             </p>
-          </TabContent>
+          </Show>
         </IndexContext.Provider>
       </section>
     </main>
