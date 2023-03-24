@@ -11,8 +11,8 @@ import {
   newAccountInputSchema,
 } from "@/features/sign-up/schema/new-account-input.schema";
 import { noop } from "@/lib/util/util";
-import { Checkbox } from "../../../components/inputs/check-box";
-import { TextInput } from "../../../components/inputs/text-input";
+import { Checkbox } from "@/lib/components/inputs/check-box";
+import { TextInput } from "@/lib/components/inputs/text-input";
 
 // For the moment, module-forms doesn't catch the superRefine error in the
 // zod schema.

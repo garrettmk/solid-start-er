@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { JSX, splitProps } from "solid-js";
 import { Role, roleSchema } from "@/features/roles/schema/role-schema";
 import { noop } from "@/lib/util/util";
-import { TextInput } from "../../../components/inputs/text-input";
+import { TextInput } from "@/lib/components/inputs/text-input";
 
 export interface NewRoleFormProps
   extends Omit<JSX.HTMLAttributes<HTMLFormElement>, "onSubmit"> {

@@ -12,8 +12,8 @@ import {
   chooseProfessionInputSchema,
 } from "@/features/sign-up/schema/choose-profession-input.schema";
 import { noop } from "@/lib/util/util";
-import { BigOptionButton } from "../../../components/inputs/big-option-button";
-import { VStack } from "../../../components/stacks/v-stack";
+import { BigOptionButton } from "@/lib/components/inputs/big-option-button";
+import { VStack } from "@/lib/components/stacks/v-stack";
 
 export interface SelectProfessionFormProps
   extends Omit<JSX.HTMLAttributes<HTMLFormElement>, "onSubmit"> {

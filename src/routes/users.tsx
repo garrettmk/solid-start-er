@@ -1,8 +1,8 @@
 import { Outlet } from "solid-start";
-import { ModuleSidebar } from "@/components/module/module-sidebar";
-import { NavMenu } from "@/components/navigation/nav-menu";
-import { NavMenuHeader } from "@/components/navigation/nav-menu-header";
-import { NavMenuItem } from "@/components/navigation/nav-menu-item";
+import { ModuleSidebar } from "@/lib/components/module/module-sidebar";
+import { NavMenu } from "@/lib/components/navigation/nav-menu";
+import { NavMenuHeader } from "@/lib/components/navigation/nav-menu-header";
+import { NavMenuItem } from "@/lib/components/navigation/nav-menu-item";
 
 const styles = {
   sidebar: `

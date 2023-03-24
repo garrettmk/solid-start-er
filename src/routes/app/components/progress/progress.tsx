@@ -1,9 +1,9 @@
-import { PageContent } from "@/components/page/page-content";
-import { PageHeader } from "@/components/page/page-header";
-import { Panel } from "@/components/panels/panel";
-import { Progress } from "@/components/progress/progress";
-import { VStack } from "@/components/stacks/v-stack";
-import { Heading } from "@/components/text/heading";
+import { PageContent } from "@/lib/components/page/page-content";
+import { PageHeader } from "@/lib/components/page/page-header";
+import { Panel } from "@/lib/components/panels/panel";
+import { Progress } from "@/lib/components/progress/progress";
+import { VStack } from "@/lib/components/stacks/v-stack";
+import { Heading } from "@/lib/components/text/heading";
 
 export function ProgressComponentPage() {
   return (

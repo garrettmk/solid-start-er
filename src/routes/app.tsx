@@ -1,6 +1,6 @@
-import { NavProgress } from "@/components/navigation/nav-progress";
-import { NavSidebar } from "@/components/navigation/nav-sidebar";
-import { SignInOverlay } from "@/components/overlays/sign-in-overlay";
+import { NavProgress } from "@/lib/components/navigation/nav-progress";
+import { NavSidebar } from "@/lib/components/navigation/nav-sidebar";
+import { SignInOverlay } from "@/lib/components/overlays/sign-in-overlay";
 import { Outlet } from "solid-start";
 
 export function AppLayout() {

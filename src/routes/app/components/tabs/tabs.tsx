@@ -1,11 +1,11 @@
-import { PageContent } from "@/components/page/page-content";
-import { PageHeader } from "@/components/page/page-header";
-import { Panel } from "@/components/panels/panel";
-import { Tab } from "@/components/tabs/tab";
-import { TabList } from "@/components/tabs/tab-list";
-import { TabTrigger } from "@/components/tabs/tab-trigger";
-import { Tabs } from "@/components/tabs/tabs";
-import { Heading } from "@/components/text/heading";
+import { PageContent } from "@/lib/components/page/page-content";
+import { PageHeader } from "@/lib/components/page/page-header";
+import { Panel } from "@/lib/components/panels/panel";
+import { Tab } from "@/lib/components/tabs/tab";
+import { TabList } from "@/lib/components/tabs/tab-list";
+import { TabTrigger } from "@/lib/components/tabs/tab-trigger";
+import { Tabs } from "@/lib/components/tabs/tabs";
+import { Heading } from "@/lib/components/text/heading";
 import { TabsProvider } from "@/lib/contexts/tabs-context";
 
 export default function TabsPage() {

@@ -2,10 +2,10 @@ import { createForm, Field, Form, zodForm } from "@modular-forms/solid";
 import { JSX, splitProps } from "solid-js";
 import { createObjectURL } from "@/lib/util/create-object-url";
 import { encodeFile, noop, omitFalsyProperties } from "@/lib/util/util";
-import { Checkbox } from "@/components/inputs/check-box";
-import { Dropzone } from "@/components/inputs/dropzone";
-import { TextInput } from "@/components/inputs/text-input";
-import { VStack } from "@/components/stacks/v-stack";
+import { Checkbox } from "@/lib/components/inputs/check-box";
+import { Dropzone } from "@/lib/components/inputs/dropzone";
+import { TextInput } from "@/lib/components/inputs/text-input";
+import { VStack } from "@/lib/components/stacks/v-stack";
 import {
   UserProfileUpdate,
   userProfileUpdateSchema,

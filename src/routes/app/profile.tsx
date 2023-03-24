@@ -1,15 +1,15 @@
-import { Avatar } from "@/components/avatars/avatar";
-import { BreadcrumbItem } from "@/components/breadcrumbs/breadcrumb-item";
-import { Breadcrumbs } from "@/components/breadcrumbs/breadcrumbs";
-import { Button } from "@/components/buttons/button";
-import { Drawer } from "@/components/drawers/drawer";
-import { PencilIcon } from "@/components/icons/pencil-icon";
-import { XMarkIcon } from "@/components/icons/x-mark-icon";
-import { PageDivider } from "@/components/page/page-divider";
-import { PageHeader } from "@/components/page/page-header";
-import { Panel } from "@/components/panels/panel";
-import { HStack } from "@/components/stacks/h-stack";
-import { VStack } from "@/components/stacks/v-stack";
+import { Avatar } from "@/lib/components/avatars/avatar";
+import { BreadcrumbItem } from "@/lib/components/breadcrumbs/breadcrumb-item";
+import { Breadcrumbs } from "@/lib/components/breadcrumbs/breadcrumbs";
+import { Button } from "@/lib/components/buttons/button";
+import { Drawer } from "@/lib/components/drawers/drawer";
+import { PencilIcon } from "@/lib/components/icons/pencil-icon";
+import { XMarkIcon } from "@/lib/components/icons/x-mark-icon";
+import { PageDivider } from "@/lib/components/page/page-divider";
+import { PageHeader } from "@/lib/components/page/page-header";
+import { Panel } from "@/lib/components/panels/panel";
+import { HStack } from "@/lib/components/stacks/h-stack";
+import { VStack } from "@/lib/components/stacks/v-stack";
 import { UpdateProfileForm } from "@/features/users/components/update-profile-form";
 import { UserProfileUpdate } from "@/features/users/schema/user-profile-update-schema";
 import { api } from "@/lib/trpc/client";
@@ -95,12 +95,7 @@ export function ProfilePage() {
           You aren't a member of any tenants yet.
         </Panel>
       </main>
-      <Drawer
-        isOpen={isOpen.value}
-        onClickOutside={isOpen.off}
-        placement="right"
-        backdrop
-      >
+      <Drawer isOpen={isOpen.value} placement="right" backdrop>
         <HStack class="mb-6" align="center" justify="between">
           <h2 class="text-md font-medium text-slate-600 dark:text-slate-400">
             Edit Profile

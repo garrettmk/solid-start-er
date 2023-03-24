@@ -1,4 +1,4 @@
-import { PageHeader } from "@/components/page/page-header";
+import { PageHeader } from "@/lib/components/page/page-header";
 
 export function UserProfile() {
   return (

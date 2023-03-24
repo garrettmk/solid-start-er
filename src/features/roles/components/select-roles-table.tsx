@@ -1,5 +1,5 @@
-import { Checkbox } from "@/components/inputs/check-box";
-import { Table, TableProps } from "@/components/tables/table";
+import { Checkbox } from "@/lib/components/inputs/check-box";
+import { Table, TableProps } from "@/lib/components/tables/table";
 import { useRowSelection } from "@/lib/util/make-selection-handler";
 import { ColumnDef } from "@tanstack/solid-table";
 import clsx from "clsx";

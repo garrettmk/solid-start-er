@@ -1,7 +1,7 @@
 import { JSX, Match, splitProps, Switch } from "solid-js";
 import { HStack } from "../stacks/h-stack";
 import clsx from "clsx";
-import { CheckCircleSolidIcon } from "@/components/icons/check-circle-solid-icon";
+import { CheckCircleSolidIcon } from "@/lib/components/icons/check-circle-solid-icon";
 import { useIndexContext } from "@/lib/contexts/index-context";
 
 export interface StepsProps extends JSX.HTMLAttributes<HTMLUListElement> {}
