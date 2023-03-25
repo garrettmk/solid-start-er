@@ -4,9 +4,22 @@ import { recursivelyCamelize } from "@/lib/util/util";
 import b64toBlob from "b64-to-blob";
 import jimp from "jimp";
 import { shake } from "radash";
+import { z } from "zod";
 import { userProfileUpdateSchema } from "../schema/user-profile-update-schema";
 
 export const usersRouter = router({
+  inviteUsers: protectedProcedure
+    .input(z.array(z.string()))
+    .mutation(async ({ input, ctx }) => {
+      const { supabase, user } = ctx;
+
+      const results = await Promise.all(
+        input.map((email) => supabase.auth.admin.inviteUserByEmail(email))
+      );
+
+      return results;
+    }),
+
   findUsersWithRoles: protectedProcedure.query(async ({ ctx }) => {
     const { supabase, user } = ctx;
 
