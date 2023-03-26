@@ -1,14 +1,25 @@
 import clsx from "clsx";
-import { JSX, Show } from "solid-js";
+import { createEffect, createSignal, JSX, Show } from "solid-js";
 import { useAuthContext } from "@/lib/contexts/auth-context";
 import { SignInData } from "@/lib/schemas/sign-in";
 import { SignInForm } from "../forms/sign-in-form";
+import { storageHasAuthTokens } from "@/lib/util/auth-tokens.util";
+import { isServer } from "solid-js/web";
 
 export interface SignInOverlayProps
   extends JSX.HTMLAttributes<HTMLDivElement> {}
 
 export function SignInOverlay(props: SignInOverlayProps) {
   const auth = useAuthContext();
+  const [isOpen, setIsOpen] = createSignal<boolean>(
+    !isServer && storageHasAuthTokens()
+  );
+
+  createEffect(() => {
+    const isSignedIn = Boolean(auth.session);
+    setIsOpen(isSignedIn);
+    console.log("signed in?", Boolean(auth.session));
+  });
 
   const handleSignIn = (data: SignInData) => {
     const { email, password } = data;
@@ -24,7 +35,7 @@ export function SignInOverlay(props: SignInOverlayProps) {
       class={clsx(
         "fixed inset-0 z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full backdrop-blur-sm backdrop-grayscale flex items-center justify-center",
         {
-          hidden: auth.session,
+          hidden: !isOpen(),
         }
       )}
     >
