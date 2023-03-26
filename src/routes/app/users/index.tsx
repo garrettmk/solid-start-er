@@ -1,6 +1,6 @@
 import { User } from "@supabase/supabase-js";
 import { ColumnDef } from "@tanstack/solid-table";
-import { Accessor } from "solid-js";
+import { Accessor, Show } from "solid-js";
 import { useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
 import { ProfileAvatar } from "@/lib/components/avatars/profile-avatar";
@@ -17,9 +17,16 @@ import { DateAndTimeCell } from "@/lib/components/tables/date-and-time-cell";
 import { Table } from "@/lib/components/tables/table";
 import { TableContainer } from "@/lib/components/tables/table-container";
 import { Heading } from "@/lib/components/text/heading";
-import { UserProfile } from "@/features/users/schema/user-profile-schema";
+import { UserProfile } from "@/features/users/schema/user-profile.schema";
 import { getAuthenticatedServerContext } from "@/lib/util/get-page-context";
 import { camelizeObject } from "@/lib/util/util";
+import { useMachine } from "@xstate/solid";
+import { allUsersMachine } from "@/features/users/machines/all-users.machine";
+import { BlurOverlay } from "@/lib/components/overlays/blur-overlay";
+import { Drawer } from "@/lib/components/drawers/drawer";
+import { TextInput } from "@/lib/components/inputs/text-input";
+import { createForm } from "@modular-forms/solid";
+import { InviteUserForm } from "@/features/users/components/invite-user-form";
 
 export function routeData() {
   return createServerData$(async (_, event) => {
@@ -71,14 +78,14 @@ const userColumns: ColumnDef<UserProfile>[] = [
         <MenuItem href="#">Assign Roles...</MenuItem>
       </ButtonMenu>
     ),
-    cell: () => (
+    cell: ({ row }) => (
       <ButtonMenu
         placement="left-end"
         size="xs"
         color="ghost"
         content={<EllipsisHorizontalIcon />}
       >
-        <MenuItem href="#">Edit...</MenuItem>
+        <MenuItem href={`/app/users/${row.original.id}`}>Edit...</MenuItem>
         <MenuItem href="#">Assign Roles...</MenuItem>
       </ButtonMenu>
     ),
@@ -86,8 +93,13 @@ const userColumns: ColumnDef<UserProfile>[] = [
 ];
 
 export function UsersPage() {
-  const data = useRouteData() as unknown as Accessor<User[]>;
-  console.log(data());
+  const data = useRouteData<typeof routeData>();
+  const [state, send] = useMachine(allUsersMachine, {
+    context: {
+      users: data(),
+    },
+  });
+
   return (
     <>
       <PageHeader>
@@ -101,7 +113,7 @@ export function UsersPage() {
               <Heading level="1" class="text-xl font-medium mb-6">
                 All Users
               </Heading>
-              <Button>Send Invite</Button>
+              <Button onClick={() => send("START_INVITE")}>Send Invite</Button>
             </HStack>
             <p class="max-w-md">
               View all users of your application. Invite new users by clicking
@@ -111,11 +123,43 @@ export function UsersPage() {
           </div>
           <Table
             columns={userColumns}
-            data={data()}
+            data={state.context.users}
             class="-mb-[2px] [&_th:last-child]:w-[0.1%]"
           />
         </TableContainer>
       </PageContent>
+      <BlurOverlay
+        isOpen={state.matches("invitingUsers")}
+        onClick={() => send("CANCEL")}
+      />
+      <Drawer
+        isOpen={state.matches("invitingUsers")}
+        placement="right"
+        class="p-6"
+      >
+        <Heading level="1" class="text-2xl font-medium mb-6">
+          Invite User
+        </Heading>
+        <p>
+          Enter the email address where you would like to send an invitation.
+        </p>
+        <InviteUserForm
+          class="mt-4"
+          onSubmit={(invite) =>
+            send({ type: "SEND_INVITES", payload: [invite.email] })
+          }
+        >
+          <HStack class="mt-4" spacing="xs" justify="end">
+            <Button onClick={() => send("CANCEL")}>Cancel</Button>
+            <Button type="submit">Send Invite</Button>
+          </HStack>
+        </InviteUserForm>
+        <Show when={Boolean(state.context.error)}>
+          <p class="text-red-500 mt-4">
+            {JSON.stringify(state.context.error, null, "  ")}
+          </p>
+        </Show>
+      </Drawer>
     </>
   );
 }

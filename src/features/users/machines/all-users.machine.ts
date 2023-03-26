@@ -1,6 +1,6 @@
 import { api } from "@/lib/trpc/client";
 import { assign, createMachine, ErrorPlatformEvent } from "xstate";
-import { UserProfile } from "../schema/user-profile-schema";
+import { UserProfile } from "../schema/user-profile.schema";
 
 export interface AllUsersContext {
   users: UserProfile[];
@@ -11,14 +11,27 @@ export type InviteUsersEvent = {
   type: "START_INVITE";
 };
 
+export type CancelEvent = {
+  type: "CANCEL";
+};
+
 export type SendInvitesEvent = {
   type: "SEND_INVITES";
   payload: string[];
 };
 
-export type AllUsersEvent = InviteUsersEvent | ErrorPlatformEvent;
+export type OkEvent = {
+  type: "OK";
+};
 
-export const allUsersMachine = createMachine<AllUsersContext>(
+export type AllUsersEvent =
+  | InviteUsersEvent
+  | SendInvitesEvent
+  | CancelEvent
+  | OkEvent;
+// | ErrorPlatformEvent;
+
+export const allUsersMachine = createMachine<AllUsersContext, AllUsersEvent>(
   {
     id: "root",
     context: {
@@ -92,7 +105,8 @@ export const allUsersMachine = createMachine<AllUsersContext>(
   },
   {
     guards: {
-      hasEmails: (ctx, event) => Boolean(event.payload?.length > 0),
+      hasEmails: (ctx, event) =>
+        Boolean((event as SendInvitesEvent).payload?.length > 0),
     },
 
     actions: {
@@ -101,7 +115,7 @@ export const allUsersMachine = createMachine<AllUsersContext>(
       }),
 
       assignError: assign({
-        error: (ctx, event: ErrorPlatformEvent) => event.data,
+        error: (ctx, event) => (event as ErrorPlatformEvent).data,
       }),
 
       clearError: assign({
