@@ -1,11 +1,23 @@
 import { UserAndRoles } from "@/features/roles/schema/user-and-roles-schema";
-import { protectedProcedure, router } from "@/lib/trpc/trpc";
-import { recursivelyCamelize } from "@/lib/util/util";
+import { makeResponseSchema } from "@/lib/schemas/postgrest-response.schema";
+import { protectedProcedure, publicProcedure, router } from "@/lib/trpc/trpc";
+import {
+  recursively,
+  camelizeObject,
+  shakeNullValues,
+} from "@/lib/util/objects.util";
+import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import b64toBlob from "b64-to-blob";
 import jimp from "jimp";
 import { shake } from "radash";
 import { z } from "zod";
 import { userProfileUpdateSchema } from "../schema/user-profile-update-schema";
+import { UserProfile, userProfileSchema } from "../schema/user-profile.schema";
+
+const transformData: <T = object>(value: any) => T = recursively(
+  shakeNullValues,
+  camelizeObject
+);
 
 export const usersRouter = router({
   inviteUsers: protectedProcedure
@@ -18,6 +30,40 @@ export const usersRouter = router({
       );
 
       return results;
+    }),
+
+  getUser: publicProcedure
+    .input(z.string())
+    .output(makeResponseSchema(userProfileSchema))
+    .query(async ({ input, ctx }) => {
+      console.log("getUser", input);
+      const { supabase, user } = ctx;
+
+      const result = (await supabase
+        .from("user_profiles")
+        .select("*")
+        .eq("id", input)
+        .single()
+        .then((result) => ({
+          ...result,
+          data: transformData<UserProfile | null>(result.data),
+        }))) as PostgrestSingleResponse<UserProfile>;
+
+      return result;
+    }),
+
+  findUsers: protectedProcedure
+    .output(makeResponseSchema(z.array(userProfileSchema)))
+    .query(async ({ ctx }) => {
+      const { supabase, user } = ctx;
+
+      return (await supabase
+        .from("user_profiles")
+        .select("*")
+        .then((result) => ({
+          ...result,
+          data: transformData<UserProfile[] | null>(result.data),
+        }))) as PostgrestSingleResponse<UserProfile[]>;
     }),
 
   findUsersWithRoles: protectedProcedure.query(async ({ ctx }) => {
@@ -38,7 +84,7 @@ export const usersRouter = router({
       )
       .then((result) => ({
         ...result,
-        data: recursivelyCamelize<UserAndRoles[] | null>(result.data),
+        data: transformData<UserAndRoles[] | null>(result.data),
       }));
   }),
 
