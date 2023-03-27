@@ -1,13 +1,5 @@
 import { Session, User } from "@supabase/supabase-js";
-import {
-  mapValues,
-  shake,
-  camel,
-  snake,
-  mapKeys,
-  isObject,
-  isArray,
-} from "radash";
+import { mapValues, shake } from "radash";
 import { createStore } from "solid-js/store";
 import { supabaseServiceRole } from "../supabase/supabase";
 
@@ -106,40 +98,4 @@ export function stringifySupabaseSession(session: Session): string {
     session.provider_refresh_token,
     session.user.factors,
   ]);
-}
-
-export function camelizeObject<T = object>(obj: object): T {
-  return mapKeys(obj, (key) => camel(key)) as T;
-}
-
-export function recursivelyCamelize<T = any>(value: any): T {
-  if (isArray(value)) {
-    return value.map(recursivelyCamelize) as T;
-  } else if (isObject(value)) {
-    const camelizedEntries = Object.entries(value).map(([key, val]) => [
-      camel(key),
-      recursivelyCamelize(val),
-    ]);
-    return Object.fromEntries(camelizedEntries);
-  }
-
-  return value;
-}
-
-export function snakeifyObject<T = object>(obj: object): T {
-  return mapKeys(obj, (key) => snake(key)) as T;
-}
-
-export function recursivelySnakeify<T = any>(value: any): T {
-  if (isArray(value)) {
-    return value.map(recursivelySnakeify) as T;
-  } else if (isObject(value)) {
-    const snakedEntries = Object.entries(value).map(([key, val]) => [
-      snake(key),
-      recursivelySnakeify(val),
-    ]);
-    return Object.fromEntries(snakedEntries);
-  }
-
-  return value;
 }
