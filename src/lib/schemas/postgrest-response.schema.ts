@@ -32,8 +32,7 @@ export const postgrestSingleResponseSchema = z.union([
 ]);
 
 export function makeResponseSchema<T>(type: z.Schema<T>) {
-  return z.union([
-    postgrestResponseSuccessSchema.extend({ data: type }),
-    postgrestResponseFailureSchema,
-  ]);
+  return postgrestResponseSuccessSchema
+    .extend({ data: type })
+    .or(postgrestResponseFailureSchema);
 }
