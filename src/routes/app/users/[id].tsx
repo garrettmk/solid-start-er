@@ -1,11 +1,41 @@
+import { UserProfile } from "@/features/users/schema/user-profile.schema";
+import { BreadcrumbItem } from "@/lib/components/breadcrumbs/breadcrumb-item";
+import { Breadcrumbs } from "@/lib/components/breadcrumbs/breadcrumbs";
+import { PageContent } from "@/lib/components/page/page-content";
 import { PageHeader } from "@/lib/components/page/page-header";
+import { api } from "@/lib/trpc/client";
+import { RouteDataArgs, useParams, useRouteData } from "solid-start";
+import { createServerData$ } from "solid-start/server";
 
-export function UserProfile() {
-  return (
-    <main class="ml-[calc(theme(spacing.64)+3.25rem+1px)]">
-      <PageHeader title="Profile"></PageHeader>
-    </main>
+export function routeData({ params }: RouteDataArgs) {
+  return createServerData$(
+    async (id, event) => {
+      return api.users.getUser.query(id);
+    },
+    {
+      key: () => params.id,
+    }
   );
 }
 
-export default UserProfile;
+export function UserProfilePage() {
+  const { id } = useParams();
+  const user = useRouteData<typeof routeData>();
+
+  return (
+    <>
+      <PageHeader title="User Profile">
+        <Breadcrumbs>
+          <BreadcrumbItem href="/app/users/">Users</BreadcrumbItem>
+          <BreadcrumbItem>/</BreadcrumbItem>
+          <BreadcrumbItem>{user()?.data?.fullName}</BreadcrumbItem>
+        </Breadcrumbs>
+      </PageHeader>
+      <PageContent>
+        <pre>{JSON.stringify(user()?.data, null, 2)}</pre>
+      </PageContent>
+    </>
+  );
+}
+
+export default UserProfilePage;

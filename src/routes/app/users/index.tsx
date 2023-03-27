@@ -1,14 +1,14 @@
-import { User } from "@supabase/supabase-js";
-import { ColumnDef } from "@tanstack/solid-table";
-import { Accessor, Show } from "solid-js";
-import { useRouteData } from "solid-start";
-import { createServerData$ } from "solid-start/server";
+import { InviteUserForm } from "@/features/users/components/invite-user-form";
+import { allUsersMachine } from "@/features/users/machines/all-users.machine";
+import { UserProfile } from "@/features/users/schema/user-profile.schema";
 import { ProfileAvatar } from "@/lib/components/avatars/profile-avatar";
 import { Button } from "@/lib/components/buttons/button";
 import { ButtonMenu } from "@/lib/components/buttons/button-menu";
+import { Drawer } from "@/lib/components/drawers/drawer";
 import { EllipsisHorizontalIcon } from "@/lib/components/icons/ellipsis-horizontal-icon";
 import { SearchInput } from "@/lib/components/inputs/search-input";
 import { MenuItem } from "@/lib/components/menus/menu-item";
+import { BlurOverlay } from "@/lib/components/overlays/blur-overlay";
 import { PageContent } from "@/lib/components/page/page-content";
 import { PageHeader } from "@/lib/components/page/page-header";
 import { HStack } from "@/lib/components/stacks/h-stack";
@@ -17,25 +17,20 @@ import { DateAndTimeCell } from "@/lib/components/tables/date-and-time-cell";
 import { Table } from "@/lib/components/tables/table";
 import { TableContainer } from "@/lib/components/tables/table-container";
 import { Heading } from "@/lib/components/text/heading";
-import { UserProfile } from "@/features/users/schema/user-profile.schema";
 import { getAuthenticatedServerContext } from "@/lib/util/get-page-context";
-import { camelizeObject } from "@/lib/util/util";
+import { ColumnDef } from "@tanstack/solid-table";
 import { useMachine } from "@xstate/solid";
-import { allUsersMachine } from "@/features/users/machines/all-users.machine";
-import { BlurOverlay } from "@/lib/components/overlays/blur-overlay";
-import { Drawer } from "@/lib/components/drawers/drawer";
-import { TextInput } from "@/lib/components/inputs/text-input";
-import { createForm } from "@modular-forms/solid";
-import { InviteUserForm } from "@/features/users/components/invite-user-form";
+import { Show } from "solid-js";
+import { useRouteData } from "solid-start";
+import { createServerData$ } from "solid-start/server";
 
 export function routeData() {
   return createServerData$(async (_, event) => {
-    const { supabase } = getAuthenticatedServerContext(event);
+    const { api } = getAuthenticatedServerContext(event);
+    const { data, error } = await api.users.findUsers();
 
-    const { data, error } = await supabase.from("user_profiles").select("*");
     if (error) console.log(error);
-
-    return data?.map(camelizeObject<UserProfile>);
+    return data ?? undefined;
   });
 }
 
