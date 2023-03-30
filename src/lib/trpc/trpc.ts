@@ -10,8 +10,6 @@ export type ApiContext = {
 
 const t = initTRPC.context<ApiContext>().create({
   errorFormatter: ({ shape, error }) => {
-    console.log(error);
-
     return {
       ...shape,
       data: {

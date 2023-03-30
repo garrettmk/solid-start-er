@@ -12,13 +12,12 @@ export interface SignInOverlayProps
 export function SignInOverlay(props: SignInOverlayProps) {
   const auth = useAuthContext();
   const [isOpen, setIsOpen] = createSignal<boolean>(
-    !isServer && storageHasAuthTokens()
+    !isServer && !storageHasAuthTokens()
   );
 
   createEffect(() => {
     const isSignedIn = Boolean(auth.session);
-    setIsOpen(isSignedIn);
-    console.log("signed in?", Boolean(auth.session));
+    setIsOpen(!isSignedIn);
   });
 
   const handleSignIn = (data: SignInData) => {
@@ -31,7 +30,7 @@ export function SignInOverlay(props: SignInOverlayProps) {
       id="authentication-modal"
       data-modal-target="authentication-modal"
       tabindex="-1"
-      aria-hidden="true"
+      aria-hidden={isOpen() ? "false" : "true"}
       class={clsx(
         "fixed inset-0 z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full backdrop-blur-sm backdrop-grayscale flex items-center justify-center",
         {

@@ -1,16 +1,17 @@
-import { UserProfile } from "@/features/users/schema/user-profile.schema";
 import { BreadcrumbItem } from "@/lib/components/breadcrumbs/breadcrumb-item";
 import { Breadcrumbs } from "@/lib/components/breadcrumbs/breadcrumbs";
 import { PageContent } from "@/lib/components/page/page-content";
 import { PageHeader } from "@/lib/components/page/page-header";
-import { api } from "@/lib/trpc/client";
+import { getAuthenticatedServerContext } from "@/lib/util/get-page-context";
 import { RouteDataArgs, useParams, useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
 
 export function routeData({ params }: RouteDataArgs) {
   return createServerData$(
     async (id, event) => {
-      return api.users.getUser.query(id);
+      const { api } = getAuthenticatedServerContext(event);
+
+      return api.users.getUser(id);
     },
     {
       key: () => params.id,

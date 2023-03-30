@@ -32,11 +32,10 @@ export const usersRouter = router({
       return results;
     }),
 
-  getUser: publicProcedure
+  getUser: protectedProcedure
     .input(z.string())
     .output(makeResponseSchema(userProfileSchema))
     .query(async ({ input, ctx }) => {
-      console.log("getUser", input);
       const { supabase, user } = ctx;
 
       const result = (await supabase
