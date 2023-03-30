@@ -3,18 +3,18 @@ import {
   renderAsync,
   StartServer,
 } from "solid-start/entry-server";
+import { createSupabaseClient } from "./lib/supabase/supabase";
 import {
-  createSupabaseClient,
-  getAuthTokens,
+  getAuthTokensFromRequest,
   useAuthTokens,
-} from "./lib/supabase/supabase";
+} from "./lib/util/auth-tokens.util";
 import { apiRouter } from "./lib/trpc/router";
 
 export default createHandler(
   ({ forward }) =>
     async (event) => {
       const url = new URL(event.request.url);
-      const tokens = getAuthTokens(event.request);
+      const tokens = getAuthTokensFromRequest(event.request);
 
       // Create a supabase client for the request
       const supabase = await createSupabaseClient();

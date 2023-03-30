@@ -1,4 +1,3 @@
-import { serializeCookie } from "@supabase/auth-helpers-shared";
 import { AuthError, AuthSession, User } from "@supabase/supabase-js";
 import {
   createContext,
@@ -10,7 +9,6 @@ import {
 } from "solid-js";
 import { createStore } from "solid-js/store";
 import { isServer } from "solid-js/web";
-import { CookieSerializeOptions } from "solid-start";
 import { SignInData } from "../schemas/sign-in";
 import { createSupabaseClient } from "../supabase/supabase";
 import {
@@ -18,7 +16,6 @@ import {
   removeAuthTokensFromStorage,
   saveAuthTokensInStorage,
 } from "../util/auth-tokens.util";
-import { parseCookieString } from "../util/util";
 
 export type Auth = {
   user?: User;
@@ -32,7 +29,10 @@ export type Auth = {
 export const AuthContext = createContext<Auth>({} as Auth);
 
 export function createAuth(): Auth {
+  // TODO: extract supabase client to a separate context
   const [supabase] = createSignal(createSupabaseClient());
+
+  // The Auth store
   const [state, setState] = createStore<Auth>({
     signInWithPassword: async (signIn: SignInData) => {
       const { data, error } = await supabase().auth.signInWithPassword(signIn);
@@ -97,10 +97,6 @@ export function createAuth(): Auth {
         }));
       }
     });
-
-  createEffect(() => {
-    console.log("auth state changed", { ...state });
-  });
 
   return state;
 }

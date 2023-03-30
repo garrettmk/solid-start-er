@@ -9,10 +9,16 @@ import {
 } from "radash";
 
 /**
- * Return a new object with all null values removed
+ * Return a new object with all falsy values removed
  * @param obj
  * @returns
  */
+export function shakeFalsyValues<T = object>(obj: object): T {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([_, value]) => !value)
+  ) as T;
+}
+
 export function shakeNullValues<T = object>(obj: object): T {
   return Object.fromEntries(
     Object.entries(obj).filter(([_, value]) => value !== null)

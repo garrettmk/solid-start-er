@@ -1,19 +1,20 @@
-import { createForm, Field, Form, zodForm } from "@modular-forms/solid";
-import { JSX, splitProps } from "solid-js";
-import { createObjectURL } from "@/lib/util/create-object-url";
-import { encodeFile, noop, omitFalsyProperties } from "@/lib/util/util";
-import { Checkbox } from "@/lib/components/inputs/check-box";
-import { Dropzone } from "@/lib/components/inputs/dropzone";
-import { TextInput } from "@/lib/components/inputs/text-input";
-import { VStack } from "@/lib/components/stacks/v-stack";
 import {
   UserProfileUpdate,
   userProfileUpdateSchema,
 } from "@/features/users/schema/user-profile-update-schema";
+import { Checkbox } from "@/lib/components/inputs/check-box";
+import { Dropzone } from "@/lib/components/inputs/dropzone";
+import { TextInput } from "@/lib/components/inputs/text-input";
+import { VStack } from "@/lib/components/stacks/v-stack";
+import { createObjectURL } from "@/lib/util/create-object-url";
+import { shakeFalsyValues } from "@/lib/util/objects.util";
+import { encodeFile, noop } from "@/lib/util/util";
+import { createForm, Field, Form, zodForm } from "@modular-forms/solid";
+import { JSX, splitProps } from "solid-js";
 
 const zodFormValidator = zodForm(userProfileUpdateSchema);
 const validateForm = (values: any) =>
-  zodFormValidator(omitFalsyProperties(values));
+  zodFormValidator(shakeFalsyValues(values));
 
 export interface UpdateProfileFormProps
   extends Omit<JSX.HTMLAttributes<HTMLFormElement>, "onSubmit"> {
@@ -39,7 +40,7 @@ export function UpdateProfileForm(props: UpdateProfileFormProps) {
   const imageURL = createObjectURL();
 
   const handleSubmit = async (data: UserProfileUpdate) => {
-    data = omitFalsyProperties(data);
+    data = shakeFalsyValues(data);
 
     const avatarImage = data.avatarImage && {
       name: data.avatarImage.name,

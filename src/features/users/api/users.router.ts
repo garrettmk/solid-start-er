@@ -1,9 +1,9 @@
 import { UserAndRoles } from "@/features/roles/schema/user-and-roles-schema";
 import { makeResponseSchema } from "@/lib/schemas/postgrest-response.schema";
-import { protectedProcedure, publicProcedure, router } from "@/lib/trpc/trpc";
+import { protectedProcedure, router } from "@/lib/trpc/trpc";
 import {
-  recursively,
   camelizeObject,
+  recursively,
   shakeNullValues,
 } from "@/lib/util/objects.util";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
@@ -14,12 +14,16 @@ import { z } from "zod";
 import { userProfileUpdateSchema } from "../schema/user-profile-update-schema";
 import { UserProfile, userProfileSchema } from "../schema/user-profile.schema";
 
+// The database uses snake_case and nulls, but we want camelCase and undefined
 const transformData: <T = object>(value: any) => T = recursively(
   shakeNullValues,
   camelizeObject
 );
 
 export const usersRouter = router({
+  /**
+   * Invite a user to the application
+   */
   inviteUsers: protectedProcedure
     .input(z.array(z.string()))
     .mutation(async ({ input, ctx }) => {
@@ -32,6 +36,9 @@ export const usersRouter = router({
       return results;
     }),
 
+  /**
+   * Get a user by ID
+   */
   getUser: protectedProcedure
     .input(z.string())
     .output(makeResponseSchema(userProfileSchema))
@@ -51,6 +58,9 @@ export const usersRouter = router({
       return result;
     }),
 
+  /**
+   * Get all users
+   */
   findUsers: protectedProcedure
     .output(makeResponseSchema(z.array(userProfileSchema)))
     .query(async ({ ctx }) => {
@@ -65,6 +75,9 @@ export const usersRouter = router({
         }))) as PostgrestSingleResponse<UserProfile[]>;
     }),
 
+  /**
+   *
+   */
   findUsersWithRoles: protectedProcedure.query(async ({ ctx }) => {
     const { supabase, user } = ctx;
 
@@ -87,11 +100,17 @@ export const usersRouter = router({
       }));
   }),
 
+  /**
+   *
+   */
   getCurrentProfile: protectedProcedure.query(async ({ ctx }) => {
     const { supabase, user } = ctx;
     return supabase.from("profiles").select("*").eq("id", user!.id).single();
   }),
 
+  /**
+   * Update the current user's profile
+   */
   updateCurrentProfile: protectedProcedure
     .input(userProfileUpdateSchema)
     .mutation(async ({ input, ctx }) => {
