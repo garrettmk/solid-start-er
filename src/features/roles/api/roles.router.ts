@@ -3,17 +3,17 @@ import { RoleRow } from "@/features/roles/schema/role-row-schema";
 import { Role, roleSchema } from "@/features/roles/schema/role-schema";
 import { roleUpdateInputSchema } from "@/features/roles/schema/role-update-input-schema";
 import { makeResponseSchema } from "@/lib/schemas/postgrest-response.schema";
-import { camelizeObject, snakeifyObject } from "@/lib/util/util";
+import { camelizeObject, snakeifyObject } from "@/lib/util/objects.util";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { group, mapValues, pick, shake } from "radash";
 import { z } from "zod";
-import { protectedProcedure, router } from "../../../lib/trpc/trpc";
+import { protectedProcedure, makeRouter } from "../../../lib/trpc/trpc";
 import {
   RoleAssignment,
   roleAssignmentSchema,
 } from "../schema/role-assignment-schema";
 
-export const rolesRouter = router({
+export const rolesRouter = makeRouter({
   getRolesAndPermissions: protectedProcedure
     .output(makeResponseSchema(z.array(roleSchema)))
     .query(async ({ ctx }) => {

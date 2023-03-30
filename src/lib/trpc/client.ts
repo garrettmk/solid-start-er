@@ -1,7 +1,7 @@
 import { createTRPCProxyClient, httpBatchLink, loggerLink } from "@trpc/client";
-import type { ApiRouter } from "./router";
+import type { APIRouter } from "./router";
 
-export const api = createTRPCProxyClient<ApiRouter>({
+export const api = createTRPCProxyClient<APIRouter>({
   links: [
     loggerLink(),
     httpBatchLink({

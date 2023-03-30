@@ -1,6 +1,6 @@
 import { UserAndRoles } from "@/features/roles/schema/user-and-roles-schema";
 import { makeResponseSchema } from "@/lib/schemas/postgrest-response.schema";
-import { protectedProcedure, router } from "@/lib/trpc/trpc";
+import { protectedProcedure, makeRouter } from "@/lib/trpc/trpc";
 import {
   camelizeObject,
   recursively,
@@ -20,7 +20,7 @@ const transformData: <T = object>(value: any) => T = recursively(
   camelizeObject
 );
 
-export const usersRouter = router({
+export const usersRouter = makeRouter({
   /**
    * Invite a user to the application
    */

@@ -1,7 +1,7 @@
-import { publicProcedure, router } from "@/lib/trpc/trpc";
+import { publicProcedure, makeRouter } from "@/lib/trpc/trpc";
 import { signUpInputSchema } from "../schema/sign-up-input.schema";
 
-export const signUpRouter = router({
+export const signUpRouter = makeRouter({
   signUp: publicProcedure
     .input(signUpInputSchema)
     .mutation(async ({ input, ctx }) => {
