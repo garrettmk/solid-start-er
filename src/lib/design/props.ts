@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { shake } from "radash";
 import { clamp } from "../util/util";
 
 /**
@@ -30,6 +31,8 @@ export const sizePropValues: SizeProp[] = [
   "4xl",
 ];
 
+export type SizeClassScale = Record<SizeProp, string>;
+
 /**
  * Options for adjusting a size prop
  */
@@ -58,20 +61,24 @@ export const adjustSize = (size: SizeProp, options?: ClampSizeOptions) => {
   return sizePropValues[valueIndex];
 };
 
+export type SizeToClassOptions = ClampSizeOptions & {
+  scale?: SizeClassScale;
+};
+
+export const sizeToClass = (size: SizeProp, options: SizeToClassOptions) => {
+  const adjustedSize = adjustSize(size, options);
+  return options.scale?.[adjustedSize] ?? "";
+};
+
 /**
  * Returns a width class for a given size
- *
  * @param size
  * @param options
  * @returns
  */
-export const widthClass = (
-  size: SizeProp = "md",
-  options?: ClampSizeOptions
-) => {
-  const clampedSize = options ? adjustSize(size, options) : size;
-  return (
-    {
+export const widthClass = (size: SizeProp, options?: SizeToClassOptions) =>
+  sizeToClass(size, {
+    scale: {
       none: "",
       xs: "w-6",
       sm: "w-8",
@@ -81,9 +88,9 @@ export const widthClass = (
       "2xl": "w-16",
       "3xl": "w-20",
       "4xl": "w-24",
-    }[clampedSize] ?? ""
-  );
-};
+    },
+    ...options,
+  });
 
 /**
  * Returns a height class for a given size
@@ -93,11 +100,10 @@ export const widthClass = (
  */
 export const heightClass = (
   size: SizeProp = "md",
-  options?: ClampSizeOptions
-) => {
-  const clampedSize = options ? adjustSize(size, options) : size;
-  return (
-    {
+  options?: SizeToClassOptions
+) =>
+  sizeToClass(size, {
+    scale: {
       none: "",
       xs: "h-6",
       sm: "h-8",
@@ -107,8 +113,13 @@ export const heightClass = (
       "2xl": "h-16",
       "3xl": "h-20",
       "4xl": "h-24",
-    }[clampedSize] ?? ""
-  );
+    },
+    ...options,
+  });
+
+export type SizeClassesOptions = ClampSizeOptions & {
+  widthScale?: SizeClassScale;
+  heightScale?: SizeClassScale;
 };
 
 /**
@@ -120,9 +131,12 @@ export const heightClass = (
  */
 export const sizeClasses = (
   size: SizeProp = "md",
-  options?: ClampSizeOptions
+  options?: SizeClassesOptions
 ) => {
-  return clsx(widthClass(size, options), heightClass(size, options));
+  const widthOptions = shake({ ...options, scale: options?.widthScale });
+  const heightOptions = shake({ ...options, scale: options?.heightScale });
+
+  return clsx(widthClass(size, widthOptions), heightClass(size, heightOptions));
 };
 
 /**
@@ -134,11 +148,10 @@ export const sizeClasses = (
  */
 export const textSizeClass = (
   size: SizeProp = "md",
-  options?: ClampSizeOptions
-) => {
-  const clampedSize = options ? adjustSize(size, options) : size;
-  return (
-    {
+  options?: SizeToClassOptions
+) =>
+  sizeToClass(size, {
+    scale: {
       none: "",
       xs: "text-xs",
       sm: "text-sm",
@@ -148,9 +161,9 @@ export const textSizeClass = (
       "2xl": "text-2xl",
       "3xl": "text-3xl",
       "4xl": "text-4xl",
-    }[clampedSize] ?? ""
-  );
-};
+    },
+    ...options,
+  });
 
 /**
  * Returns a padding-x class for a given size
@@ -192,7 +205,7 @@ export const paddingYClass = (
   return (
     {
       none: "",
-      xs: "py-1",
+      xs: "py-0.5",
       sm: "py-2",
       md: "py-3",
       lg: "py-4",
@@ -212,11 +225,10 @@ export const paddingYClass = (
  */
 export const paddingClass = (
   size: SizeProp = "md",
-  options?: ClampSizeOptions
-) => {
-  const clampedSize = options ? adjustSize(size, options) : size;
-  return (
-    {
+  options?: SizeToClassOptions
+) =>
+  sizeToClass(size, {
+    scale: {
       none: "",
       xs: "p-1",
       sm: "p-2",
@@ -226,9 +238,9 @@ export const paddingClass = (
       "2xl": "p-6",
       "3xl": "p-8",
       "4xl": "p-10",
-    }[clampedSize] ?? ""
-  );
-};
+    },
+    ...options,
+  });
 
 /**
  * Returns both padding-x and padding-y classes for a given size
