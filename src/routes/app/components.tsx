@@ -19,7 +19,9 @@ export function ComponentsLayout() {
           <NavMenuItem href="/app/components/alerts/alert">Alert</NavMenuItem>
 
           <NavMenuHeader>Avatars</NavMenuHeader>
-          <NavMenuItem href="/app/components/avatars/alert">Avatar</NavMenuItem>
+          <NavMenuItem href="/app/components/avatars/avatar">
+            Avatar
+          </NavMenuItem>
 
           <NavMenuHeader>Breadcrumbs</NavMenuHeader>
           <NavMenuItem href="/app/components/breadcrumbs/breadcrumbs">

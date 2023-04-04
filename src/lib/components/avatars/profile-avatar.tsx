@@ -1,9 +1,9 @@
 import { splitProps } from "solid-js";
-import { UserProfileData } from "@/lib/schemas/user-profile-schema";
+import { UserProfile } from "@/features/users/schema/user-profile.schema";
 import { Avatar, AvatarProps } from "./avatar";
 
 export interface ProfileAvatarProps extends AvatarProps {
-  profile?: UserProfileData;
+  profile?: UserProfile;
 }
 
 export function ProfileAvatar(props: ProfileAvatarProps) {
