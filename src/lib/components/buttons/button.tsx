@@ -1,5 +1,6 @@
-import { createMemo, JSX, Show, splitProps } from "solid-js";
+import { paddingClass, SizeProp, textSizeClass } from "@/lib/design/props";
 import clsx from "clsx";
+import { createMemo, JSX, Show, splitProps } from "solid-js";
 import * as styles from "./button-styles";
 
 export interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
@@ -12,7 +13,7 @@ export interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
     | "blue"
     | "red"
     | "green";
-  size?: "xs" | "sm" | "md" | "lg" | "xl" | "none";
+  size?: SizeProp;
   description?: string;
   icon?: boolean;
   disabled?: boolean;
@@ -34,13 +35,15 @@ export function Button(props: ButtonProps) {
     const state = props.disabled ? "disabled" : "enabled";
     const size = props.size ?? "md";
     const color = props.color ?? "blue";
+    const paddingScale = props.icon
+      ? styles.iconPaddingScale
+      : styles.paddingScale;
 
     return clsx(
       styles.base,
       props.disabled && styles.disabled,
-      !props.icon && styles.padding[size],
-      props.icon && styles.iconPadding[size],
-      styles.textSize[size],
+      paddingClass(size, { scale: paddingScale }),
+      textSizeClass(size),
       styles.colors[color][state],
       props.class
     );

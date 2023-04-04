@@ -1,34 +1,32 @@
+import { SizeClassScale } from "@/lib/design/props";
 import { ButtonProps } from "./button";
 
 export const base =
   "rounded-lg font-medium focus:ring-4 focus:outline-none flex justify-center items-center basis-grow-0 basis-shrink-0";
 export const disabled = "cursor-not-allowed";
 
-export const padding: Record<NonNullable<ButtonProps["size"]>, string> = {
+export const paddingScale: SizeClassScale = {
   none: "",
   xs: "px-2.5 py-0.5",
   sm: "px-3.5 py-2",
   md: "px-5 py-2.5",
   lg: "px-6 py-3",
   xl: "px-7 py-4",
+  "2xl": "px-8 py-5",
+  "3xl": "px-10 py-6",
+  "4xl": "px-12 py-7",
 };
 
-export const iconPadding: Record<NonNullable<ButtonProps["size"]>, string> = {
+export const iconPaddingScale: SizeClassScale = {
   none: "",
   xs: "px-1.5 py-1.5",
   sm: "px-2 py-2",
   md: "px-3 py-3",
   lg: "px-4 py-4",
   xl: "px-5 py-5",
-};
-
-export const textSize: Record<NonNullable<ButtonProps["size"]>, string> = {
-  none: "",
-  xs: "text-xs",
-  sm: "text-sm",
-  md: "text-md",
-  lg: "text-lg",
-  xl: "text-xl",
+  "2xl": "px-6 py-6",
+  "3xl": "px-8 py-7",
+  "4xl": "px-10 py-8",
 };
 
 export const colors: Record<NonNullable<ButtonProps["color"]>, any> = {
@@ -45,7 +43,7 @@ export const colors: Record<NonNullable<ButtonProps["color"]>, any> = {
       focus:ring-slate-300  dark:focus:ring-slate-700
     `,
     disabled: `
-      text-slate-300            dark:border-slate-600
+      text-slate-300        dark:border-slate-600
       bg-slate-700          dark:bg-slate-700
     `,
   },
