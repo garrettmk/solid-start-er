@@ -7,7 +7,7 @@ import {
   TableOptions,
 } from "@tanstack/solid-table";
 import clsx from "clsx";
-import { Accessor } from "solid-js";
+import { Accessor, createEffect } from "solid-js";
 import { Component, For, JSX, Show, splitProps } from "solid-js";
 
 const styles = {
@@ -56,11 +56,12 @@ export function Table(props: TableProps) {
     "size",
   ]);
 
+  const data = () =>
+    typeof props.data === "function" ? props.data() ?? [] : props.data ?? [];
+
   const table = createSolidTable({
     get data() {
-      return typeof props.data === "function"
-        ? props.data() ?? []
-        : props.data ?? [];
+      return data();
     },
     columns: props.columns ?? [],
     getCoreRowModel: getCoreRowModel(),
