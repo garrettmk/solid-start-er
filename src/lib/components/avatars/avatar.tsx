@@ -1,42 +1,26 @@
-import { JSX, Match, splitProps, Switch } from "solid-js";
-import { UserIcon } from "../icons/user-icon";
+import {
+  adjustSize,
+  sizeClasses,
+  SizeProp,
+  textSizeClass,
+} from "@/lib/design/props";
 import clsx from "clsx";
+import { createMemo, JSX, Match, splitProps, Switch } from "solid-js";
+import { UserIcon } from "../icons/user-icon";
 
 export interface AvatarProps extends JSX.HTMLAttributes<HTMLDivElement> {
   src?: string;
   initials?: string;
-  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "huge";
+  size?: SizeProp;
   shape?: "round" | "square";
 }
 
 const styles = {
-  base: "p-2 inline-block overflow-hidden bg-slate-300 dark:bg-slate-600 flex items-center justify-center text-slate-600 dark:text-slate-300 aspect-square",
+  base: "inline-block overflow-hidden bg-slate-300 dark:bg-slate-600 flex items-center justify-center text-slate-600 dark:text-slate-300 aspect-square",
 
   shape: {
     round: "rounded-full",
     square: "rounded",
-  },
-
-  size: {
-    sm: "w-8 h-8",
-    md: "w-10 h-10",
-    lg: "w-12 h-12",
-    xl: "w-14 h-14",
-    "2xl": "w-16 h-16",
-    "3xl": "w-20 h-20",
-    "4xl": "w-24 h-24",
-    huge: "w-64 h-64",
-  },
-
-  fontSize: {
-    sm: "text-sm",
-    md: "text-md",
-    lg: "text-lg",
-    xl: "text-xl",
-    "2xl": "text-2xl",
-    "3xl": "text-3xl",
-    "4xl": "text-4xl",
-    huge: "text-[7rem]",
   },
 };
 
@@ -44,15 +28,22 @@ export function Avatar(props: AvatarProps) {
   const [, elementProps] = splitProps(props, [
     "src",
     "initials",
+    "size",
     "shape",
     "class",
   ]);
+
+  const size = createMemo(() =>
+    adjustSize(props.size ?? "md", {
+      min: "xs",
+    })
+  );
 
   return (
     <div
       class={clsx(
         styles.base,
-        styles.size[props.size ?? "md"],
+        sizeClasses(size()),
         styles.shape[props.shape ?? "round"],
         props.class
       )}
@@ -66,18 +57,12 @@ export function Avatar(props: AvatarProps) {
           />
         </Match>
         <Match when={props.initials}>
-          <span
-            class={clsx("font-medium", styles.fontSize[props.size ?? "md"])}
-          >
+          <span class={clsx("font-medium", textSizeClass(size()))}>
             {props.initials}
           </span>
         </Match>
         <Match when={true}>
-          <div class={styles.size[props.size ?? "md"]}>
-            <UserIcon
-              class={clsx(styles.size[props.size ?? "md"], "translate-y-[15%]")}
-            />
-          </div>
+          <UserIcon size={size()} class="translate-y-[18%]" />
         </Match>
       </Switch>
     </div>
