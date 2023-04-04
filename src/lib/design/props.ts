@@ -151,3 +151,94 @@ export const textSizeClass = (
     }[clampedSize] ?? ""
   );
 };
+
+/**
+ * Returns a padding-x class for a given size
+ * @param size
+ * @param options
+ * @returns
+ */
+export const paddingXClass = (
+  size: SizeProp = "md",
+  options?: ClampSizeOptions
+) => {
+  const clampedSize = options ? adjustSize(size, options) : size;
+  return (
+    {
+      none: "",
+      xs: "px-1",
+      sm: "px-2",
+      md: "px-3",
+      lg: "px-4",
+      xl: "px-5",
+      "2xl": "px-6",
+      "3xl": "px-8",
+      "4xl": "px-10",
+    }[clampedSize] ?? ""
+  );
+};
+
+/**
+ * Returns a padding-y class for a given size
+ * @param size
+ * @param options
+ * @returns
+ */
+export const paddingYClass = (
+  size: SizeProp = "md",
+  options?: ClampSizeOptions
+) => {
+  const clampedSize = options ? adjustSize(size, options) : size;
+  return (
+    {
+      none: "",
+      xs: "py-1",
+      sm: "py-2",
+      md: "py-3",
+      lg: "py-4",
+      xl: "py-5",
+      "2xl": "py-6",
+      "3xl": "py-8",
+      "4xl": "py-10",
+    }[clampedSize] ?? ""
+  );
+};
+
+/**
+ * Returns a padding class for a given size
+ * @param size
+ * @param options
+ * @returns
+ */
+export const paddingClass = (
+  size: SizeProp = "md",
+  options?: ClampSizeOptions
+) => {
+  const clampedSize = options ? adjustSize(size, options) : size;
+  return (
+    {
+      none: "",
+      xs: "p-1",
+      sm: "p-2",
+      md: "p-3",
+      lg: "p-4",
+      xl: "p-5",
+      "2xl": "p-6",
+      "3xl": "p-8",
+      "4xl": "p-10",
+    }[clampedSize] ?? ""
+  );
+};
+
+/**
+ * Returns both padding-x and padding-y classes for a given size
+ * @param size
+ * @param options
+ * @returns
+ */
+export const paddingClasses = (
+  size: SizeProp = "md",
+  options?: ClampSizeOptions
+) => {
+  return clsx(paddingXClass(size, options), paddingYClass(size, options));
+};
