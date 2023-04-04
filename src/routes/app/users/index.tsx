@@ -1,14 +1,11 @@
-import { InviteUserForm } from "@/features/users/components/invite-user-form";
-import { allUsersMachine } from "@/features/users/machines/all-users.machine";
+import { InviteUsersDrawer } from "@/features/users/components/invite-user.drawer";
 import { UserProfile } from "@/features/users/schema/user-profile.schema";
 import { ProfileAvatar } from "@/lib/components/avatars/profile-avatar";
 import { Button } from "@/lib/components/buttons/button";
 import { ButtonMenu } from "@/lib/components/buttons/button-menu";
-import { Drawer } from "@/lib/components/drawers/drawer";
 import { EllipsisHorizontalIcon } from "@/lib/components/icons/ellipsis-horizontal-icon";
 import { SearchInput } from "@/lib/components/inputs/search-input";
 import { MenuItem } from "@/lib/components/menus/menu-item";
-import { BlurOverlay } from "@/lib/components/overlays/blur-overlay";
 import { PageContent } from "@/lib/components/page/page-content";
 import { PageHeader } from "@/lib/components/page/page-header";
 import { HStack } from "@/lib/components/stacks/h-stack";
@@ -17,14 +14,13 @@ import { DateAndTimeCell } from "@/lib/components/tables/date-and-time-cell";
 import { Table } from "@/lib/components/tables/table";
 import { TableContainer } from "@/lib/components/tables/table-container";
 import { Heading } from "@/lib/components/text/heading";
+import { createToggle } from "@/lib/util/create-toggle";
 import { getAuthenticatedServerContext } from "@/lib/util/get-page-context";
 import { ColumnDef } from "@tanstack/solid-table";
-import { useMachine } from "@xstate/solid";
-import { Show } from "solid-js";
-import { useRouteData } from "solid-start";
+import { RouteDataArgs, useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
 
-export function routeData() {
+export function routeData(params: RouteDataArgs) {
   return createServerData$(async (_, event) => {
     const { api } = getAuthenticatedServerContext(event);
     const { data, error } = await api.users.findUsers();
@@ -88,12 +84,8 @@ const userColumns: ColumnDef<UserProfile>[] = [
 ];
 
 export function UsersPage() {
-  const data = useRouteData<typeof routeData>();
-  const [state, send] = useMachine(allUsersMachine, {
-    context: {
-      users: data(),
-    },
-  });
+  const users = useRouteData<typeof routeData>();
+  const isInviteOpen = createToggle();
 
   return (
     <>
@@ -108,7 +100,7 @@ export function UsersPage() {
               <Heading level="1" class="text-xl font-medium mb-6">
                 All Users
               </Heading>
-              <Button onClick={() => send("START_INVITE")}>Send Invite</Button>
+              <Button onClick={isInviteOpen.on}>Invite User...</Button>
             </HStack>
             <p class="max-w-md">
               View all users of your application. Invite new users by clicking
@@ -118,43 +110,15 @@ export function UsersPage() {
           </div>
           <Table
             columns={userColumns}
-            data={state.context.users}
+            data={users}
             class="-mb-[2px] [&_th:last-child]:w-[0.1%]"
           />
         </TableContainer>
       </PageContent>
-      <BlurOverlay
-        isOpen={state.matches("invitingUsers")}
-        onClick={() => send("CANCEL")}
+      <InviteUsersDrawer
+        isOpen={isInviteOpen.value}
+        onClose={isInviteOpen.off}
       />
-      <Drawer
-        isOpen={state.matches("invitingUsers")}
-        placement="right"
-        class="p-6"
-      >
-        <Heading level="1" class="text-2xl font-medium mb-6">
-          Invite User
-        </Heading>
-        <p>
-          Enter the email address where you would like to send an invitation.
-        </p>
-        <InviteUserForm
-          class="mt-4"
-          onSubmit={(invite) =>
-            send({ type: "SEND_INVITES", payload: [invite.email] })
-          }
-        >
-          <HStack class="mt-4" spacing="xs" justify="end">
-            <Button onClick={() => send("CANCEL")}>Cancel</Button>
-            <Button type="submit">Send Invite</Button>
-          </HStack>
-        </InviteUserForm>
-        <Show when={Boolean(state.context.error)}>
-          <p class="text-red-500 mt-4">
-            {JSON.stringify(state.context.error, null, "  ")}
-          </p>
-        </Show>
-      </Drawer>
     </>
   );
 }
