@@ -7,9 +7,9 @@ export type Toggle = {
   toggle: () => void;
 };
 
-export function createToggle(initialValue?: boolean) {
+export function createToggle(initialValue?: boolean): Toggle {
   const [toggle, setState] = createStore({
-    value: initialValue,
+    value: initialValue ?? false,
     on: () => {
       setState("value", true);
     },
