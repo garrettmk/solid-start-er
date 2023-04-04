@@ -16,7 +16,7 @@ export interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
   description?: string;
   icon?: boolean;
   disabled?: boolean;
-  type?: "button" | "submit";
+  type?: "button" | "submit" | "reset";
 }
 
 export function Button(props: ButtonProps) {
@@ -49,7 +49,7 @@ export function Button(props: ButtonProps) {
   return (
     <button
       ref={props.ref}
-      type={props.type}
+      type={props.type ?? "button"}
       class={classes()}
       {...buttonProps}
     >
