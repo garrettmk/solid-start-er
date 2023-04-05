@@ -27,7 +27,10 @@ export function Menu(props: MenuProps) {
 
   const handleClick = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
-    if (target.tagName === "A") props.onClickItem?.();
+    const itemTarget = target.closest("li");
+    const inactive = itemTarget?.dataset.inactive === "true";
+
+    if (!inactive) props.onClickItem?.();
   };
 
   return (

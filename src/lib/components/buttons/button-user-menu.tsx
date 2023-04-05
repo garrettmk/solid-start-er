@@ -45,7 +45,7 @@ export function ButtonUserMenu(props: ButtonUserMenuProps) {
         class={clsx(!menu.isOpen && "hidden")}
         onClickItem={menu.close}
       >
-        <MenuItem class="py-2">
+        <MenuItem class="py-2" inactive>
           <span class="block text-sm">Garrett Myrick</span>
           <span class="block font-medium">{auth.user?.email}</span>
         </MenuItem>
