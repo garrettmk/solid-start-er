@@ -9,8 +9,14 @@ import { VStack } from "@/lib/components/stacks/v-stack";
 import { createObjectURL } from "@/lib/util/create-object-url";
 import { shakeFalsyValues } from "@/lib/util/objects.util";
 import { encodeFile, noop } from "@/lib/util/util";
-import { createForm, Field, Form, zodForm } from "@modular-forms/solid";
-import { JSX, splitProps } from "solid-js";
+import {
+  createForm,
+  Field,
+  Form,
+  FormState,
+  zodForm,
+} from "@modular-forms/solid";
+import { createEffect, JSX, Setter, splitProps } from "solid-js";
 
 const zodFormValidator = zodForm(userProfileUpdateSchema);
 const validateForm = (values: any) =>
@@ -22,6 +28,8 @@ export interface UpdateProfileFormProps
     Omit<UserProfileUpdate, "avatarImage" | "avatarImageData">
   >;
   onSubmit?: (data: UserProfileUpdate) => void;
+  ref?: Setter<HTMLFormElement>;
+  apiRef?: Setter<FormState<UserProfileUpdate>>;
 }
 
 export function UpdateProfileForm(props: UpdateProfileFormProps) {
@@ -29,12 +37,18 @@ export function UpdateProfileForm(props: UpdateProfileFormProps) {
     "initialValues",
     "onSubmit",
     "children",
+    "ref",
+    "apiRef",
   ]);
 
   const { initialValues } = props;
   const form = createForm<UserProfileUpdate>({
     initialValues,
     validate: validateForm,
+  });
+
+  createEffect(() => {
+    props.apiRef?.(form);
   });
 
   const imageURL = createObjectURL();
@@ -55,6 +69,7 @@ export function UpdateProfileForm(props: UpdateProfileFormProps) {
 
   return (
     <Form
+      ref={props.ref}
       of={form}
       onSubmit={props.onSubmit ? handleSubmit : noop}
       {...formProps}
