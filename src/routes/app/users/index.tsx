@@ -1,4 +1,5 @@
 import { InviteUsersDrawer } from "@/features/users/components/invite-user.drawer";
+import { UpdateUserDrawer } from "@/features/users/components/update-user-drawer";
 import { UserProfile } from "@/features/users/schema/user-profile.schema";
 import { ProfileAvatar } from "@/lib/components/avatars/profile-avatar";
 import { Button } from "@/lib/components/buttons/button";
@@ -16,7 +17,9 @@ import { TableContainer } from "@/lib/components/tables/table-container";
 import { Heading } from "@/lib/components/text/heading";
 import { createToggle } from "@/lib/util/create-toggle";
 import { getAuthenticatedServerContext } from "@/lib/util/get-page-context";
+import { usingDataAttribute } from "@/lib/util/util";
 import { ColumnDef } from "@tanstack/solid-table";
+import { createSignal } from "solid-js";
 import { RouteDataArgs, useRouteData } from "solid-start";
 import { createServerData$ } from "solid-start/server";
 
@@ -63,10 +66,12 @@ const userColumns: ColumnDef<UserProfile>[] = [
         placement="left-end"
         size="xs"
         color="ghost"
-        content={<EllipsisHorizontalIcon />}
+        content={<EllipsisHorizontalIcon size="xs" />}
+        class="-my-1.5"
+        icon
       >
-        <MenuItem href="#">Edit...</MenuItem>
-        <MenuItem href="#">Assign Roles...</MenuItem>
+        <MenuItem>Edit...</MenuItem>
+        <MenuItem>Assign Roles...</MenuItem>
       </ButtonMenu>
     ),
     cell: ({ row }) => (
@@ -74,10 +79,15 @@ const userColumns: ColumnDef<UserProfile>[] = [
         placement="left-end"
         size="xs"
         color="ghost"
-        content={<EllipsisHorizontalIcon />}
+        content={<EllipsisHorizontalIcon size="xs" />}
+        icon
       >
-        <MenuItem href={`/app/users/${row.original.id}`}>Edit...</MenuItem>
-        <MenuItem href="#">Assign Roles...</MenuItem>
+        <MenuItem data-action="edit" data-id={row.original.id}>
+          Edit...
+        </MenuItem>
+        <MenuItem data-action="assignRoles" data-id={row.original.id} inactive>
+          Assign Roles...
+        </MenuItem>
       </ButtonMenu>
     ),
   },
@@ -85,7 +95,21 @@ const userColumns: ColumnDef<UserProfile>[] = [
 
 export function UsersPage() {
   const users = useRouteData<typeof routeData>();
+  const [userToUpdate, setUserToUpdate] = createSignal<UserProfile>();
   const isInviteOpen = createToggle();
+  const isUpdateOpen = createToggle();
+
+  const handleTableClick = usingDataAttribute("action", {
+    edit: ({ id }) => {
+      const user = users()?.find((u) => u.id === id);
+      setUserToUpdate(user);
+      isUpdateOpen.on();
+    },
+
+    assignRoles: ({ id }) => {
+      console.log("assignRoles", id);
+    },
+  });
 
   return (
     <>
@@ -112,12 +136,18 @@ export function UsersPage() {
             columns={userColumns}
             data={users}
             class="-mb-[2px] [&_th:last-child]:w-[0.1%]"
+            onClick={handleTableClick}
           />
         </TableContainer>
       </PageContent>
       <InviteUsersDrawer
         isOpen={isInviteOpen.value}
         onClose={isInviteOpen.off}
+      />
+      <UpdateUserDrawer
+        user={userToUpdate()}
+        isOpen={isUpdateOpen.value}
+        onClose={isUpdateOpen.off}
       />
     </>
   );
