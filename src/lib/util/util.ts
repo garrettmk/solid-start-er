@@ -5,7 +5,8 @@ import { createStore } from "solid-js/store";
  *
  * @param args anything
  */
-export function noop(...args: any[]) {}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+export function noop(...args: any[]) { null; }
 
 /**
  * A function that returns the value passed in
@@ -13,7 +14,7 @@ export function noop(...args: any[]) {}
  * @param value anything
  * @returns the value passed in
  */
-export function identity(value: any) {
+export function identity<T>(value: T): T {
   return value;
 }
 
@@ -79,9 +80,8 @@ export function createFormStore<T extends object>(initial?: Partial<T>) {
   const methods = {
     handleChange: (field: keyof T) => (e: Event) =>
       setState((c) => ({
-        ...c,
-        // @ts-ignore
-        [field]: e.currentTarget?.value,
+        ...c,        
+        [field]: (e.currentTarget as HTMLInputElement)?.value,
       })),
 
     isChecked: (field: keyof T) => !!state[field],

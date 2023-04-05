@@ -7,22 +7,22 @@ export interface SpinnerProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 const styles = {
-  base: `inline animate-spin text-gray-200 dark:text-gray-600`,
+  base: "inline animate-spin text-gray-200 dark:text-gray-600",
 
   size: {
-    sm: `w-4 h-4`,
-    md: `w-6 h-6`,
-    lg: `w-8 h-8`,
-    xl: `w-10 h-10`,
+    sm: "w-4 h-4",
+    md: "w-6 h-6",
+    lg: "w-8 h-8",
+    xl: "w-10 h-10",
   },
 
   color: {
-    blue: `fill-blue-600`,
-    white: `fill-white`,
-    green: `fill-green-500`,
-    red: `fill-red-600`,
-    yellow: `fill-yellow-400`,
-    pink: `fill-pink-600`,
+    blue: "fill-blue-600",
+    white: "fill-white",
+    green: "fill-green-500",
+    red: "fill-red-600",
+    yellow: "fill-yellow-400",
+    pink: "fill-pink-600",
   },
 };
 

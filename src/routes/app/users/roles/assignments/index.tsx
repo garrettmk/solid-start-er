@@ -74,7 +74,7 @@ export function RoleAssignmentsPage() {
     },
     {
       id: "delete",
-      header: (p) => (
+      header: () => (
         <Button
           color="ghost"
           size="xs"

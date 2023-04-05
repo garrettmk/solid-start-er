@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { CheckCircleSolidIcon } from "@/lib/components/icons/check-circle-solid-icon";
 import { useIndexContext } from "@/lib/contexts/index-context";
 
-export interface StepsProps extends JSX.HTMLAttributes<HTMLUListElement> {}
+export type StepsProps = JSX.HTMLAttributes<HTMLUListElement>;
 
 export function Steps(props: StepsProps) {
   const [stepsProps, listProps] = splitProps(props, ["class", "children"]);

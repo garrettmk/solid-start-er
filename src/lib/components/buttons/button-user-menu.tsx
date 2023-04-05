@@ -1,18 +1,15 @@
-import clsx from "clsx";
-import { splitProps } from "solid-js";
 import { useAuthContext } from "@/lib/contexts/auth-context";
 import { createFloatingUI } from "@/lib/util/create-floating-ui";
 import { useOnClickOutside } from "@/lib/util/use-click-outside";
+import clsx from "clsx";
 import { UserCircleIcon } from "../icons/user-circle-icon";
 import { Menu } from "../menus/menu";
 import { MenuItem } from "../menus/menu-item";
-import { Panel } from "../panels/panel";
 import { Button, ButtonProps } from "./button";
 
-export interface ButtonUserMenuProps extends ButtonProps {}
+export type ButtonUserMenuProps = Omit<ButtonProps, "onClick">;
 
 export function ButtonUserMenu(props: ButtonUserMenuProps) {
-  const [, buttonProps] = splitProps(props, ["onClick"]);
   const auth = useAuthContext();
   const menu = createFloatingUI({
     placement: "right-end",
@@ -36,7 +33,7 @@ export function ButtonUserMenu(props: ButtonUserMenuProps) {
         aria-expanded="false"
         data-dropdown-toggle="user-dropdown"
         data-dropdown-placement="right-end"
-        {...buttonProps}
+        {...props}
       >
         <UserCircleIcon />
       </Button>

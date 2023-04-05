@@ -1,19 +1,20 @@
 import { api } from "@/lib/trpc/client";
 import { assign, createMachine } from "xstate";
+import { RoleAssignment } from "../schema/role-assignment-schema";
 
 export interface RoleAssignmentsContent {
-  selection: any[];
+  selection: RoleAssignment[];
   error?: string;
 }
 
 export type SelectionEvent = {
   type: "SELECT";
-  payload: any[];
+  payload: RoleAssignment[];
 };
 
 export type DeleteEvent = {
   type: "DELETE";
-  payload?: any[];
+  payload?: RoleAssignment[];
 };
 
 export type ConfirmEvent = {
@@ -95,7 +96,7 @@ export const roleAssignmentsMachines = createMachine<
       }),
 
       assignError: assign({
-        error: (_, event) => "There was a problem",
+        error: () => "There was a problem",
       }),
 
       clearError: assign({
@@ -114,8 +115,8 @@ export const roleAssignmentsMachines = createMachine<
     },
 
     services: {
-      deleteAssignments: (ctx, event) =>
-        api.roles.deleteRoleAssignments.mutate(ctx.selection),
+      deleteAssignments: (ctx) =>
+        api.roles.deleteRoleAssignments.mutate(ctx.selection as RoleAssignment[]),
     },
   }
 );

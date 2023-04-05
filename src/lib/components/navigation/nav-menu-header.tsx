@@ -1,8 +1,7 @@
 import { JSX, splitProps } from "solid-js";
 import clsx from "clsx";
 
-export interface NavMenuHeaderProps
-  extends JSX.HTMLAttributes<HTMLHeadingElement> {}
+export type NavMenuHeaderProps = JSX.HTMLAttributes<HTMLHeadingElement>;
 
 export function NavMenuHeader(props: NavMenuHeaderProps) {
   const [headerProps, otherProps] = splitProps(props, ["class"]);

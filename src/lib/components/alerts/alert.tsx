@@ -6,10 +6,10 @@ export interface AlertProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 const styles = {
-  base: `p-4 mb-4 text-sm rounded-lg bg-blue-50 dark:bg-gray-800`,
+  base: "p-4 mb-4 text-sm rounded-lg bg-blue-50 dark:bg-gray-800",
   color: {
-    blue: `text-blue-800 dark:text-blue-400`,
-    red: `text-red-800 dark:text-red-400`,
+    blue: "text-blue-800 dark:text-blue-400",
+    red: "text-red-800 dark:text-red-400",
   },
 };
 

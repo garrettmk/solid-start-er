@@ -14,7 +14,6 @@ import {
 import { AuthProvider } from "./lib/contexts/auth-context";
 import {
   createDarkMode,
-  DarkModeContext,
   DarkModeProvider,
 } from "./lib/contexts/dark-mode-context";
 import { createLayout, LayoutContext } from "./lib/contexts/layout-context";

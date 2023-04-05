@@ -1,8 +1,7 @@
 import clsx from "clsx";
 import { JSX, splitProps } from "solid-js";
 
-export interface TableContainerProps
-  extends JSX.HTMLAttributes<HTMLDivElement> {}
+export type TableContainerProps = JSX.HTMLAttributes<HTMLDivElement>;
 
 export function TableContainer(props: TableContainerProps) {
   const [, divProps] = splitProps(props, ["class"]);

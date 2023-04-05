@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { JSX, splitProps } from "solid-js";
 
-export interface DividerProps extends JSX.HTMLAttributes<HTMLHRElement> {}
+export type DividerProps = JSX.HTMLAttributes<HTMLHRElement>;
 
 export function Divider(props: DividerProps) {
   const [, hrProps] = splitProps(props, ["class"]);

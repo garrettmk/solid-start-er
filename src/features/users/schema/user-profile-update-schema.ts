@@ -14,7 +14,7 @@ export const userProfileUpdateSchemaBase = z.object({
     .min(3, "Please enter at least 3 characters")
     .max(30, "Please, no more than 30 characters")
     .regex(
-      /^[a-zA-Z' \p{L}\-]+$/,
+      /^[a-zA-Z' \p{L}-]+$/,
       "Names can include any Unicode letter, hyphen, or apostrophe"
     )
     .optional(),
@@ -24,7 +24,7 @@ export const userProfileUpdateSchemaBase = z.object({
     .min(3, "Please enter at least 3 characters")
     .max(30, "Please, no more than 30 characters")
     .regex(
-      /^[a-zA-Z' \p{L}\-]+$/,
+      /^[a-zA-Z' \p{L}-]+$/,
       "Names can include any Unicode letter, hyphen, or apostrophe"
     )
     .optional(),

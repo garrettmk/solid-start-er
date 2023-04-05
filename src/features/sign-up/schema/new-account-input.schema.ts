@@ -7,7 +7,7 @@ export const newAccountInputSchema = z
       .min(3, "Please enter at least 3 characters")
       .max(30, "Please, no more than 30 characters")
       .regex(
-        /^[a-zA-Z' \p{L}\-]+$/,
+        /^[a-zA-Z' \p{L}-]+$/,
         "Names can include any Unicode letter, hyphen, or apostrophe"
       ),
 
@@ -16,7 +16,7 @@ export const newAccountInputSchema = z
       .min(3, "Please enter at least 3 characters")
       .max(30, "Please, no more than 30 characters")
       .regex(
-        /^[a-zA-Z' \p{L}\-]+$/,
+        /^[a-zA-Z' \p{L}-]+$/,
         "Names can include any Unicode letter, hyphen, or apostrophe"
       )
       .optional(),
@@ -35,7 +35,7 @@ export const newAccountInputSchema = z
       .regex(/^.*[A-Z]+.*$/, "Must include at least one uppercase letter")
       .regex(/^.*[0-9]+.*$/, "Must include at least one number")
       .regex(
-        /^.*[#?!@$%^&*@_^&*(){}[\]\-]+.*$/,
+        /^.*[#?!@$%^&*@_^&*(){}[\]-]+.*$/,
         "Must include at least one special character (#?!@$%^&*-@_^&*(){}[])"
       ),
 
