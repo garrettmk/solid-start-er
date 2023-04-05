@@ -9,6 +9,7 @@ import {
   useAuthTokens,
 } from "./lib/util/auth-tokens.util";
 import { apiRouter } from "./lib/trpc/router";
+import { redirect } from "solid-start";
 
 export default createHandler(
   ({ forward }) =>
@@ -24,7 +25,10 @@ export default createHandler(
       const user = tokens && (await useAuthTokens(supabase, tokens));
       event.locals.user = user;
 
-      // We don't need to create the caller if this is an API request
+      // Redirect to login if the user is not authenticated
+      if (!user && url.pathname.startsWith("/app")) return redirect("/sign-in");
+
+      // Create an API caller for the page routes to use
       if (!url.pathname.startsWith("/api"))
         event.locals.api = apiRouter.createCaller({ supabase, user });
 
